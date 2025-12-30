@@ -31,11 +31,15 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'IBM Plex Mono', monospace; }
+        @media print {
+            body { background: white !important; color: black !important; }
+            nav, footer, button { display: none !important; }
+        }
     </style>
 </head>
 <body class="bg-paper-100 text-paper-900 dark:bg-paper-900 dark:text-paper-100 min-h-screen transition-colors duration-300">
     <!-- Navbar -->
-    <nav class="border-b border-paper-200 dark:border-paper-800">
+    <nav class="border-b border-paper-200 dark:border-paper-800 print:hidden">
         <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="text-sm font-medium">jacob lecoq</a>
             <div class="flex items-center gap-6">
@@ -53,90 +57,181 @@
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto px-6 py-16">
         <!-- Header -->
-        <section class="mb-16">
-            <h1 class="text-2xl font-medium mb-2">Resume</h1>
-            <p class="text-sm text-paper-800/60 dark:text-paper-200/60">lecoqjacob@gmail.com</p>
+        <section class="mb-12">
+            <h1 class="text-2xl font-medium mb-2">Jacob LeCoq</h1>
+            <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-1">Senior Software Engineer</p>
+            <div class="text-sm text-paper-800/60 dark:text-paper-200/60 flex flex-wrap gap-x-4 gap-y-1">
+                <span>Louisiana, US</span>
+                <a href="mailto:lecoqjacob@gmail.com" class="hover:underline">lecoqjacob@gmail.com</a>
+                <a href="https://linkedin.com/in/jacob-lecoq" target="_blank" class="hover:underline">linkedin</a>
+                <a href="https://github.com/HexSleeves" target="_blank" class="hover:underline">github</a>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="mb-12">
+            <h2 class="text-sm font-medium mb-4 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Summary</h2>
+            <p class="text-sm text-paper-800/80 dark:text-paper-200/80 leading-relaxed">
+                Senior Software Engineer with 8 years of full-stack experience building scalable web applications and high-throughput backend services. Expert in Node.js, TypeScript, Go, and cloud-native architectures on AWS, with deep experience in data processing and API design. Led the design of Bayer's reusable form system to streamline cross-team workflows and optimized DNAnexus infrastructure to secure $30K in annual savings.
+            </p>
         </section>
 
         <!-- Experience -->
-        <section class="mb-16">
-            <h2 class="text-sm font-medium mb-8 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Experience</h2>
+        <section class="mb-12">
+            <h2 class="text-sm font-medium mb-6 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Experience</h2>
             
-            <div class="space-y-10">
+            <div class="space-y-8">
+                <!-- Dexian -->
                 <div>
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
-                        <h3 class="font-medium">Software Developer</h3>
-                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">2022 — Present</span>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Senior Software Engineer</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">Aug 2024 — Present</span>
                     </div>
-                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">Company Name</p>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">Dexian (Bayer contractor) · Remote</p>
                     <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
-                        <li>→ Developed and maintained web applications</li>
-                        <li>→ Collaborated with cross-functional teams</li>
-                        <li>→ Improved application performance</li>
+                        <li>→ Built Bayer's farmer-facing e-commerce platform end-to-end: React.js/TypeScript frontend, Node.js/NestJS backend, GraphQL APIs</li>
+                        <li>→ Mentored junior engineers and performed code reviews, enforcing best practices across Java and Node.js stack</li>
+                        <li>→ Diagnosed and resolved complex issues using Splunk and DataDog, increasing platform stability</li>
                     </ul>
                 </div>
 
+                <!-- DNAnexus -->
                 <div>
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
-                        <h3 class="font-medium">Junior Developer</h3>
-                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">2020 — 2022</span>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Senior Software Engineer</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">Oct 2023 — Aug 2024</span>
                     </div>
-                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">Previous Company</p>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">DNAnexus · Mountain View, CA</p>
                     <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
-                        <li>→ Built and deployed backend services</li>
-                        <li>→ Participated in code reviews</li>
-                        <li>→ Wrote tests and documentation</li>
+                        <li>→ Led end-to-end backend development (Node.js/TypeScript) for three features from spec to production</li>
+                        <li>→ Optimized AWS database clusters and pricing models, achieving $30K in annual cost savings</li>
+                        <li>→ Developed backend infrastructure using IAM and KMS/Secrets Manager for secure cross-account AWS access (BYOA)</li>
+                        <li>→ Implemented automatic AWS Spot Instance utilization, reducing compute costs and job execution times</li>
+                    </ul>
+                </div>
+
+                <!-- Bayer -->
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Senior Software Engineer</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">Feb 2020 — Oct 2023</span>
+                    </div>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">Bayer · St. Louis, MO</p>
+                    <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
+                        <li>→ Led design and full-stack development (React.js, Node.js/TypeScript) of reusable form system adopted across all GEM programs</li>
+                        <li>→ Implemented serverless deployment pipelines using AWS CloudFormation and Lambda</li>
+                        <li>→ Designed and optimized DynamoDB databases with standard data modeling and indexing strategies</li>
+                        <li>→ Maintained system stability with error rates below 10% using DataDog and CloudWatch</li>
+                    </ul>
+                </div>
+
+                <!-- Waitr -->
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Software Engineer</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">May 2019 — Jan 2020</span>
+                    </div>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">Waitr · Lafayette, LA</p>
+                    <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
+                        <li>→ Led frontend development with Angular.js for internal applications enabling restaurant partner management</li>
+                        <li>→ Served as Scrum Master, facilitating ceremonies and improving sprint predictability</li>
+                        <li>→ Managed frontend builds with Grunt and set up CircleCI pipelines for automated testing and AWS deployment</li>
+                    </ul>
+                </div>
+
+                <!-- CGI Federal -->
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Technical Consultant</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">Feb 2018 — May 2019</span>
+                    </div>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">CGI Federal · Lafayette, LA</p>
+                    <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
+                        <li>→ Full-stack developer using Knockout.js, jQuery, and Java/Spring Boot for EPA software solutions</li>
+                        <li>→ Delivered features each 2-week sprint within Agile Scrum ceremonies</li>
+                    </ul>
+                </div>
+
+                <!-- ASV Global -->
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Autonomous Systems Software Developer</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">May 2017 — Jan 2018</span>
+                    </div>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">ASV Global · Broussard, LA</p>
+                    <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
+                        <li>→ Developed C++ system software and Qt GUI interfaces for autonomous surface vehicles (ASVs)</li>
+                        <li>→ Led development and integration of C++ software for winch systems on marine vehicles</li>
+                        <li>→ Performed software installation and configuration on embedded headless systems</li>
+                    </ul>
+                </div>
+
+                <!-- Perficient -->
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
+                        <h3 class="font-medium">Associate Technical Consultant</h3>
+                        <span class="text-sm text-paper-800/60 dark:text-paper-200/60">Jun 2016 — May 2017</span>
+                    </div>
+                    <p class="text-sm text-paper-800/60 dark:text-paper-200/60 mb-3">Perficient · Lafayette, LA</p>
+                    <ul class="text-sm text-paper-800/80 dark:text-paper-200/80 space-y-1">
+                        <li>→ Led Agile team building web applications using Angular.js, Java/Hibernate, HTML, CSS/SCSS</li>
+                        <li>→ Ensured compliance with government regulations (NIST SP 800-53) using Azure Policy</li>
+                        <li>→ Executed deployments with Jenkins CI/CD pipelines on Azure and AWS</li>
                     </ul>
                 </div>
             </div>
         </section>
 
         <!-- Education -->
-        <section class="mb-16">
-            <h2 class="text-sm font-medium mb-8 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Education</h2>
+        <section class="mb-12">
+            <h2 class="text-sm font-medium mb-6 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Education</h2>
             
             <div>
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
                     <h3 class="font-medium">B.S. Computer Science</h3>
-                    <span class="text-sm text-paper-800/60 dark:text-paper-200/60">2016 — 2020</span>
+                    <span class="text-sm text-paper-800/60 dark:text-paper-200/60">2012 — 2016</span>
                 </div>
-                <p class="text-sm text-paper-800/60 dark:text-paper-200/60">University Name</p>
+                <p class="text-sm text-paper-800/60 dark:text-paper-200/60">University of Louisiana at Lafayette · GPA: 3.66</p>
             </div>
+        </section>
+
+        <!-- Certifications -->
+        <section class="mb-12">
+            <h2 class="text-sm font-medium mb-4 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Certifications</h2>
+            <p class="text-sm text-paper-800/80 dark:text-paper-200/80">Certified Scrum Master (2016)</p>
         </section>
 
         <!-- Skills -->
-        <section class="mb-16">
-            <h2 class="text-sm font-medium mb-8 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Skills</h2>
+        <section>
+            <h2 class="text-sm font-medium mb-6 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Skills</h2>
             
-            <div class="space-y-4 text-sm">
+            <div class="space-y-3 text-sm">
                 <div>
-                    <span class="text-paper-800/60 dark:text-paper-200/60">Languages:</span>
-                    <span class="text-paper-800/80 dark:text-paper-200/80">Go, TypeScript, Python, Rust, Lua, SQL</span>
+                    <span class="text-paper-800/60 dark:text-paper-200/60">Frontend:</span>
+                    <span class="text-paper-800/80 dark:text-paper-200/80">React.js, Next.js, Angular, TypeScript, JavaScript, HTML, CSS, Tailwind, Material UI, Bootstrap</span>
                 </div>
                 <div>
-                    <span class="text-paper-800/60 dark:text-paper-200/60">Frameworks:</span>
-                    <span class="text-paper-800/80 dark:text-paper-200/80">React, Node.js, Bevy</span>
+                    <span class="text-paper-800/60 dark:text-paper-200/60">Backend:</span>
+                    <span class="text-paper-800/80 dark:text-paper-200/80">Node.js, GraphQL, Java, Go, Rust</span>
+                </div>
+                <div>
+                    <span class="text-paper-800/60 dark:text-paper-200/60">Databases:</span>
+                    <span class="text-paper-800/80 dark:text-paper-200/80">DynamoDB, PostgreSQL, Redis, MS SQL</span>
+                </div>
+                <div>
+                    <span class="text-paper-800/60 dark:text-paper-200/60">Cloud:</span>
+                    <span class="text-paper-800/80 dark:text-paper-200/80">AWS, Azure, Oracle</span>
                 </div>
                 <div>
                     <span class="text-paper-800/60 dark:text-paper-200/60">Tools:</span>
-                    <span class="text-paper-800/80 dark:text-paper-200/80">Git, Docker, Linux, Neovim</span>
+                    <span class="text-paper-800/80 dark:text-paper-200/80">DataDog, Splunk, Git, Docker, CI/CD</span>
                 </div>
-            </div>
-        </section>
-
-        <!-- Links -->
-        <section>
-            <h2 class="text-sm font-medium mb-6 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Links</h2>
-            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                <a href="https://github.com/HexSleeves" target="_blank" class="hover:underline">github</a>
-                <a href="https://www.linkedin.com/in/jacob-lecoq/" target="_blank" class="hover:underline">linkedin</a>
-                <a href="mailto:lecoqjacob@gmail.com" class="hover:underline">email</a>
             </div>
         </section>
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-paper-200 dark:border-paper-800 mt-auto">
+    <footer class="border-t border-paper-200 dark:border-paper-800 mt-auto print:hidden">
         <div class="max-w-3xl mx-auto px-6 py-6">
             <p class="text-xs text-paper-800/40 dark:text-paper-200/40">© 2024</p>
         </div>
