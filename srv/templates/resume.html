@@ -4,137 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume | Portfolio</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a2e',
+                            600: '#2a2a3e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">Portfolio</a>
-            <div class="nav-links">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/resume" class="nav-link active">Resume</a>
-                <a href="/showcase" class="nav-link">Showcase</a>
+<body class="bg-dark-900 text-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/90 backdrop-blur-md border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Portfolio</a>
+            <div class="flex gap-8">
+                <a href="/" class="text-gray-400 font-medium hover:text-gray-100 transition-colors">Home</a>
+                <a href="/resume" class="text-gray-100 font-medium border-b-2 border-indigo-500 pb-1">Resume</a>
+                <a href="/showcase" class="text-gray-400 font-medium hover:text-gray-100 transition-colors">Showcase</a>
             </div>
         </div>
     </nav>
 
-    <main class="main-content">
-        <section class="resume-header">
-            <div class="section-container">
-                <h1>Resume</h1>
-                <p class="resume-subtitle">My professional experience and education</p>
+    <!-- Main Content -->
+    <main class="flex-1">
+        <!-- Header -->
+        <section class="py-16 text-center">
+            <div class="max-w-6xl mx-auto px-6">
+                <h1 class="text-5xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Resume</h1>
+                <p class="text-gray-400 text-xl mt-4">My professional experience and education</p>
             </div>
         </section>
 
-        <section class="resume-section">
-            <div class="section-container">
-                <div class="resume-grid">
-                    <div class="resume-main">
-                        <div class="resume-block">
-                            <h2 class="resume-block-title">
-                                <span class="resume-icon">💼</span>
-                                Experience
+        <!-- Resume Content -->
+        <section class="pb-24">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Main Column -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Experience -->
+                        <div class="bg-dark-700 p-8 rounded-xl border border-dark-600">
+                            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+                                <span>💼</span> Experience
                             </h2>
                             
-                            <div class="experience-item">
-                                <div class="experience-header">
-                                    <h3>Software Developer</h3>
-                                    <span class="experience-date">2022 - Present</span>
+                            <div class="border-b border-dark-600 pb-6 mb-6">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <h3 class="text-lg font-semibold">Software Developer</h3>
+                                    <span class="text-indigo-400 font-medium">2022 - Present</span>
                                 </div>
-                                <p class="experience-company">Company Name</p>
-                                <ul class="experience-list">
-                                    <li>Developed and maintained web applications using modern technologies</li>
-                                    <li>Collaborated with cross-functional teams to deliver features</li>
-                                    <li>Improved application performance and user experience</li>
+                                <p class="text-gray-400 mb-3">Company Name</p>
+                                <ul class="text-gray-400 space-y-2">
+                                    <li class="flex gap-2"><span class="text-indigo-400">→</span> Developed and maintained web applications using modern technologies</li>
+                                    <li class="flex gap-2"><span class="text-indigo-400">→</span> Collaborated with cross-functional teams to deliver features</li>
+                                    <li class="flex gap-2"><span class="text-indigo-400">→</span> Improved application performance and user experience</li>
                                 </ul>
                             </div>
 
-                            <div class="experience-item">
-                                <div class="experience-header">
-                                    <h3>Junior Developer</h3>
-                                    <span class="experience-date">2020 - 2022</span>
+                            <div>
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <h3 class="text-lg font-semibold">Junior Developer</h3>
+                                    <span class="text-indigo-400 font-medium">2020 - 2022</span>
                                 </div>
-                                <p class="experience-company">Previous Company</p>
-                                <ul class="experience-list">
-                                    <li>Built and deployed backend services</li>
-                                    <li>Participated in code reviews and technical discussions</li>
-                                    <li>Wrote unit tests and documentation</li>
+                                <p class="text-gray-400 mb-3">Previous Company</p>
+                                <ul class="text-gray-400 space-y-2">
+                                    <li class="flex gap-2"><span class="text-indigo-400">→</span> Built and deployed backend services</li>
+                                    <li class="flex gap-2"><span class="text-indigo-400">→</span> Participated in code reviews and technical discussions</li>
+                                    <li class="flex gap-2"><span class="text-indigo-400">→</span> Wrote unit tests and documentation</li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div class="resume-block">
-                            <h2 class="resume-block-title">
-                                <span class="resume-icon">🎓</span>
-                                Education
+                        <!-- Education -->
+                        <div class="bg-dark-700 p-8 rounded-xl border border-dark-600">
+                            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+                                <span>🎓</span> Education
                             </h2>
                             
-                            <div class="education-item">
-                                <div class="experience-header">
-                                    <h3>Bachelor of Science in Computer Science</h3>
-                                    <span class="experience-date">2016 - 2020</span>
+                            <div>
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                                    <h3 class="text-lg font-semibold">Bachelor of Science in Computer Science</h3>
+                                    <span class="text-indigo-400 font-medium">2016 - 2020</span>
                                 </div>
-                                <p class="experience-company">University Name</p>
-                                <p class="education-details">Relevant coursework: Data Structures, Algorithms, Database Systems, Software Engineering</p>
+                                <p class="text-gray-400 mb-3">University Name</p>
+                                <p class="text-gray-400">Relevant coursework: Data Structures, Algorithms, Database Systems, Software Engineering</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="resume-sidebar">
-                        <div class="resume-block">
-                            <h2 class="resume-block-title">
-                                <span class="resume-icon">🛠️</span>
-                                Skills
+                    <!-- Sidebar -->
+                    <div class="space-y-8">
+                        <!-- Skills -->
+                        <div class="bg-dark-700 p-8 rounded-xl border border-dark-600">
+                            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+                                <span>🛠️</span> Skills
                             </h2>
-                            <div class="skills-category">
-                                <h4>Languages</h4>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">Go</span>
-                                    <span class="skill-tag">TypeScript</span>
-                                    <span class="skill-tag">Python</span>
-                                    <span class="skill-tag">JavaScript</span>
-                                    <span class="skill-tag">SQL</span>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="text-sm text-gray-400 uppercase tracking-wide mb-3">Languages</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Go</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">TypeScript</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Python</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Rust</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">SQL</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="skills-category">
-                                <h4>Frameworks</h4>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">React</span>
-                                    <span class="skill-tag">Node.js</span>
-                                    <span class="skill-tag">Express</span>
+                                <div>
+                                    <h4 class="text-sm text-gray-400 uppercase tracking-wide mb-3">Frameworks</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">React</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Node.js</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Bevy</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="skills-category">
-                                <h4>Tools</h4>
-                                <div class="skill-tags">
-                                    <span class="skill-tag">Git</span>
-                                    <span class="skill-tag">Docker</span>
-                                    <span class="skill-tag">Linux</span>
-                                    <span class="skill-tag">CI/CD</span>
+                                <div>
+                                    <h4 class="text-sm text-gray-400 uppercase tracking-wide mb-3">Tools</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Git</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Docker</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">Linux</span>
+                                        <span class="px-3 py-1 bg-indigo-500/15 text-indigo-400 rounded font-mono text-sm">CI/CD</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="resume-block">
-                            <h2 class="resume-block-title">
-                                <span class="resume-icon">🌐</span>
-                                Links
+                        <!-- Links -->
+                        <div class="bg-dark-700 p-8 rounded-xl border border-dark-600">
+                            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+                                <span>🌐</span> Links
                             </h2>
-                            <div class="contact-links">
-                                <a href="https://github.com/HexSleeves" target="_blank" class="contact-link">
-                                    <span class="link-icon">🐙</span>
-                                    GitHub
+                            <div class="space-y-3">
+                                <a href="https://github.com/HexSleeves" target="_blank" class="flex items-center gap-3 p-3 bg-dark-800 rounded-lg hover:bg-indigo-500/10 transition-colors">
+                                    <span>🐙</span> GitHub
                                 </a>
-                                <a href="https://linkedin.com" target="_blank" class="contact-link">
-                                    <span class="link-icon">💼</span>
-                                    LinkedIn
+                                <a href="https://www.linkedin.com/in/jacob-lecoq/" target="_blank" class="flex items-center gap-3 p-3 bg-dark-800 rounded-lg hover:bg-indigo-500/10 transition-colors">
+                                    <span>💼</span> LinkedIn
                                 </a>
-                                <a href="mailto:email@example.com" class="contact-link">
-                                    <span class="link-icon">✉️</span>
-                                    Email
+                                <a href="mailto:lecoqjacob@gmail.com" class="flex items-center gap-3 p-3 bg-dark-800 rounded-lg hover:bg-indigo-500/10 transition-colors">
+                                    <span>✉️</span> Email
                                 </a>
                             </div>
                         </div>
@@ -144,12 +170,13 @@
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2024 • Built with ❤️</p>
-            <div class="footer-links">
-                <a href="https://github.com/HexSleeves" target="_blank">GitHub</a>
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+    <!-- Footer -->
+    <footer class="bg-dark-800 border-t border-dark-600 py-6">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500">© 2024 • Built with ❤️</p>
+            <div class="flex gap-6">
+                <a href="https://github.com/HexSleeves" target="_blank" class="text-gray-400 hover:text-indigo-400 transition-colors">GitHub</a>
+                <a href="https://www.linkedin.com/in/jacob-lecoq/" target="_blank" class="text-gray-400 hover:text-indigo-400 transition-colors">LinkedIn</a>
             </div>
         </div>
     </footer>

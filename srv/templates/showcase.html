@@ -4,89 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Showcase | Portfolio</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a2e',
+                            600: '#2a2a3e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">Portfolio</a>
-            <div class="nav-links">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/resume" class="nav-link">Resume</a>
-                <a href="/showcase" class="nav-link active">Showcase</a>
+<body class="bg-dark-900 text-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/90 backdrop-blur-md border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Portfolio</a>
+            <div class="flex gap-8">
+                <a href="/" class="text-gray-400 font-medium hover:text-gray-100 transition-colors">Home</a>
+                <a href="/resume" class="text-gray-400 font-medium hover:text-gray-100 transition-colors">Resume</a>
+                <a href="/showcase" class="text-gray-100 font-medium border-b-2 border-indigo-500 pb-1">Showcase</a>
             </div>
         </div>
     </nav>
 
-    <main class="main-content">
-        <section class="showcase-header">
-            <div class="section-container">
-                <h1>Project Showcase</h1>
-                <p class="showcase-subtitle">Things I've built in my free time</p>
-                <div class="github-input-container">
-                    <input type="text" id="githubUsername" placeholder="Enter your GitHub username" class="github-input" value="HexSleeves">
-                    <button onclick="loadProjects()" class="btn btn-primary">Load My Projects</button>
+    <!-- Main Content -->
+    <main class="flex-1">
+        <!-- Header -->
+        <section class="py-16 text-center">
+            <div class="max-w-6xl mx-auto px-6">
+                <h1 class="text-5xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Project Showcase</h1>
+                <p class="text-gray-400 text-xl mt-4 mb-8">Things I've built in my free time</p>
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <input type="text" id="githubUsername" placeholder="Enter GitHub username" value="HexSleeves" 
+                           class="px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-gray-100 w-72 focus:outline-none focus:border-indigo-500">
+                    <button onclick="loadProjects()" class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all">Load My Projects</button>
                 </div>
             </div>
         </section>
 
-        <section class="projects-section">
-            <div class="section-container">
-                <div class="projects-grid" id="projectsGrid">
+        <!-- Projects Grid -->
+        <section class="pb-16">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid">
                     {{range .Projects}}
-                    <div class="project-card">
-                        <div class="project-header">
-                            <h3 class="project-name">{{.Name}}</h3>
-                            <span class="project-language">{{.Language}}</span>
+                    <div class="bg-dark-700 border border-dark-600 rounded-xl p-6 hover:border-indigo-500 hover:-translate-y-1 hover:shadow-xl transition-all">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-lg font-semibold">{{.Name}}</h3>
+                            <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">{{.Language}}</span>
                         </div>
-                        <p class="project-description">{{.Description}}</p>
-                        <div class="project-stats">
-                            <span class="stat">⭐ {{.Stars}}</span>
-                            <span class="stat">🍴 {{.Forks}}</span>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">{{if .Description}}{{.Description}}{{else}}No description{{end}}</p>
+                        <div class="flex gap-4 text-gray-500 text-sm mb-4">
+                            <span>⭐ {{.Stars}}</span>
+                            <span>🍴 {{.Forks}}</span>
                         </div>
-                        <a href="{{.URL}}" target="_blank" class="project-link">View on GitHub →</a>
+                        <a href="{{.URL}}" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium text-sm">View on GitHub →</a>
                     </div>
                     {{end}}
                 </div>
             </div>
         </section>
 
-        <section class="featured-section">
-            <div class="section-container">
-                <h2 class="section-title">Featured Projects</h2>
-                <div class="featured-grid">
-                    <div class="featured-card">
-                        <div class="featured-image">
-                            <div class="placeholder-image">🌐</div>
+        <!-- Featured Projects -->
+        <section class="py-16 bg-dark-800">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">Featured Projects</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-dark-700 border border-dark-600 rounded-xl overflow-hidden hover:border-indigo-500 hover:shadow-xl transition-all">
+                        <div class="h-48 bg-dark-800 flex items-center justify-center">
+                            <span class="text-6xl">🌐</span>
                         </div>
-                        <div class="featured-content">
-                            <h3>tailscale-mcp</h3>
-                            <p>A server that provides seamless integration with Tailscale's CLI commands and REST API, enabling automated network management and monitoring through a standardized interface.</p>
-                            <div class="featured-tech">
-                                <span>TypeScript</span>
-                                <span>Tailscale</span>
-                                <span>MCP</span>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-3">tailscale-mcp</h3>
+                            <p class="text-gray-400 mb-4">A server that provides seamless integration with Tailscale's CLI commands and REST API, enabling automated network management and monitoring through a standardized interface.</p>
+                            <div class="flex gap-2 mb-4">
+                                <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">TypeScript</span>
+                                <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">Tailscale</span>
+                                <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">MCP</span>
                             </div>
-                            <a href="https://github.com/HexSleeves/tailscale-mcp" target="_blank" class="btn btn-secondary">View on GitHub</a>
+                            <a href="https://github.com/HexSleeves/tailscale-mcp" target="_blank" class="inline-block px-4 py-2 border border-dark-600 rounded-lg hover:bg-dark-600 hover:border-indigo-500 transition-all">View on GitHub</a>
                         </div>
                     </div>
 
-                    <div class="featured-card">
-                        <div class="featured-image">
-                            <div class="placeholder-image">⚔️</div>
+                    <div class="bg-dark-700 border border-dark-600 rounded-xl overflow-hidden hover:border-indigo-500 hover:shadow-xl transition-all">
+                        <div class="h-48 bg-dark-800 flex items-center justify-center">
+                            <span class="text-6xl">⚔️</span>
                         </div>
-                        <div class="featured-content">
-                            <h3>runeforge</h3>
-                            <p>A roguelike game project built in Rust, exploring procedural generation and game development patterns.</p>
-                            <div class="featured-tech">
-                                <span>Rust</span>
-                                <span>Roguelike</span>
-                                <span>Game Dev</span>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-3">runeforge</h3>
+                            <p class="text-gray-400 mb-4">A roguelike game project built in Rust, exploring procedural generation and game development patterns.</p>
+                            <div class="flex gap-2 mb-4">
+                                <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">Rust</span>
+                                <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">Roguelike</span>
+                                <span class="px-2 py-1 bg-indigo-500/15 text-indigo-400 rounded text-xs font-mono">Game Dev</span>
                             </div>
-                            <a href="https://github.com/HexSleeves/runeforge" target="_blank" class="btn btn-secondary">View on GitHub</a>
+                            <a href="https://github.com/HexSleeves/runeforge" target="_blank" class="inline-block px-4 py-2 border border-dark-600 rounded-lg hover:bg-dark-600 hover:border-indigo-500 transition-all">View on GitHub</a>
                         </div>
                     </div>
                 </div>
@@ -94,12 +120,13 @@
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2024 • Built with ❤️</p>
-            <div class="footer-links">
-                <a href="https://github.com/HexSleeves" target="_blank">GitHub</a>
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+    <!-- Footer -->
+    <footer class="bg-dark-800 border-t border-dark-600 py-6">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500">© 2024 • Built with ❤️</p>
+            <div class="flex gap-6">
+                <a href="https://github.com/HexSleeves" target="_blank" class="text-gray-400 hover:text-indigo-400 transition-colors">GitHub</a>
+                <a href="https://www.linkedin.com/in/jacob-lecoq/" target="_blank" class="text-gray-400 hover:text-indigo-400 transition-colors">LinkedIn</a>
             </div>
         </div>
     </footer>
