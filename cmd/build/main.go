@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -23,13 +24,18 @@ type Project struct {
 }
 
 type PageData struct {
+	BasePath string
 	Projects []Project
 }
 
 func main() {
 	outDir := flag.String("out", "dist", "output directory")
 	githubUser := flag.String("github", "HexSleeves", "GitHub username for projects")
+	basePath := flag.String("base", "", "base path for URLs (e.g., /portfolio for GitHub Pages)")
 	flag.Parse()
+
+	// Normalize base path
+	base := strings.TrimSuffix(*basePath, "/")
 
 	// Get templates directory
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -58,7 +64,10 @@ func main() {
 
 	// Fetch GitHub projects
 	projects := fetchGitHubProjects(*githubUser)
-	data := PageData{Projects: projects}
+	data := PageData{
+		BasePath: base,
+		Projects: projects,
+	}
 
 	// Pages to render
 	pages := []struct {
@@ -127,7 +136,10 @@ func main() {
 	}
 	fmt.Printf("Copied static files to %s\n", outStaticDir)
 
-	fmt.Println("\nBuild complete!")
+	if base != "" {
+		fmt.Printf("\nBuilt with base path: %s\n", base)
+	}
+	fmt.Println("Build complete!")
 }
 
 func fetchGitHubProjects(username string) []Project {

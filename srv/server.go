@@ -25,6 +25,7 @@ type Server struct {
 type PageData struct {
 	Hostname    string
 	CurrentPage string
+	BasePath    string
 	Projects    []Project
 }
 
