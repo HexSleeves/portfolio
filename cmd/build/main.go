@@ -36,7 +36,7 @@ func main() {
 	templatesDir := filepath.Join(baseDir, "..", "srv", "templates")
 
 	// Create output directory
-	if err := os.MkdirAll(*outDir, 0755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o755); err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating output dir: %v\n", err)
 		os.Exit(1)
 	}
@@ -60,7 +60,7 @@ func main() {
 		outPath := filepath.Join(*outDir, page.output)
 
 		// Create subdirectory if needed
-		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error creating dir for %s: %v\n", page.output, err)
 			os.Exit(1)
 		}
@@ -103,7 +103,7 @@ func main() {
 func fetchGitHubProjects(username string) []Project {
 	client := &http.Client{Timeout: 10 * time.Second}
 	url := fmt.Sprintf("https://api.github.com/users/%s/repos?sort=updated&per_page=12", username)
-	
+
 	resp, err := client.Get(url)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: Could not fetch GitHub repos: %v\n", err)
@@ -122,7 +122,7 @@ func fetchGitHubProjects(username string) []Project {
 }
 
 func copyDir(src, dst string) error {
-	if err := os.MkdirAll(dst, 0755); err != nil {
+	if err := os.MkdirAll(dst, 0o755); err != nil {
 		return err
 	}
 
@@ -144,7 +144,7 @@ func copyDir(src, dst string) error {
 			if err != nil {
 				return err
 			}
-			if err := os.WriteFile(dstPath, data, 0644); err != nil {
+			if err := os.WriteFile(dstPath, data, 0o644); err != nil {
 				return err
 			}
 		}
