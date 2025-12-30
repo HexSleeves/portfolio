@@ -164,7 +164,7 @@ func (s *Server) Serve(addr string) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", s.HandleHome)
 	mux.HandleFunc("GET /resume", s.HandleResume)
-	mux.HandleFunc("GET /showcase", s.HandleShowcase)
+	mux.HandleFunc("GET /projects", s.HandleShowcase)
 	mux.HandleFunc("GET /api/projects", s.HandleAPIProjects)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(s.StaticDir))))
 	slog.Info("starting server", "addr", addr)
