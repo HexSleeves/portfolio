@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: portfolio
+    runtime: go
+    buildCommand: go build -o portfolio ./cmd/srv
+    startCommand: ./portfolio -listen :$PORT
+    envVars:
+      - key: PORT
+        value: 10000
