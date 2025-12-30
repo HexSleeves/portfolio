@@ -146,7 +146,20 @@ func fetchGitHubProjects(username string) []Project {
 	client := &http.Client{Timeout: 10 * time.Second}
 	url := fmt.Sprintf("https://api.github.com/users/%s/repos?sort=updated&per_page=12", username)
 
-	resp, err := client.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Warning: Could not create request: %v\n", err)
+		return nil
+	}
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	req.Header.Set("User-Agent", "portfolio-build")
+
+	// Use GITHUB_TOKEN if available (for higher rate limits)
+	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
+		req.Header.Set("Authorization", "token "+token)
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: Could not fetch GitHub repos: %v\n", err)
 		return nil
@@ -156,6 +169,11 @@ func fetchGitHubProjects(username string) []Project {
 			fmt.Fprintf(os.Stderr, "Warning: Error closing response body: %v\n", closeErr)
 		}
 	}()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Fprintf(os.Stderr, "Warning: GitHub API returned status %d\n", resp.StatusCode)
+		return nil
+	}
 
 	var projects []Project
 	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
