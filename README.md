@@ -1,57 +1,86 @@
-# Go Shelley Template
+# Portfolio
 
-This is a starter template for building Go web applications on exe.dev. It demonstrates end-to-end usage including HTTP handlers, authentication, database integration, and deployment.
+A minimal, professional portfolio website built with Go and Tailwind CSS.
 
-Use this as a foundation to build your own service.
+## Screenshots
 
-## Building and Running
+### Light Mode
+![Home - Light](screenshots/home-light.png)
 
-Build with `make build`, then run `./srv`. The server listens on port 8000 by default.
+### Dark Mode
+![Home - Dark](screenshots/home-dark.png)
 
-## Running as a systemd service
+![Resume](screenshots/resume-dark.png)
 
-To run the server as a systemd service:
+![Projects](screenshots/projects-dark.png)
+
+## Features
+
+- **Minimal design** — Clean typewriter aesthetic with IBM Plex Mono font
+- **Dark/light mode** — Toggle with system preference detection and persistence
+- **Responsive** — Works on desktop and mobile
+- **GitHub integration** — Automatically fetches and displays repositories
+- **Fast** — Server-side rendered with Go, styled with Tailwind CSS CDN
+
+## Pages
+
+- `/` — Home page with bio and links
+- `/resume` — Full resume with experience, education, and skills
+- `/showcase` — GitHub projects showcase with featured highlights
+
+## Tech Stack
+
+- **Backend:** Go
+- **Styling:** Tailwind CSS (CDN)
+- **Font:** IBM Plex Mono
+- **Database:** SQLite (for visitor tracking)
+- **Deployment:** systemd service
+
+## Development
 
 ```bash
-# Install the service file
-sudo cp srv.service /etc/systemd/system/srv.service
+# Build
+go build -o portfolio ./cmd/srv
 
-# Reload systemd and enable the service
+# Run locally
+./portfolio -listen :8000
+
+# Or with make
+make run
+```
+
+## Deployment
+
+The site runs as a systemd service:
+
+```bash
+# Install service
+sudo cp srv.service /etc/systemd/system/portfolio.service
 sudo systemctl daemon-reload
-sudo systemctl enable srv.service
+sudo systemctl enable portfolio
+sudo systemctl start portfolio
 
-# Start the service
-sudo systemctl start srv
-
-# Check status
-systemctl status srv
-
-# View logs
-journalctl -u srv -f
+# Manage
+sudo systemctl status portfolio
+sudo systemctl restart portfolio
+journalctl -u portfolio -f
 ```
 
-To restart after code changes:
+## Customization
+
+Edit the templates in `srv/templates/`:
+
+- `home.html` — Landing page content
+- `resume.html` — Resume details
+- `showcase.html` — Featured projects
+
+After changes, restart the service:
 
 ```bash
-make build
-sudo systemctl restart srv
+go build -o portfolio ./cmd/srv
+sudo systemctl restart portfolio
 ```
 
-## Authorization
+## License
 
-exe.dev provides authorization headers and login/logout links
-that this template uses.
-
-When proxied through exed, requests will include `X-ExeDev-UserID` and
-`X-ExeDev-Email` if the user is authenticated via exe.dev.
-
-## Database
-
-This template uses sqlite (`db.sqlite3`). SQL queries are managed with sqlc.
-
-## Code layout
-
-- `cmd/srv`: main package (binary entrypoint)
-- `srv`: HTTP server logic (handlers)
-- `srv/templates`: Go HTML templates
-- `db`: SQLite open + migrations (001-base.sql)
+MIT
