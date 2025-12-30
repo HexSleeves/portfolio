@@ -111,7 +111,11 @@ func (s *Server) fetchGitHubProjects() []Project {
 		slog.Warn("fetch github repos", "error", err)
 		return nil
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			slog.Warn("error closing response body", "error", closeErr)
+		}
+	}()
 
 	var projects []Project
 	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
@@ -135,7 +139,11 @@ func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to fetch repos", http.StatusInternalServerError)
 		return
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			slog.Warn("error closing response body", "error", closeErr)
+		}
+	}()
 
 	var projects []Project
 	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
@@ -145,7 +153,11 @@ func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(projects)
+	if err := json.NewEncoder(w).Encode(projects); err != nil {
+		slog.Warn("encode projects to json", "error", err)
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (s *Server) setUpDatabase(dbPath string) error {
@@ -167,6 +179,15 @@ func (s *Server) Serve(addr string) error {
 	mux.HandleFunc("GET /projects", s.HandleShowcase)
 	mux.HandleFunc("GET /api/projects", s.HandleAPIProjects)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(s.StaticDir))))
+
+	server := &http.Server{
+		Addr:         addr,
+		Handler:      mux,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
 	slog.Info("starting server", "addr", addr)
-	return http.ListenAndServe(addr, mux)
+	return server.ListenAndServe()
 }

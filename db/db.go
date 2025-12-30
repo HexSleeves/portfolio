@@ -69,7 +69,11 @@ func RunMigrations(db *sql.DB) error {
 		if err != nil {
 			return fmt.Errorf("query executed migrations: %w", err)
 		}
-		defer rows.Close()
+		defer func() {
+			if closeErr := rows.Close(); closeErr != nil {
+				slog.Error("error closing rows", "error", closeErr)
+			}
+		}()
 		for rows.Next() {
 			var n int
 			if err := rows.Scan(&n); err != nil {

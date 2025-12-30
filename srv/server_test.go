@@ -11,7 +11,7 @@ import (
 
 func TestServerSetupAndHandlers(t *testing.T) {
 	tempDB := filepath.Join(t.TempDir(), "test_server.sqlite3")
-	t.Cleanup(func() { os.Remove(tempDB) })
+	t.Cleanup(func() { _ = os.Remove(tempDB) })
 
 	server, err := New(tempDB, "test-hostname")
 	if err != nil {
@@ -72,7 +72,7 @@ func TestServerSetupAndHandlers(t *testing.T) {
 
 func TestAPIProjects(t *testing.T) {
 	tempDB := filepath.Join(t.TempDir(), "test_api.sqlite3")
-	t.Cleanup(func() { os.Remove(tempDB) })
+	t.Cleanup(func() { _ = os.Remove(tempDB) })
 
 	server, err := New(tempDB, "test-hostname")
 	if err != nil {
