@@ -2,9 +2,9 @@
 portfolio
 
 # Database
-*.db
-*.db-shm
-*.db-wal
+db.*sqlite3
+*-shm
+*-wal
 
 # IDE
 .idea/
