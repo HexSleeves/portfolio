@@ -51,7 +51,7 @@ jobs:
         run: go run ./cmd/build -out dist -github HexSleeves
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: build
           path: |
