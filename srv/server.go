@@ -104,34 +104,21 @@ func (s *Server) HandleShowcase(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) fetchGitHubProjects() []Project {
-	// Default projects - user can customize their GitHub username
-	// For now, return sample projects that can be replaced
-	return []Project{
-		{
-			Name:        "awesome-project",
-			Description: "A really awesome project I built",
-			URL:         "https://github.com/username/awesome-project",
-			Language:    "Go",
-			Stars:       42,
-			Forks:       5,
-		},
-		{
-			Name:        "web-app",
-			Description: "A modern web application",
-			URL:         "https://github.com/username/web-app",
-			Language:    "TypeScript",
-			Stars:       28,
-			Forks:       3,
-		},
-		{
-			Name:        "cli-tool",
-			Description: "A useful command-line tool",
-			URL:         "https://github.com/username/cli-tool",
-			Language:    "Rust",
-			Stars:       15,
-			Forks:       2,
-		},
+	// Fetch projects from GitHub for HexSleeves
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Get("https://api.github.com/users/HexSleeves/repos?sort=updated&per_page=12")
+	if err != nil {
+		slog.Warn("fetch github repos", "error", err)
+		return nil
 	}
+	defer resp.Body.Close()
+
+	var projects []Project
+	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
+		slog.Warn("decode github repos", "error", err)
+		return nil
+	}
+	return projects
 }
 
 func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
