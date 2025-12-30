@@ -39,14 +39,17 @@ A minimal, professional portfolio website built with Go and Tailwind CSS.
 ## Development
 
 ```bash
-# Build
-go build -o portfolio ./cmd/srv
+# Build server
+make build
 
 # Run locally
-./portfolio -listen :8000
-
-# Or with make
 make run
+
+# Build static site
+make static
+
+# Clean build artifacts
+make clean
 ```
 
 ## Deployment

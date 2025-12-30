@@ -1,6 +1,9 @@
 # Binary
 portfolio
 
+# Build output
+dist/
+
 # Database
 db.*sqlite3
 *-shm
