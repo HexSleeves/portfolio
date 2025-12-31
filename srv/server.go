@@ -19,7 +19,9 @@ type Server struct {
 	Hostname     string
 	TemplatesDir string
 	StaticDir    string
+	PostsDir     string
 	templates    *template.Template
+	logHandler   *BrowserLogHandler
 }
 
 type PageData struct {
@@ -42,10 +44,17 @@ type Project struct {
 func New(dbPath, hostname string) (*Server, error) {
 	_, thisFile, _, _ := runtime.Caller(0)
 	baseDir := filepath.Dir(thisFile)
+
+	// Set up browser log handler
+	logHandler := NewBrowserLogHandler(slog.Default().Handler())
+	slog.SetDefault(slog.New(logHandler))
+
 	srv := &Server{
 		Hostname:     hostname,
 		TemplatesDir: filepath.Join(baseDir, "templates"),
 		StaticDir:    filepath.Join(baseDir, "static"),
+		PostsDir:     filepath.Join(baseDir, "posts"),
+		logHandler:   logHandler,
 	}
 	if err := srv.loadTemplates(); err != nil {
 		return nil, err
@@ -126,6 +135,14 @@ func (s *Server) fetchGitHubProjects() []Project {
 	return projects
 }
 
+func (s *Server) HandleDevLogs(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := s.templates.ExecuteTemplate(w, "devlogs.html", nil); err != nil {
+		slog.Warn("render template", "url", r.URL.Path, "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
 func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	if username == "" {
@@ -178,7 +195,11 @@ func (s *Server) Serve(addr string) error {
 	mux.HandleFunc("GET /{$}", s.HandleHome)
 	mux.HandleFunc("GET /resume", s.HandleResume)
 	mux.HandleFunc("GET /projects", s.HandleShowcase)
+	mux.HandleFunc("GET /blog", s.HandleBlogList)
+	mux.HandleFunc("GET /blog/{slug}", s.HandleBlogPost)
 	mux.HandleFunc("GET /api/projects", s.HandleAPIProjects)
+	mux.Handle("GET /dev/logs", s.logHandler)
+	mux.HandleFunc("GET /dev", s.HandleDevLogs)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(s.StaticDir))))
 
 	server := &http.Server{

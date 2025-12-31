@@ -1,0 +1,39 @@
+---
+default: true
+
+# List indentation: 2 spaces
+MD007:
+  indent: 2
+
+# Line length
+MD013:
+  line_length: 119
+  heading_line_length: 119
+  code_block_line_length: 119
+  code_blocks: true
+  tables: false
+  headings: true
+  strict: false
+  stern: false
+
+# Allow duplicate headings under different parents
+MD024:
+  siblings_only: true
+
+# Disable first-line-heading - blogs use YAML frontmatter
+MD041: false
+
+# Allow inline HTML (for embeds, videos, etc.)
+MD033: false
+
+# Consistent emphasis style
+MD049:
+  style: asterisk
+MD050:
+  style: asterisk
+
+# Blank lines around lists (cleaner diffs)
+MD032: true
+
+# Files should end with newline
+MD047: true

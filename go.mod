@@ -2,7 +2,11 @@ module srv.exe.dev
 
 go 1.25.0
 
-require modernc.org/sqlite v1.42.2
+require (
+	github.com/gomarkdown/markdown v0.0.0-20250810172220-2e2c11897d1a
+	gopkg.in/yaml.v3 v3.0.1
+	modernc.org/sqlite v1.42.2
+)
 
 require (
 	cel.dev/expr v0.24.0 // indirect
@@ -51,7 +55,6 @@ require (
 	google.golang.org/grpc v1.75.0 // indirect
 	google.golang.org/protobuf v1.36.8 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/libc v1.66.10 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect

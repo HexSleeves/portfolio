@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dev Logs</title>
+    <style>
+        body { background: #1a1a1a; color: #0f0; font-family: monospace; padding: 1rem; margin: 0; }
+        #logs { white-space: pre-wrap; font-size: 14px; line-height: 1.4; }
+        .warn { color: #ff0; }
+        .error { color: #f00; }
+        .info { color: #0f0; }
+    </style>
+</head>
+<body>
+    <div id="logs"></div>
+    <script>
+        const logs = document.getElementById('logs');
+        const es = new EventSource('/dev/logs');
+        es.onmessage = (e) => {
+            const line = document.createElement('div');
+            line.textContent = e.data;
+            if (e.data.includes('[WARN]')) line.className = 'warn';
+            if (e.data.includes('[ERROR]')) line.className = 'error';
+            logs.appendChild(line);
+            window.scrollTo(0, document.body.scrollHeight);
+        };
+        es.onerror = () => {
+            const line = document.createElement('div');
+            line.textContent = '[disconnected]';
+            line.className = 'error';
+            logs.appendChild(line);
+        };
+    </script>
+</body>
+</html>
