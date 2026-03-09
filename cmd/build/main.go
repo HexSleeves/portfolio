@@ -18,8 +18,11 @@ import (
 )
 
 type PageData struct {
-	BasePath string
-	Projects []githubapi.Project
+	BasePath    string
+	CurrentPage string
+	Projects    []githubapi.Project
+	Info        string
+	Error       string
 }
 
 type BlogPageData struct {
@@ -52,23 +55,30 @@ func main() {
 
 	// Fetch GitHub projects
 	projects := fetchGitHubProjects(*githubUser)
-	data := PageData{
-		BasePath: base,
-		Projects: projects,
+	tmpl, err := loadTemplates(templatesDir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error loading templates: %v\n", err)
+		os.Exit(1)
 	}
 
 	// Pages to render
 	pages := []struct {
 		template string
 		output   string
+		page     string
 	}{
-		{"home.html", "index.html"},
-		{"resume.html", "resume/index.html"},
-		{"showcase.html", "projects/index.html"},
+		{"home.html", "index.html", "home"},
+		{"resume.html", "resume/index.html", "resume"},
+		{"showcase.html", "projects/index.html", "showcase"},
 	}
 
 	for _, page := range pages {
-		if err := renderTemplate(templatesDir, *outDir, page.template, page.output, data); err != nil {
+		data := PageData{
+			BasePath:    base,
+			CurrentPage: page.page,
+			Projects:    projects,
+		}
+		if err := renderTemplate(tmpl, *outDir, page.template, page.output, data); err != nil {
 			fmt.Fprintf(os.Stderr, "Error rendering %s: %v\n", page.template, err)
 			os.Exit(1)
 		}
@@ -82,10 +92,14 @@ func main() {
 	}
 
 	blogData := BlogPageData{
-		PageData: data,
-		Posts:    posts,
+		PageData: PageData{
+			BasePath:    base,
+			CurrentPage: "blog",
+			Projects:    projects,
+		},
+		Posts: posts,
 	}
-	if err := renderTemplate(templatesDir, *outDir, "blog.html", "blog/index.html", blogData); err != nil {
+	if err := renderTemplate(tmpl, *outDir, "blog.html", "blog/index.html", blogData); err != nil {
 		fmt.Fprintf(os.Stderr, "Error rendering blog index: %v\n", err)
 		os.Exit(1)
 	}
@@ -94,11 +108,15 @@ func main() {
 	for _, post := range posts {
 		post := post
 		postData := BlogPageData{
-			PageData: data,
-			Post:     &post,
+			PageData: PageData{
+				BasePath:    base,
+				CurrentPage: "blog",
+				Projects:    projects,
+			},
+			Post: &post,
 		}
 		outPath := filepath.Join("blog", post.Slug, "index.html")
-		if err := renderTemplate(templatesDir, *outDir, "blog_post.html", outPath, postData); err != nil {
+		if err := renderTemplate(tmpl, *outDir, "blog_post.html", outPath, postData); err != nil {
 			fmt.Fprintf(os.Stderr, "Error rendering blog post %s: %v\n", post.Slug, err)
 			os.Exit(1)
 		}
@@ -129,12 +147,11 @@ func fetchGitHubProjects(username string) []githubapi.Project {
 	return projects
 }
 
-func renderTemplate(templatesDir, outDir, templateName, outputPath string, data any) error {
-	tmpl, err := template.ParseFiles(filepath.Join(templatesDir, templateName))
-	if err != nil {
-		return err
-	}
+func loadTemplates(templatesDir string) (*template.Template, error) {
+	return template.ParseGlob(filepath.Join(templatesDir, "*.html"))
+}
 
+func renderTemplate(tmpl *template.Template, outDir, templateName, outputPath string, data any) error {
 	fullOutPath := filepath.Join(outDir, outputPath)
 	if err := os.MkdirAll(filepath.Dir(fullOutPath), 0o750); err != nil {
 		return err
@@ -146,7 +163,7 @@ func renderTemplate(templatesDir, outDir, templateName, outputPath string, data 
 	}
 	defer f.Close()
 
-	return tmpl.Execute(f, data)
+	return tmpl.ExecuteTemplate(f, templateName, data)
 }
 
 func copyDir(srcDir, dstDir string) error {

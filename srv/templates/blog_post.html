@@ -1,38 +1,10 @@
+{{define "blog_post.html"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Post.Title}} | Jacob LeCoq</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        paper: {
-                            50: '#fdfcfb',
-                            100: '#f5f3ef',
-                            200: '#e8e4dd',
-                            800: '#1c1c1c',
-                            900: '#141414',
-                        }
-                    },
-                    fontFamily: {
-                        mono: ['IBM Plex Mono', 'Courier Prime', 'Courier New', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    {{template "head_common" .}}
     <style>
-        * { font-family: 'IBM Plex Mono', monospace; }
-
-        /* Prose styling for blog content */
         .prose h1 { font-size: 1.5rem; font-weight: 500; margin-top: 2rem; margin-bottom: 1rem; }
         .prose h2 { font-size: 1.25rem; font-weight: 500; margin-top: 1.75rem; margin-bottom: 0.75rem; }
         .prose h3 { font-size: 1.1rem; font-weight: 500; margin-top: 1.5rem; margin-bottom: 0.5rem; }
@@ -54,22 +26,7 @@
     </style>
 </head>
 <body class="bg-paper-100 text-paper-900 dark:bg-paper-900 dark:text-paper-100 min-h-screen transition-colors duration-300">
-    <!-- Navbar -->
-    <nav class="border-b border-paper-200 dark:border-paper-800">
-        <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="{{.BasePath}}/" class="text-sm font-medium">jacob lecoq</a>
-            <div class="flex items-center gap-6">
-                <a href="{{.BasePath}}/" class="text-sm text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100">home</a>
-                <a href="{{.BasePath}}/resume" class="text-sm text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100">resume</a>
-                <a href="{{.BasePath}}/projects" class="text-sm text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100">projects</a>
-                <a href="{{.BasePath}}/blog" class="text-sm border-b border-current">blog</a>
-                <button onclick="toggleTheme()" class="text-sm text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100" aria-label="Toggle theme">
-                    <span class="dark:hidden">◐</span>
-                    <span class="hidden dark:inline">◑</span>
-                </button>
-            </div>
-        </div>
-    </nav>
+    {{template "navbar" .}}
 
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto px-6 py-16">
@@ -95,21 +52,8 @@
         </article>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-paper-200 dark:border-paper-800 mt-auto">
-        <div class="max-w-3xl mx-auto px-6 py-6">
-            <p class="text-xs text-paper-800/40 dark:text-paper-200/40">© 2024</p>
-        </div>
-    </footer>
-
-    <script>
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-        }
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
+    {{template "footer" .}}
+    {{template "theme_script" .}}
 </body>
 </html>
+{{end}}

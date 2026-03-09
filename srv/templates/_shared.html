@@ -1,0 +1,71 @@
+{{define "head_common"}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        paper: {
+                            50: '#fdfcfb',
+                            100: '#f5f3ef',
+                            200: '#e8e4dd',
+                            800: '#1c1c1c',
+                            900: '#141414',
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['IBM Plex Mono', 'Courier Prime', 'Courier New', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'IBM Plex Mono', monospace; }
+    </style>
+{{end}}
+
+{{define "navbar"}}
+    <nav class="border-b border-paper-200 dark:border-paper-800{{if eq .CurrentPage "resume"}} print:hidden{{end}}">
+        <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="{{.BasePath}}/" class="text-sm font-medium">jacob lecoq</a>
+            <div class="flex items-center gap-6">
+                <a href="{{.BasePath}}/" class="text-sm{{if eq .CurrentPage "home"}} border-b border-current{{else}} text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100{{end}}">home</a>
+                <a href="{{.BasePath}}/resume" class="text-sm{{if eq .CurrentPage "resume"}} border-b border-current{{else}} text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100{{end}}">resume</a>
+                <a href="{{.BasePath}}/projects" class="text-sm{{if eq .CurrentPage "showcase"}} border-b border-current{{else}} text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100{{end}}">projects</a>
+                <a href="{{.BasePath}}/blog" class="text-sm{{if eq .CurrentPage "blog"}} border-b border-current{{else}} text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100{{end}}">blog</a>
+                <button onclick="toggleTheme()" class="text-sm text-paper-800/60 dark:text-paper-200/60 hover:text-paper-900 dark:hover:text-paper-100" aria-label="Toggle theme">
+                    <span class="dark:hidden">◐</span>
+                    <span class="hidden dark:inline">◑</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+{{end}}
+
+{{define "footer"}}
+    <footer class="border-t border-paper-200 dark:border-paper-800 mt-auto{{if eq .CurrentPage "resume"}} print:hidden{{end}}">
+        <div class="max-w-3xl mx-auto px-6 py-6">
+            <p class="text-xs text-paper-800/40 dark:text-paper-200/40">© 2024</p>
+        </div>
+    </footer>
+{{end}}
+
+{{define "theme_script"}}
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+{{end}}

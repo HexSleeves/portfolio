@@ -33,23 +33,24 @@ func (s *Server) loadBlogPost(filename string) (*blog.Post, error) {
 
 func (s *Server) HandleBlogList(w http.ResponseWriter, r *http.Request) {
 	posts, err := s.loadBlogPosts()
+	status := http.StatusOK
+	errMsg := ""
 	if err != nil {
 		slog.Warn("load blog posts", "error", err)
+		status = http.StatusServiceUnavailable
+		errMsg = "Blog posts are temporarily unavailable. Please try again shortly."
 	}
 
 	data := BlogPageData{
 		PageData: PageData{
 			Hostname:    s.Hostname,
 			CurrentPage: "blog",
+			Error:       errMsg,
 		},
 		Posts: posts,
 	}
 
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := s.templates.ExecuteTemplate(w, "blog.html", data); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	s.renderTemplateWithStatus(w, r, "blog.html", status, data)
 }
 
 func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request) {

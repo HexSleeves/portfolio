@@ -3,17 +3,25 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"os"
 
 	"srv.exe.dev/srv"
 )
 
 var flagListenAddr = flag.String("listen", ":8000", "address to listen on")
+var runFn = run
 
 func main() {
-	if err := run(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+	os.Exit(runMain(os.Stderr))
+}
+
+func runMain(stderr io.Writer) int {
+	if err := runFn(); err != nil {
+		fmt.Fprintln(stderr, err)
+		return 1
 	}
+	return 0
 }
 
 func run() error {

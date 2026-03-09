@@ -129,7 +129,12 @@ func RenderMarkdown(data []byte) template.HTML {
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
 	p := parser.NewWithExtensions(extensions)
 
-	htmlFlags := mdhtml.CommonFlags | mdhtml.HrefTargetBlank
+	htmlFlags := mdhtml.CommonFlags |
+		mdhtml.SkipHTML |
+		mdhtml.Safelink |
+		mdhtml.NoreferrerLinks |
+		mdhtml.NoopenerLinks |
+		mdhtml.HrefTargetBlank
 	renderer := mdhtml.NewRenderer(mdhtml.RendererOptions{Flags: htmlFlags})
 	rendered := markdown.ToHTML(data, p, renderer)
 
