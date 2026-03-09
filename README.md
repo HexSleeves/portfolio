@@ -5,9 +5,11 @@ A minimal, professional portfolio website built with Go and Tailwind CSS.
 ## Screenshots
 
 ### Light Mode
+
 ![Home - Light](screenshots/home-light.png)
 
 ### Dark Mode
+
 ![Home - Dark](screenshots/home-dark.png)
 
 ![Resume](screenshots/resume-dark.png)
