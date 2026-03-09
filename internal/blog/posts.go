@@ -138,5 +138,6 @@ func RenderMarkdown(data []byte) template.HTML {
 	renderer := mdhtml.NewRenderer(mdhtml.RendererOptions{Flags: htmlFlags})
 	rendered := markdown.ToHTML(data, p, renderer)
 
+	// #nosec G203 -- raw HTML is skipped and unsafe links are stripped before marking the rendered output trusted.
 	return template.HTML(rendered)
 }

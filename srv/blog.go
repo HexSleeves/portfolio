@@ -27,7 +27,6 @@ func (s *Server) loadBlogPost(filename string) (*blog.Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	slog.Info("blog post", "file", filename, "published", post.Published)
 	return post, nil
 }
 
@@ -62,7 +61,7 @@ func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	post, err := s.loadBlogPost(slug + ".md")
 	if err != nil {
-		slog.Warn("load blog post", "slug", slug, "error", err)
+		slog.Warn("load blog post", "error", err)
 		http.NotFound(w, r)
 		return
 	}
@@ -81,7 +80,7 @@ func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := s.templates.ExecuteTemplate(w, "blog_post.html", data); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "error", err)
+		slog.Warn("render template", "template", "blog_post.html", "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }

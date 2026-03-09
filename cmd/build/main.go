@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -152,12 +153,20 @@ func loadTemplates(templatesDir string) (*template.Template, error) {
 }
 
 func renderTemplate(tmpl *template.Template, outDir, templateName, outputPath string, data any) error {
-	fullOutPath := filepath.Join(outDir, outputPath)
-	if err := os.MkdirAll(filepath.Dir(fullOutPath), 0o750); err != nil {
+	outRoot, err := os.OpenRoot(outDir)
+	if err != nil {
 		return err
 	}
+	defer outRoot.Close()
 
-	f, err := os.Create(fullOutPath)
+	parentDir := filepath.Dir(outputPath)
+	if parentDir != "." {
+		if err := outRoot.MkdirAll(parentDir, 0o750); err != nil {
+			return err
+		}
+	}
+
+	f, err := outRoot.Create(outputPath)
 	if err != nil {
 		return err
 	}
@@ -171,31 +180,43 @@ func copyDir(srcDir, dstDir string) error {
 		return err
 	}
 
-	return filepath.WalkDir(srcDir, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
+	srcRoot, err := os.OpenRoot(srcDir)
+	if err != nil {
+		return err
+	}
+	defer srcRoot.Close()
 
-		relPath, err := filepath.Rel(srcDir, path)
+	dstRoot, err := os.OpenRoot(dstDir)
+	if err != nil {
+		return err
+	}
+	defer dstRoot.Close()
+
+	return fs.WalkDir(srcRoot.FS(), ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		if relPath == "." {
+		if path == "." {
 			return nil
 		}
-
-		dstPath := filepath.Join(dstDir, relPath)
 		if d.IsDir() {
-			return os.MkdirAll(dstPath, 0o750)
+			return dstRoot.MkdirAll(path, 0o750)
 		}
 
-		srcFile, err := os.Open(path)
+		parentDir := filepath.Dir(path)
+		if parentDir != "." {
+			if err := dstRoot.MkdirAll(parentDir, 0o750); err != nil {
+				return err
+			}
+		}
+
+		srcFile, err := srcRoot.Open(path)
 		if err != nil {
 			return err
 		}
 		defer srcFile.Close()
 
-		dstFile, err := os.Create(dstPath)
+		dstFile, err := dstRoot.Create(path)
 		if err != nil {
 			return err
 		}

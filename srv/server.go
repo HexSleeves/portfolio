@@ -106,7 +106,7 @@ func (s *Server) renderTemplate(w http.ResponseWriter, r *http.Request, name str
 func (s *Server) renderTemplateWithStatus(w http.ResponseWriter, r *http.Request, name string, status int, data any) {
 	var buf bytes.Buffer
 	if err := s.templates.ExecuteTemplate(&buf, name, data); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "template", name, "error", err)
+		slog.Warn("render template", "template", name, "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -182,7 +182,7 @@ func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
 
 	projects, err := s.fetchProjects(r.Context(), username)
 	if err != nil {
-		slog.Warn("fetch github repos", "user", username, "error", err)
+		slog.Warn("fetch github repos", "error", err)
 		http.Error(w, "Failed to fetch repos", http.StatusInternalServerError)
 		return
 	}
