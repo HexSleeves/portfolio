@@ -1,12 +1,15 @@
 package srv
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"srv.exe.dev/internal/githubapi"
 )
 
 func TestServerSetupAndHandlers(t *testing.T) {
@@ -54,6 +57,12 @@ func TestServerSetupAndHandlers(t *testing.T) {
 	})
 
 	t.Run("showcase page", func(t *testing.T) {
+		server.fetchProjects = func(ctx context.Context, username string) ([]githubapi.Project, error) {
+			return []githubapi.Project{
+				{Name: "tailscale-mcp", URL: "https://github.com/HexSleeves/tailscale-mcp"},
+			}, nil
+		}
+
 		req := httptest.NewRequest(http.MethodGet, "/showcase", nil)
 		w := httptest.NewRecorder()
 
@@ -66,6 +75,9 @@ func TestServerSetupAndHandlers(t *testing.T) {
 		body := w.Body.String()
 		if !strings.Contains(body, "Projects") {
 			t.Errorf("expected page to contain Projects, got body: %s", body[:200])
+		}
+		if !strings.Contains(body, "tailscale-mcp") {
+			t.Errorf("expected page to contain stubbed project")
 		}
 	})
 }
@@ -91,6 +103,15 @@ func TestAPIProjects(t *testing.T) {
 	})
 
 	t.Run("with username", func(t *testing.T) {
+		server.fetchProjects = func(ctx context.Context, username string) ([]githubapi.Project, error) {
+			if username != "HexSleeves" {
+				t.Fatalf("expected username HexSleeves, got %s", username)
+			}
+			return []githubapi.Project{
+				{Name: "runeforge", URL: "https://github.com/HexSleeves/runeforge"},
+			}, nil
+		}
+
 		req := httptest.NewRequest(http.MethodGet, "/api/projects?username=HexSleeves", nil)
 		w := httptest.NewRecorder()
 
@@ -104,5 +125,41 @@ func TestAPIProjects(t *testing.T) {
 		if !strings.Contains(contentType, "application/json") {
 			t.Errorf("expected JSON content type, got %s", contentType)
 		}
+		if !strings.Contains(w.Body.String(), "runeforge") {
+			t.Errorf("expected JSON response to include stubbed repository")
+		}
 	})
+}
+
+func TestDraftBlogPostNotServed(t *testing.T) {
+	tempDB := filepath.Join(t.TempDir(), "test_blog.sqlite3")
+
+	server, err := New(tempDB, "test-hostname")
+	if err != nil {
+		t.Fatalf("failed to create server: %v", err)
+	}
+
+	postsDir := t.TempDir()
+	server.PostsDir = postsDir
+
+	draftPost := `---
+title: Draft Post
+date: 2026-01-01
+published: false
+---
+This should not be public.
+`
+	if err := os.WriteFile(filepath.Join(postsDir, "draft-post.md"), []byte(draftPost), 0o600); err != nil {
+		t.Fatalf("write draft post: %v", err)
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/blog/draft-post", nil)
+	req.SetPathValue("slug", "draft-post")
+	w := httptest.NewRecorder()
+
+	server.HandleBlogPost(w, req)
+
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("expected draft blog post to return 404, got %d", w.Code)
+	}
 }

@@ -1,44 +1,39 @@
 package srv
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
+	"os"
 	"path/filepath"
 	"runtime"
 	"time"
 
 	"srv.exe.dev/db"
+	"srv.exe.dev/internal/githubapi"
 )
 
 type Server struct {
-	DB           *sql.DB
-	Hostname     string
-	TemplatesDir string
-	StaticDir    string
-	PostsDir     string
-	templates    *template.Template
-	logHandler   *BrowserLogHandler
+	DB            *sql.DB
+	Hostname      string
+	TemplatesDir  string
+	StaticDir     string
+	PostsDir      string
+	templates     *template.Template
+	logHandler    *BrowserLogHandler
+	fetchProjects func(context.Context, string) ([]githubapi.Project, error)
+	githubUser    string
 }
 
 type PageData struct {
 	Hostname    string
 	CurrentPage string
 	BasePath    string
-	Projects    []Project
-}
-
-type Project struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	URL         string `json:"html_url"`
-	Language    string `json:"language"`
-	Stars       int    `json:"stargazers_count"`
-	Forks       int    `json:"forks_count"`
-	UpdatedAt   string `json:"updated_at"`
+	Projects    []githubapi.Project
 }
 
 func New(dbPath, hostname string) (*Server, error) {
@@ -46,8 +41,10 @@ func New(dbPath, hostname string) (*Server, error) {
 	baseDir := filepath.Dir(thisFile)
 
 	// Set up browser log handler
-	logHandler := NewBrowserLogHandler(slog.Default().Handler())
+	logHandler := NewBrowserLogHandler(slog.NewTextHandler(os.Stderr, nil))
 	slog.SetDefault(slog.New(logHandler))
+
+	httpClient := &http.Client{Timeout: 10 * time.Second}
 
 	srv := &Server{
 		Hostname:     hostname,
@@ -55,6 +52,10 @@ func New(dbPath, hostname string) (*Server, error) {
 		StaticDir:    filepath.Join(baseDir, "static"),
 		PostsDir:     filepath.Join(baseDir, "posts"),
 		logHandler:   logHandler,
+		githubUser:   "HexSleeves",
+	}
+	srv.fetchProjects = func(ctx context.Context, username string) ([]githubapi.Project, error) {
+		return githubapi.FetchProjects(ctx, httpClient, username, os.Getenv("GITHUB_TOKEN"))
 	}
 	if err := srv.loadTemplates(); err != nil {
 		return nil, err
@@ -75,16 +76,20 @@ func (s *Server) loadTemplates() error {
 	return nil
 }
 
+func (s *Server) renderTemplate(w http.ResponseWriter, r *http.Request, name string, data any) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := s.templates.ExecuteTemplate(w, name, data); err != nil {
+		slog.Warn("render template", "url", r.URL.Path, "template", name, "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
 func (s *Server) HandleHome(w http.ResponseWriter, r *http.Request) {
 	data := PageData{
 		Hostname:    s.Hostname,
 		CurrentPage: "home",
 	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := s.templates.ExecuteTemplate(w, "home.html", data); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	s.renderTemplate(w, r, "home.html", data)
 }
 
 func (s *Server) HandleResume(w http.ResponseWriter, r *http.Request) {
@@ -92,55 +97,24 @@ func (s *Server) HandleResume(w http.ResponseWriter, r *http.Request) {
 		Hostname:    s.Hostname,
 		CurrentPage: "resume",
 	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := s.templates.ExecuteTemplate(w, "resume.html", data); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	s.renderTemplate(w, r, "resume.html", data)
 }
 
 func (s *Server) HandleShowcase(w http.ResponseWriter, r *http.Request) {
-	projects := s.fetchGitHubProjects()
+	projects, err := s.fetchProjects(r.Context(), s.githubUser)
+	if err != nil {
+		slog.Warn("fetch github repos", "user", s.githubUser, "error", err)
+	}
 	data := PageData{
 		Hostname:    s.Hostname,
 		CurrentPage: "showcase",
 		Projects:    projects,
 	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := s.templates.ExecuteTemplate(w, "showcase.html", data); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
-}
-
-func (s *Server) fetchGitHubProjects() []Project {
-	// Fetch projects from GitHub for HexSleeves
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Get("https://api.github.com/users/HexSleeves/repos?sort=updated&per_page=12")
-	if err != nil {
-		slog.Warn("fetch github repos", "error", err)
-		return nil
-	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			slog.Warn("error closing response body", "error", closeErr)
-		}
-	}()
-
-	var projects []Project
-	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
-		slog.Warn("decode github repos", "error", err)
-		return nil
-	}
-	return projects
+	s.renderTemplate(w, r, "showcase.html", data)
 }
 
 func (s *Server) HandleDevLogs(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := s.templates.ExecuteTemplate(w, "devlogs.html", nil); err != nil {
-		slog.Warn("render template", "url", r.URL.Path, "error", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-	}
+	s.renderTemplate(w, r, "devlogs.html", nil)
 }
 
 func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
@@ -150,23 +124,10 @@ func (s *Server) HandleAPIProjects(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Get(fmt.Sprintf("https://api.github.com/users/%s/repos?sort=updated&per_page=12", username))
+	projects, err := s.fetchProjects(r.Context(), username)
 	if err != nil {
-		slog.Warn("fetch github repos", "error", err)
+		slog.Warn("fetch github repos", "user", username, "error", err)
 		http.Error(w, "Failed to fetch repos", http.StatusInternalServerError)
-		return
-	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			slog.Warn("error closing response body", "error", closeErr)
-		}
-	}()
-
-	var projects []Project
-	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
-		slog.Warn("decode github repos", "error", err)
-		http.Error(w, "Failed to parse repos", http.StatusInternalServerError)
 		return
 	}
 

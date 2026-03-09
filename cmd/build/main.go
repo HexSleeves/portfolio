@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
 	"flag"
 	"fmt"
 	"html/template"
@@ -12,20 +12,20 @@ import (
 	"runtime"
 	"strings"
 	"time"
-)
 
-type Project struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	URL         string `json:"html_url"`
-	Language    string `json:"language"`
-	Stars       int    `json:"stargazers_count"`
-	Forks       int    `json:"forks_count"`
-}
+	"srv.exe.dev/internal/blog"
+	"srv.exe.dev/internal/githubapi"
+)
 
 type PageData struct {
 	BasePath string
-	Projects []Project
+	Projects []githubapi.Project
+}
+
+type BlogPageData struct {
+	PageData
+	Posts []blog.Post
+	Post  *blog.Post
 }
 
 func main() {
@@ -41,24 +41,12 @@ func main() {
 	_, thisFile, _, _ := runtime.Caller(0)
 	baseDir := filepath.Dir(filepath.Dir(thisFile))
 	templatesDir := filepath.Join(baseDir, "..", "srv", "templates")
+	postsDir := filepath.Join(baseDir, "..", "srv", "posts")
+	staticDir := filepath.Join(baseDir, "..", "srv", "static")
 
 	// Create output directory first
 	if err := os.MkdirAll(*outDir, 0o750); err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating output dir: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Create output directory root for secure file operations
-	outRoot, err := os.OpenRoot(*outDir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating output root: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Create source directory roots for secure file operations
-	templatesRoot, err := os.OpenRoot(templatesDir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating templates root: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -80,57 +68,45 @@ func main() {
 	}
 
 	for _, page := range pages {
-		outPath := page.output
-
-		// Create subdirectory if needed
-		fullOutPath := filepath.Join(*outDir, page.output)
-		if err := os.MkdirAll(filepath.Dir(fullOutPath), 0o750); err != nil {
-			fmt.Fprintf(os.Stderr, "Error creating dir for %s: %v\n", page.output, err)
-			os.Exit(1)
-		}
-
-		// Parse and render template using root
-		tmplFile, err := templatesRoot.Open(page.template)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error opening template %s: %v\n", page.template, err)
-			os.Exit(1)
-		}
-
-		tmpl, err := template.ParseFiles(tmplFile.Name())
-		_ = tmplFile.Close()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing %s: %v\n", page.template, err)
-			os.Exit(1)
-		}
-
-		f, err := outRoot.Create(outPath)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error creating %s: %v\n", page.output, err)
-			os.Exit(1)
-		}
-
-		if err := tmpl.Execute(f, data); err != nil {
-			_ = f.Close() // ignore error since we're already failing
+		if err := renderTemplate(templatesDir, *outDir, page.template, page.output, data); err != nil {
 			fmt.Fprintf(os.Stderr, "Error rendering %s: %v\n", page.template, err)
 			os.Exit(1)
 		}
-		if err := f.Close(); err != nil {
-			fmt.Fprintf(os.Stderr, "Error closing %s: %v\n", page.output, err)
+		fmt.Printf("Generated %s\n", page.output)
+	}
+
+	posts, err := blog.LoadPosts(postsDir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error loading blog posts: %v\n", err)
+		os.Exit(1)
+	}
+
+	blogData := BlogPageData{
+		PageData: data,
+		Posts:    posts,
+	}
+	if err := renderTemplate(templatesDir, *outDir, "blog.html", "blog/index.html", blogData); err != nil {
+		fmt.Fprintf(os.Stderr, "Error rendering blog index: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("Generated blog/index.html")
+
+	for _, post := range posts {
+		post := post
+		postData := BlogPageData{
+			PageData: data,
+			Post:     &post,
+		}
+		outPath := filepath.Join("blog", post.Slug, "index.html")
+		if err := renderTemplate(templatesDir, *outDir, "blog_post.html", outPath, postData); err != nil {
+			fmt.Fprintf(os.Stderr, "Error rendering blog post %s: %v\n", post.Slug, err)
 			os.Exit(1)
 		}
-
 		fmt.Printf("Generated %s\n", outPath)
 	}
 
-	// Copy static files
-	staticDir := filepath.Join(baseDir, "..", "srv", "static")
-	staticRoot, err := os.OpenRoot(staticDir)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating static root: %v\n", err)
-		os.Exit(1)
-	}
-	outStaticDir := "static"
-	if err := copyDir(staticRoot, outRoot, staticDir, outStaticDir); err != nil {
+	outStaticDir := filepath.Join(*outDir, "static")
+	if err := copyDir(staticDir, outStaticDir); err != nil {
 		fmt.Fprintf(os.Stderr, "Error copying static files: %v\n", err)
 		os.Exit(1)
 	}
@@ -142,90 +118,73 @@ func main() {
 	fmt.Println("Build complete!")
 }
 
-func fetchGitHubProjects(username string) []Project {
+func fetchGitHubProjects(username string) []githubapi.Project {
 	client := &http.Client{Timeout: 10 * time.Second}
-	url := fmt.Sprintf("https://api.github.com/users/%s/repos?sort=updated&per_page=12", username)
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: Could not create request: %v\n", err)
-		return nil
-	}
-	req.Header.Set("Accept", "application/vnd.github.v3+json")
-	req.Header.Set("User-Agent", "portfolio-build")
-
-	// Use GITHUB_TOKEN if available (for higher rate limits)
-	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
-		req.Header.Set("Authorization", "token "+token)
-	}
-
-	resp, err := client.Do(req)
+	projects, err := githubapi.FetchProjects(context.Background(), client, username, os.Getenv("GITHUB_TOKEN"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Warning: Could not fetch GitHub repos: %v\n", err)
 		return nil
 	}
-	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			fmt.Fprintf(os.Stderr, "Warning: Error closing response body: %v\n", closeErr)
-		}
-	}()
-
-	if resp.StatusCode != http.StatusOK {
-		fmt.Fprintf(os.Stderr, "Warning: GitHub API returned status %d\n", resp.StatusCode)
-		return nil
-	}
-
-	var projects []Project
-	if err := json.NewDecoder(resp.Body).Decode(&projects); err != nil {
-		fmt.Fprintf(os.Stderr, "Warning: Could not parse GitHub repos: %v\n", err)
-		return nil
-	}
-
 	fmt.Printf("Fetched %d projects from GitHub\n", len(projects))
 	return projects
 }
 
-func copyDir(srcRoot, dstRoot *os.Root, srcDir, dstBase string) error {
-	// Create destination directory
-	if err := dstRoot.MkdirAll(dstBase, 0o750); err != nil {
-		return err
-	}
-
-	entries, err := os.ReadDir(srcDir)
+func renderTemplate(templatesDir, outDir, templateName, outputPath string, data any) error {
+	tmpl, err := template.ParseFiles(filepath.Join(templatesDir, templateName))
 	if err != nil {
 		return err
 	}
 
-	for _, entry := range entries {
-		srcPath := entry.Name()
-		dstPath := filepath.Join(dstBase, entry.Name())
-
-		if entry.IsDir() {
-			srcSubDir := filepath.Join(srcDir, srcPath)
-			if err := copyDir(srcRoot, dstRoot, srcSubDir, dstPath); err != nil {
-				return err
-			}
-		} else {
-			srcFile, err := srcRoot.Open(srcPath)
-			if err != nil {
-				return err
-			}
-			data, err := io.ReadAll(srcFile)
-			_ = srcFile.Close()
-			if err != nil {
-				return err
-			}
-
-			dstFile, err := dstRoot.Create(dstPath)
-			if err != nil {
-				return err
-			}
-			_, err = dstFile.Write(data)
-			_ = dstFile.Close()
-			if err != nil {
-				return err
-			}
-		}
+	fullOutPath := filepath.Join(outDir, outputPath)
+	if err := os.MkdirAll(filepath.Dir(fullOutPath), 0o750); err != nil {
+		return err
 	}
-	return nil
+
+	f, err := os.Create(fullOutPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return tmpl.Execute(f, data)
+}
+
+func copyDir(srcDir, dstDir string) error {
+	if err := os.MkdirAll(dstDir, 0o750); err != nil {
+		return err
+	}
+
+	return filepath.WalkDir(srcDir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		relPath, err := filepath.Rel(srcDir, path)
+		if err != nil {
+			return err
+		}
+		if relPath == "." {
+			return nil
+		}
+
+		dstPath := filepath.Join(dstDir, relPath)
+		if d.IsDir() {
+			return os.MkdirAll(dstPath, 0o750)
+		}
+
+		srcFile, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer srcFile.Close()
+
+		dstFile, err := os.Create(dstPath)
+		if err != nil {
+			return err
+		}
+		defer dstFile.Close()
+
+		_, err = io.Copy(dstFile, srcFile)
+		return err
+	})
 }
