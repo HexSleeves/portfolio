@@ -76,13 +76,17 @@ func (h *BrowserLogHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Send initial connection message
-	fmt.Fprintf(w, "data: [connected to log stream]\n\n")
+	if _, err := fmt.Fprintf(w, "data: [connected to log stream]\n\n"); err != nil {
+		return
+	}
 	flusher.Flush()
 
 	for {
 		select {
 		case msg := <-ch:
-			fmt.Fprintf(w, "data: %s\n\n", msg)
+			if _, err := fmt.Fprintf(w, "data: %s\n\n", msg); err != nil {
+				return
+			}
 			flusher.Flush()
 		case <-r.Context().Done():
 			return

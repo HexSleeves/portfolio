@@ -63,7 +63,7 @@ func LoadPost(postsDir, filename string) (*Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	data, err := io.ReadAll(file)
 	if err != nil {
@@ -84,7 +84,7 @@ func LoadPostFS(root fs.FS, filename string) (*Post, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	data, err := io.ReadAll(file)
 	if err != nil {

@@ -18,7 +18,7 @@ func main() {
 
 func runMain(stderr io.Writer) int {
 	if err := runFn(); err != nil {
-		fmt.Fprintln(stderr, err)
+		_, _ = fmt.Fprintln(stderr, err)
 		return 1
 	}
 	return 0

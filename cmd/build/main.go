@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"html/template"
@@ -152,12 +153,12 @@ func loadTemplates(templatesDir string) (*template.Template, error) {
 	return template.ParseGlob(filepath.Join(templatesDir, "*.html"))
 }
 
-func renderTemplate(tmpl *template.Template, outDir, templateName, outputPath string, data any) error {
+func renderTemplate(tmpl *template.Template, outDir, templateName, outputPath string, data any) (err error) {
 	outRoot, err := os.OpenRoot(outDir)
 	if err != nil {
 		return err
 	}
-	defer outRoot.Close()
+	defer closeAndJoin(&err, outRoot)
 
 	parentDir := filepath.Dir(outputPath)
 	if parentDir != "." {
@@ -170,12 +171,12 @@ func renderTemplate(tmpl *template.Template, outDir, templateName, outputPath st
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer closeAndJoin(&err, f)
 
 	return tmpl.ExecuteTemplate(f, templateName, data)
 }
 
-func copyDir(srcDir, dstDir string) error {
+func copyDir(srcDir, dstDir string) (err error) {
 	if err := os.MkdirAll(dstDir, 0o750); err != nil {
 		return err
 	}
@@ -184,13 +185,13 @@ func copyDir(srcDir, dstDir string) error {
 	if err != nil {
 		return err
 	}
-	defer srcRoot.Close()
+	defer closeAndJoin(&err, srcRoot)
 
 	dstRoot, err := os.OpenRoot(dstDir)
 	if err != nil {
 		return err
 	}
-	defer dstRoot.Close()
+	defer closeAndJoin(&err, dstRoot)
 
 	return fs.WalkDir(srcRoot.FS(), ".", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -214,15 +215,21 @@ func copyDir(srcDir, dstDir string) error {
 		if err != nil {
 			return err
 		}
-		defer srcFile.Close()
 
 		dstFile, err := dstRoot.Create(path)
 		if err != nil {
-			return err
+			return errors.Join(err, srcFile.Close())
 		}
-		defer dstFile.Close()
 
-		_, err = io.Copy(dstFile, srcFile)
-		return err
+		_, copyErr := io.Copy(dstFile, srcFile)
+		srcCloseErr := srcFile.Close()
+		dstCloseErr := dstFile.Close()
+		return errors.Join(copyErr, srcCloseErr, dstCloseErr)
 	})
+}
+
+func closeAndJoin(dst *error, closer io.Closer) {
+	if closeErr := closer.Close(); closeErr != nil {
+		*dst = errors.Join(*dst, closeErr)
+	}
 }
