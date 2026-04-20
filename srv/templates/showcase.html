@@ -13,76 +13,58 @@
         <!-- Header -->
         <section class="mb-12">
             <h1 class="text-2xl font-medium mb-2">Projects</h1>
-            <p class="text-sm text-paper-800/60 dark:text-paper-200/60">Things I've built in my free time</p>
+            <p class="text-sm text-paper-800/60 dark:text-paper-200/60">Pinned repositories from my GitHub profile</p>
             {{if .Info}}
-            <p class="mt-3 text-sm text-paper-800/60 dark:text-paper-200/60">{{.Info}}</p>
+            <p class="mt-3 text-xs text-paper-800/40 dark:text-paper-200/40">{{.Info}}</p>
             {{end}}
             {{if .Error}}
             <p class="mt-4 rounded border border-amber-500/40 bg-amber-100/80 px-3 py-2 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-100">{{.Error}}</p>
             {{end}}
         </section>
 
-        <!-- Featured -->
+        <!-- Pinned Projects -->
+        {{if .Projects}}
         <section class="mb-16">
-            <h2 class="text-sm font-medium mb-8 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Featured</h2>
+            <h2 class="text-sm font-medium mb-8 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">Pinned</h2>
 
             <div class="space-y-8">
+                {{range .Projects}}
                 <article class="border-b border-paper-200 dark:border-paper-800 pb-8">
                     <div class="flex justify-between items-baseline mb-2">
-                        <h3 class="font-medium">tailscale-mcp</h3>
-                        <span class="text-xs text-paper-800/60 dark:text-paper-200/60">TypeScript</span>
+                        <h3 class="font-medium">{{.Name}}</h3>
+                        {{if .Language}}<span class="text-xs text-paper-800/60 dark:text-paper-200/60">{{.Language}}</span>{{end}}
                     </div>
-                    <p class="text-sm text-paper-800/80 dark:text-paper-200/80 mb-3">
-                        MCP server for Tailscale integration. Provides seamless access to Tailscale's CLI and REST API for automated network management.
-                    </p>
-                    <a href="https://github.com/HexSleeves/tailscale-mcp" target="_blank" class="text-sm hover:underline">→ view on github</a>
-                </article>
-
-                <article class="border-b border-paper-200 dark:border-paper-800 pb-8">
-                    <div class="flex justify-between items-baseline mb-2">
-                        <h3 class="font-medium">runeforge</h3>
-                        <span class="text-xs text-paper-800/60 dark:text-paper-200/60">Rust</span>
+                    {{if .Description}}
+                    <p class="text-sm text-paper-800/80 dark:text-paper-200/80 mb-3">{{.Description}}</p>
+                    {{end}}
+                    {{if .Topics}}
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        {{range .Topics}}
+                        <span class="text-xs px-2 py-0.5 bg-paper-200 dark:bg-paper-800 rounded">{{.}}</span>
+                        {{end}}
                     </div>
-                    <p class="text-sm text-paper-800/80 dark:text-paper-200/80 mb-3">
-                        A roguelike game built in Rust. Exploring procedural generation, ECS architecture, and terminal rendering.
-                    </p>
-                    <a href="https://github.com/HexSleeves/runeforge" target="_blank" class="text-sm hover:underline">→ view on github</a>
-                </article>
-
-                <article class="border-b border-paper-200 dark:border-paper-800 pb-8">
-                    <div class="flex justify-between items-baseline mb-2">
-                        <h3 class="font-medium">bones</h3>
-                        <span class="text-xs text-paper-800/60 dark:text-paper-200/60">Rust</span>
+                    {{end}}
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-1">
+                        <a href="{{.URL}}" target="_blank" rel="noopener noreferrer" class="text-sm hover:underline">→ github</a>
+                        {{if .HomepageURL}}<a href="{{.HomepageURL}}" target="_blank" rel="noopener noreferrer" class="text-sm hover:underline">→ demo</a>{{end}}
+                        {{if .Stars}}<span class="text-xs text-paper-800/50 dark:text-paper-200/50">★ {{.Stars}}</span>{{end}}
+                        {{if .Forks}}<span class="text-xs text-paper-800/50 dark:text-paper-200/50">⑂ {{.Forks}}</span>{{end}}
                     </div>
-                    <p class="text-sm text-paper-800/80 dark:text-paper-200/80 mb-3">
-                        Work-in-progress opinionated game framework built on Bevy.
-                    </p>
-                    <a href="https://github.com/HexSleeves/bones" target="_blank" class="text-sm hover:underline">→ view on github</a>
                 </article>
+                {{end}}
             </div>
         </section>
+        {{else}}
+        <section class="mb-16">
+            <p class="text-sm text-paper-800/60 dark:text-paper-200/60">No pinned repositories to show yet.</p>
+        </section>
+        {{end}}
 
-        <!-- All Projects -->
+        <!-- GitHub link -->
         <section>
-            <h2 class="text-sm font-medium mb-8 text-paper-800/60 dark:text-paper-200/60 uppercase tracking-wide">All Repositories</h2>
-
-            <div class="space-y-4" id="projectsGrid">
-                {{range .Projects}}
-                <div class="flex justify-between items-baseline py-2 border-b border-paper-200/50 dark:border-paper-800/50">
-                    <div class="flex-1 min-w-0">
-                        <a href="{{.URL}}" target="_blank" class="font-medium hover:underline">{{.Name}}</a>
-                        {{if .Description}}<p class="text-xs text-paper-800/60 dark:text-paper-200/60 truncate">{{.Description}}</p>{{end}}
-                    </div>
-                    <div class="flex items-center gap-4 ml-4 text-xs text-paper-800/60 dark:text-paper-200/60">
-                        {{if .Language}}<span>{{.Language}}</span>{{end}}
-                        {{if .Stars}}<span>★ {{.Stars}}</span>{{end}}
-                    </div>
-                </div>
-                {{end}}
-                {{if and (not .Projects) (not .Error)}}
-                <p class="text-sm text-paper-800/60 dark:text-paper-200/60">No repositories to show yet.</p>
-                {{end}}
-            </div>
+            <p class="text-sm text-paper-800/60 dark:text-paper-200/60">
+                See all repositories on <a href="https://github.com/HexSleeves" target="_blank" rel="noopener noreferrer" class="hover:underline">github.com/HexSleeves</a>.
+            </p>
         </section>
     </main>
 

@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-paper-50: #fdfcfb;
+  --color-paper-100: #f5f3ef;
+  --color-paper-200: #e8e4dd;
+  --color-paper-800: #1c1c1c;
+  --color-paper-900: #141414;
+
+  --font-family-mono: 'IBM Plex Mono', 'Courier Prime', 'Courier New', monospace;
+}
+
+@layer base {
+  * {
+    font-family: var(--font-family-mono);
+  }
+}

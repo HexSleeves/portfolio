@@ -18,7 +18,14 @@ import (
 
 	"srv.exe.dev/db"
 	"srv.exe.dev/internal/githubapi"
+	"srv.exe.dev/internal/pagedata"
 )
+
+// PageData is a convenience alias so existing code in this package compiles.
+type PageData = pagedata.PageData
+
+// BlogPageData is a convenience alias for the blog handler.
+type BlogPageData = pagedata.BlogPageData
 
 type Server struct {
 	DB            *sql.DB
@@ -35,15 +42,6 @@ type Server struct {
 }
 
 const projectsCacheTTL = 15 * time.Minute
-
-type PageData struct {
-	Hostname    string
-	CurrentPage string
-	BasePath    string
-	Projects    []githubapi.Project
-	Info        string
-	Error       string
-}
 
 type projectCache struct {
 	mu        sync.RWMutex
@@ -115,19 +113,24 @@ func (s *Server) renderTemplateWithStatus(w http.ResponseWriter, r *http.Request
 	_, _ = w.Write(buf.Bytes())
 }
 
+func (s *Server) newPage(currentPage string) PageData {
+	pd := pagedata.NewPageData(currentPage, "")
+	pd.Hostname = s.Hostname
+	return pd
+}
+
 func (s *Server) HandleHome(w http.ResponseWriter, r *http.Request) {
-	data := PageData{
-		Hostname:    s.Hostname,
-		CurrentPage: "home",
-	}
+	data := s.newPage("home")
+	data.OGTitle = "Jacob LeCoq — Senior Software Engineer"
+	data.MetaDescription = "Senior Software Engineer with 8 years of full-stack experience building scalable web applications and high-throughput backend services. Expert in Node.js, TypeScript, Go, and AWS."
 	s.renderTemplate(w, r, "home.html", data)
 }
 
 func (s *Server) HandleResume(w http.ResponseWriter, r *http.Request) {
-	data := PageData{
-		Hostname:    s.Hostname,
-		CurrentPage: "resume",
-	}
+	data := s.newPage("resume")
+	data.OGTitle = "Resume — Jacob LeCoq"
+	data.MetaDescription = "Resume of Jacob LeCoq, Senior Software Engineer with 8 years of full-stack experience."
+	data.OGPath = "/resume"
 	s.renderTemplate(w, r, "resume.html", data)
 }
 
@@ -159,13 +162,13 @@ func (s *Server) HandleShowcase(w http.ResponseWriter, r *http.Request) {
 			errMsg = "Projects are temporarily unavailable. Please try again shortly."
 		}
 	}
-	data := PageData{
-		Hostname:    s.Hostname,
-		CurrentPage: "showcase",
-		Projects:    result.projects,
-		Info:        infoMsg,
-		Error:       errMsg,
-	}
+	data := s.newPage("showcase")
+	data.Projects = result.projects
+	data.Info = infoMsg
+	data.Error = errMsg
+	data.OGTitle = "Projects — Jacob LeCoq"
+	data.MetaDescription = "Open-source projects and repositories by Jacob LeCoq, including tailscale-mcp, runeforge, and more."
+	data.OGPath = "/projects"
 	s.renderTemplateWithStatus(w, r, "showcase.html", status, data)
 }
 

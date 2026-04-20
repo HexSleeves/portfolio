@@ -1,18 +1,14 @@
 package srv
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
 
 	"srv.exe.dev/internal/blog"
+	"srv.exe.dev/internal/pagedata"
 )
-
-type BlogPageData struct {
-	PageData
-	Posts []blog.Post
-	Post  *blog.Post
-}
 
 func (s *Server) loadBlogPosts() ([]blog.Post, error) {
 	posts, err := blog.LoadPosts(s.PostsDir)
@@ -40,13 +36,15 @@ func (s *Server) HandleBlogList(w http.ResponseWriter, r *http.Request) {
 		errMsg = "Blog posts are temporarily unavailable. Please try again shortly."
 	}
 
-	data := BlogPageData{
-		PageData: PageData{
-			Hostname:    s.Hostname,
-			CurrentPage: "blog",
-			Error:       errMsg,
-		},
-		Posts: posts,
+	pd := s.newPage("blog")
+	pd.Error = errMsg
+	pd.OGTitle = "Blog — Jacob LeCoq"
+	pd.MetaDescription = "Writing on software engineering, systems programming, Go, Rust, and developer tooling."
+	pd.OGPath = "/blog"
+
+	data := pagedata.BlogPageData{
+		PageData: pd,
+		Posts:    posts,
 	}
 
 	s.renderTemplateWithStatus(w, r, "blog.html", status, data)
@@ -70,12 +68,17 @@ func (s *Server) HandleBlogPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := BlogPageData{
-		PageData: PageData{
-			Hostname:    s.Hostname,
-			CurrentPage: "blog",
-		},
-		Post: post,
+	pd := s.newPage("blog")
+	pd.OGTitle = fmt.Sprintf("%s — Jacob LeCoq", post.Title)
+	pd.OGType = "article"
+	pd.OGPath = fmt.Sprintf("/blog/%s", slug)
+	if post.Description != "" {
+		pd.MetaDescription = post.Description
+	}
+
+	data := pagedata.BlogPageData{
+		PageData: pd,
+		Post:     post,
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

@@ -7,6 +7,9 @@ DIST_DIR ?= dist
 RELEASE_BIN_DIR ?= $(DIST_DIR)/bin
 GITHUB_USER ?= HexSleeves
 PAGES_BASE ?= /portfolio
+TAILWIND_BIN ?= ./tailwindcss
+TAILWIND_INPUT ?= tailwind.css
+TAILWIND_OUTPUT ?= srv/static/css/styles.css
 GOLANGCI_LINT_VERSION ?= v2.11.3
 GOLANGCI_LINT ?= $(GO) run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
 GOVULNCHECK ?= $(if $(shell command -v govulncheck 2>/dev/null),govulncheck,$(GO) run golang.org/x/vuln/cmd/govulncheck@latest)
@@ -18,13 +21,14 @@ GOFILES := $(shell find . -type f -name '*.go' -not -path './.git/*' -not -path 
 .PHONY: test test-race coverage
 .PHONY: fmt fmt-check tidy tidy-check
 .PHONY: lint vulncheck gosec security
-.PHONY: static pages-build release-build
+.PHONY: css static pages-build release-build
 .PHONY: ci checks
 
 help:
 	@echo "Usage: make <target>"
 	@echo ""
 	@echo "App targets:"
+	@echo "  css           Compile Tailwind CSS to $(TAILWIND_OUTPUT)"
 	@echo "  build         Build the server binary"
 	@echo "  run           Build and run the server"
 	@echo "  restart       Rebuild and restart the server in the background"
@@ -96,10 +100,13 @@ gosec:
 
 security: vulncheck gosec
 
-static:
+css:
+	$(TAILWIND_BIN) --input $(TAILWIND_INPUT) --output $(TAILWIND_OUTPUT) --content 'srv/templates/**/*.html' --minify
+
+static: css
 	$(GO) run ./cmd/build -out $(DIST_DIR) -github $(GITHUB_USER)
 
-pages-build:
+pages-build: css
 	$(GO) run ./cmd/build -out $(DIST_DIR) -github $(GITHUB_USER) -base $(PAGES_BASE)
 
 release-build:
