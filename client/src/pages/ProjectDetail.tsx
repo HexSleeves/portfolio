@@ -30,7 +30,7 @@ export default function ProjectDetail() {
         <div className="container max-w-3xl">
           {/* Back */}
           <Link
-            href="/#projects"
+            href="/projects"
             className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
             style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "oklch(0.82 0.15 200)")}

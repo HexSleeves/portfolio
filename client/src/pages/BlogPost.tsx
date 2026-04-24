@@ -39,7 +39,7 @@ export default function BlogPost() {
         <div className="container max-w-2xl">
           {/* Back */}
           <Link
-            href="/#blog"
+            href="/blog"
             className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
             style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "oklch(0.82 0.15 200)")}
@@ -150,7 +150,7 @@ export default function BlogPost() {
                 Get in touch
               </a>
               <Link
-                href="/#blog"
+                href="/blog"
                 className="px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200"
                 style={{
                   background: "transparent",
