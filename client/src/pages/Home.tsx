@@ -1,25 +1,26 @@
-import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
+// Terminal Noir — Home Page
+// Assembles all portfolio sections in order
 
-/**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Best Practices, Design Guide and Common Pitfalls
- */
+import Navigation from "@/components/Navigation";
+import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/AboutSection";
+import ProjectsSection from "@/components/ProjectsSection";
+import SkillsSection from "@/components/SkillsSection";
+import ExperienceSection from "@/components/ExperienceSection";
+import BlogSection from "@/components/BlogSection";
+import ContactSection from "@/components/ContactSection";
+
 export default function Home() {
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
-
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
+    <div className="min-h-screen" style={{ background: "oklch(0.085 0.012 265)" }}>
+      <Navigation />
+      <HeroSection />
+      <AboutSection />
+      <ProjectsSection />
+      <SkillsSection />
+      <ExperienceSection />
+      <BlogSection />
+      <ContactSection />
     </div>
   );
 }
