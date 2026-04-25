@@ -1,10 +1,19 @@
 // Terminal Noir — Blog Post Detail Page
+// Renders markdown content from .md files using react-markdown + rehype-highlight.
+// Only published posts are accessible; drafts (published: false) return a 404.
 
 import { useParams, Link } from "wouter";
-import { blogPosts } from "@/lib/data";
-import Navigation from "@/components/Navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
-import { Streamdown } from "streamdown";
+import Navigation from "@/components/Navigation";
+import { getPublishedPost } from "@/lib/blog";
+
+// Dark syntax highlighting theme matching Terminal Noir
+import "highlight.js/styles/github-dark.css";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -16,17 +25,35 @@ function formatDate(dateStr: string) {
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = getPublishedPost(slug ?? "");
 
   if (!post) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "oklch(0.085 0.012 265)" }}>
-        <div className="text-center">
-          <p className="font-mono text-cyan-400 mb-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>404</p>
-          <Link href="/" className="text-slate-400 hover:text-slate-100 transition-colors text-sm">
-            ← Back to portfolio
-          </Link>
-        </div>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center gap-4"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
+        <Navigation />
+        <p
+          className="text-5xl font-bold mt-20"
+          style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.82 0.15 200)" }}
+        >
+          404
+        </p>
+        <p
+          className="text-sm"
+          style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}
+        >
+          Post not found or not yet published.
+        </p>
+        <Link href="/blog">
+          <span
+            className="text-sm transition-colors cursor-pointer"
+            style={{ color: "oklch(0.82 0.15 200)", fontFamily: "'Inter', sans-serif" }}
+          >
+            ← Back to blog
+          </span>
+        </Link>
       </div>
     );
   }
@@ -35,25 +62,30 @@ export default function BlogPost() {
     <div className="min-h-screen" style={{ background: "oklch(0.085 0.012 265)" }}>
       <Navigation />
 
-      <main className="pt-24 pb-16">
-        <div className="container max-w-2xl">
+      <main className="pt-24 pb-20">
+        <div className="container max-w-3xl">
           {/* Back */}
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 text-sm mb-8 transition-colors"
-            style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "oklch(0.82 0.15 200)")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "oklch(0.52 0.015 250)")}
-          >
-            <ArrowLeft size={14} />
-            Back to writing
+          <Link href="/blog">
+            <span
+              className="inline-flex items-center gap-2 text-sm mb-10 transition-colors cursor-pointer"
+              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
+              onMouseEnter={(e) =>
+                ((e.currentTarget as HTMLElement).style.color = "oklch(0.82 0.15 200)")
+              }
+              onMouseLeave={(e) =>
+                ((e.currentTarget as HTMLElement).style.color = "oklch(0.52 0.015 250)")
+              }
+            >
+              <ArrowLeft size={14} />
+              Back to writing
+            </span>
           </Link>
 
           {/* Header */}
-          <div className="mb-8">
-            <div className="flex flex-wrap items-center gap-2 mb-4">
+          <header className="mb-10">
+            <div className="mb-4">
               <span
-                className="px-2 py-0.5 rounded-full text-xs"
+                className="px-3 py-1 rounded-full text-xs"
                 style={{
                   background: "oklch(0.82 0.15 200 / 10%)",
                   color: "oklch(0.82 0.15 200)",
@@ -65,26 +97,31 @@ export default function BlogPost() {
             </div>
 
             <h1
-              className="font-display font-bold text-3xl lg:text-4xl mb-4 leading-tight"
+              className="font-display font-bold text-3xl lg:text-4xl leading-tight mb-4"
               style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.94 0.005 240)" }}
             >
               {post.title}
             </h1>
 
             <p
-              className="text-lg leading-relaxed mb-6"
-              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
+              className="text-base leading-relaxed mb-6"
+              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.65 0.01 240)" }}
             >
               {post.summary}
             </p>
 
-            {/* Meta */}
-            <div className="flex flex-wrap items-center gap-4">
+            <div
+              className="flex flex-wrap items-center gap-5 pb-6 border-b"
+              style={{ borderColor: "oklch(1 0 0 / 8%)" }}
+            >
               <div className="flex items-center gap-1.5">
                 <Calendar size={13} style={{ color: "oklch(0.52 0.015 250)" }} />
                 <span
-                  className="text-xs"
-                  style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}
+                  className="text-sm"
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    color: "oklch(0.52 0.015 250)",
+                  }}
                 >
                   {formatDate(post.date)}
                 </span>
@@ -92,45 +129,52 @@ export default function BlogPost() {
               <div className="flex items-center gap-1.5">
                 <Clock size={13} style={{ color: "oklch(0.52 0.015 250)" }} />
                 <span
-                  className="text-xs"
-                  style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}
+                  className="text-sm"
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    color: "oklch(0.52 0.015 250)",
+                  }}
                 >
                   {post.readTime}
                 </span>
               </div>
+              {post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
+                      style={{
+                        background: "oklch(0.16 0.012 265)",
+                        color: "oklch(0.52 0.015 250)",
+                        fontFamily: "'JetBrains Mono', monospace",
+                      }}
+                    >
+                      <Tag size={8} />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
+          </header>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 mt-4">
-              {post.tags.map((tag) => (
-                <span key={tag} className="skill-tag text-xs">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="h-px mb-8" style={{ background: "oklch(1 0 0 / 8%)" }} />
-
-          {/* Content */}
-          <div
-            className="prose prose-invert max-w-none"
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              color: "oklch(0.75 0.01 240)",
-              lineHeight: "1.8",
-            }}
-          >
-            <Streamdown
-              className="blog-content"
+          {/* Markdown body */}
+          <article className="blog-prose">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[
+                rehypeSlug,
+                [rehypeAutolinkHeadings, { behavior: "wrap" }],
+                rehypeHighlight,
+              ]}
             >
               {post.content}
-            </Streamdown>
-          </div>
+            </ReactMarkdown>
+          </article>
 
-          {/* Footer CTA */}
-          <div className="mt-12 pt-8 border-t" style={{ borderColor: "oklch(1 0 0 / 8%)" }}>
+          {/* Footer */}
+          <div className="mt-16 pt-8 border-t" style={{ borderColor: "oklch(1 0 0 / 8%)" }}>
             <p
               className="text-sm mb-4"
               style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
@@ -149,17 +193,18 @@ export default function BlogPost() {
               >
                 Get in touch
               </a>
-              <Link
-                href="/blog"
-                className="px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200"
-                style={{
-                  background: "transparent",
-                  borderColor: "oklch(1 0 0 / 8%)",
-                  color: "oklch(0.52 0.015 250)",
-                  fontFamily: "'Inter', sans-serif",
-                }}
-              >
-                More articles
+              <Link href="/blog">
+                <span
+                  className="px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 cursor-pointer"
+                  style={{
+                    background: "transparent",
+                    borderColor: "oklch(1 0 0 / 8%)",
+                    color: "oklch(0.52 0.015 250)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  More articles
+                </span>
               </Link>
             </div>
           </div>
