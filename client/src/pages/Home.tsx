@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Github, Star, Lock, ExternalLink, Calendar, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
+import ContactSection from "@/components/ContactSection";
 import { projects, blogPosts, skillCategories, stats } from "@/lib/data";
 
 // ─── Typewriter hook ─────────────────────────────────────────
@@ -404,8 +405,7 @@ export default function Home() {
       <FeaturedProjects />
       <SkillsSnapshot />
       <LatestPost />
-      <ContactCTA />
-      <Footer />
+      <ContactSection />
     </PageLayout>
   );
 }
