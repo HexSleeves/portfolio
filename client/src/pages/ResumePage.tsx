@@ -104,7 +104,7 @@ function Education() {
       <div className="flex items-center gap-1.5">
         <MapPin size={11} style={{ color: "oklch(0.52 0.015 250)" }} />
         <span className="text-xs" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}>
-          Lafayette, LA · 2013 – 2017
+          Lafayette, LA · 2016
         </span>
       </div>
     </div>
@@ -125,25 +125,28 @@ export default function ResumePage() {
             </h1>
             <p className="mt-3 text-base max-w-xl"
               style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}>
-              8+ years building production software across enterprise platforms, genomics infrastructure, and AI tooling.
+              Senior Software Engineer with deep experience in full-stack, DevOps, and platform engineering. Drove delivery of CI/CD standards, integrated AI tooling, and optimized AWS infrastructure across enterprise commerce and genomics platforms.
             </p>
           </div>
           <a
-            href="mailto:lecoqjacob@gmail.com?subject=Resume Request"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium border transition-all duration-200"
+            href="/manus-storage/Jacob-LeCoq-Resume_8c936ce0.pdf"
+            download="Jacob-LeCoq-Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-medium transition-all duration-200"
             style={{
               fontFamily: "'Inter', sans-serif",
-              borderColor: "oklch(0.82 0.15 200 / 40%)",
-              color: "oklch(0.82 0.15 200)",
+              background: "oklch(0.82 0.15 200)",
+              color: "oklch(0.085 0.012 265)",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "oklch(0.82 0.15 200 / 10%)";
+              (e.currentTarget as HTMLElement).style.background = "oklch(0.72 0.15 200)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = "transparent";
+              (e.currentTarget as HTMLElement).style.background = "oklch(0.82 0.15 200)";
             }}
           >
-            <Download size={14} /> Request Resume PDF
+            <Download size={14} /> Download PDF
           </a>
         </div>
 

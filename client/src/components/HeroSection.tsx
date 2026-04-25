@@ -140,9 +140,7 @@ export default function HeroSection() {
               color: "oklch(0.52 0.015 250)",
             }}
           >
-            I build cloud-scale platforms, AI agent systems, and developer
-            tooling that teams actually want to use. 8+ years shipping
-            production software at Bayer, DNAnexus, and beyond.
+            Senior Software Engineer with 8+ years shipping production software across enterprise commerce, genomics infrastructure, and AI tooling. Currently at Dexian (Bayer) driving CI/CD standards, AI agent workflows, and platform modernization.
           </p>
 
           {/* CTAs */}
@@ -166,16 +164,24 @@ export default function HeroSection() {
               View My Work
               <ArrowRight size={16} />
             </button>
-            <button
-              onClick={() => {
-                const el = document.getElementById("contact");
-                el?.scrollIntoView({ behavior: "smooth" });
-              }}
+            <a
+              href="/about"
               className="flex items-center gap-2 px-6 py-3 rounded-md font-medium text-sm border border-white/10 text-slate-300 hover:border-white/20 hover:text-white transition-all duration-200"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Get In Touch
-            </button>
+              About Me
+            </a>
+            <a
+              href="/manus-storage/Jacob-LeCoq-Resume_8c936ce0.pdf"
+              download="Jacob-LeCoq-Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-3 rounded-md text-sm text-slate-400 hover:text-slate-100 transition-colors"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              <Download size={16} />
+              Resume
+            </a>
             <a
               href="https://github.com/HexSleeves"
               target="_blank"

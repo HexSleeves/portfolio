@@ -60,18 +60,19 @@ export default function AboutSection() {
               }}
             >
               <p>
-                I'm a Senior Software Engineer based in Lafayette, LA with 8+
+                I'm a Senior Software Engineer based in Youngsville, LA with 8+
                 years of experience building full-stack systems, cloud
                 infrastructure, and AI-powered tooling for enterprise platforms.
                 My work spans everything from React frontends and NestJS APIs to
                 AWS infrastructure automation and multi-agent AI orchestration.
               </p>
               <p>
-                At Bayer, I've led platform modernization efforts, defined CI/CD
-                standards across multiple teams, and built AI agent workflows
-                that cut manual engineering time in half. At DNAnexus, I
-                optimized AWS infrastructure to save $30K annually while
-                improving throughput for genomics workloads.
+                Currently at Dexian (Bayer), I lead full-stack delivery across
+                commerce platforms, define CI/CD standards with GitHub Actions
+                and Docker, and build AI agent workflows that cut manual
+                engineering time by roughly half. Previously at DNAnexus, I
+                reduced AWS spend by $30K annually through cluster optimization
+                and Spot Instance orchestration.
               </p>
               <p>
                 Outside of work, I build open-source tools — including{" "}
@@ -111,7 +112,7 @@ export default function AboutSection() {
                     color: "oklch(0.52 0.015 250)",
                   }}
                 >
-                  Lafayette, LA (Open to remote)
+                  Youngsville, LA (Open to remote)
                 </span>
               </div>
               <div className="flex items-center gap-3">

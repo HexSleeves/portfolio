@@ -388,6 +388,18 @@ export const experience: Experience[] = [
     highlights: [
       "Developed C++ core systems and Qt interfaces for autonomous marine software, reducing operator steps by one third",
       "Built winch-control logic and configured headless embedded systems with Go and MATLAB",
+      "Applied code review, static analysis, QA testing, and Splunk-based log analysis to reduce regressions and speed defect isolation",
+    ],
+  },
+  {
+    company: "Perficient",
+    role: "Associate Technical Consultant",
+    period: "Jun 2016 – May 2017",
+    current: false,
+    highlights: [
+      "Delivered AngularJS and Java features for government clients, improving release cadence and application stability",
+      "Supported Jenkins pipeline deployments and Git branching strategies, performed server compliance tasks",
+      "Clarified requirements with clients and internal teams, streamlining release processes and reducing deployment errors",
     ],
   },
 ];
@@ -417,11 +429,11 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     name: "DevOps & Tooling",
-    skills: ["GitHub Actions", "CI/CD", "Docker", "Nx", "Monorepo", "SonarQube", "Datadog"],
+    skills: ["CI/CD Architecture", "GitHub Actions", "Docker", "Deployment Automation", "Go CLI Tooling", "Nx", "SonarQube", "Datadog"],
   },
   {
     name: "Leadership",
-    skills: ["Architecture", "Mentoring", "Code Review", "Cross-functional Collaboration", "Technical Guidance"],
+    skills: ["Architecture", "Cross-functional Collaboration", "Mentoring", "Code Review", "Technical Guidance", "Operational Reliability"],
   },
 ];
 
