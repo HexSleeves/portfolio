@@ -4,6 +4,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, Github, Linkedin } from "lucide-react";
+import { BANNER_HEIGHT } from "./AvailabilityBanner";
+
+const STORAGE_KEY = "banner-dismissed-v2";
 
 const navLinks = [
   { href: "/", label: "Home", exact: true },
@@ -16,6 +19,7 @@ const navLinks = [
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [bannerVisible, setBannerVisible] = useState(false);
   const [location] = useLocation();
 
   useEffect(() => {
@@ -23,6 +27,24 @@ export default function Navigation() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Mirror banner visibility for nav offset
+  useEffect(() => {
+    const dismissed = sessionStorage.getItem(STORAGE_KEY);
+    if (!dismissed) {
+      const t = setTimeout(() => setBannerVisible(true), 400);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  // Poll for banner dismissal to remove the offset
+  useEffect(() => {
+    if (!bannerVisible) return;
+    const interval = setInterval(() => {
+      if (sessionStorage.getItem(STORAGE_KEY)) setBannerVisible(false);
+    }, 200);
+    return () => clearInterval(interval);
+  }, [bannerVisible]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -36,11 +58,12 @@ export default function Navigation() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-[oklch(0.085_0.012_265/0.96)] backdrop-blur-md border-b border-white/5"
           : "bg-[oklch(0.085_0.012_265/0.85)] backdrop-blur-sm border-b border-white/5"
       }`}
+      style={{ top: bannerVisible ? `${BANNER_HEIGHT}px` : "0px", transition: "top 0.3s ease" }}
     >
       <div className="container">
         <nav className="flex items-center justify-between h-16">

@@ -1,20 +1,21 @@
 // Terminal Noir — Availability Banner
-// Dismissible top banner signaling open-to-work status
+// Fixed-position top banner that sits above the nav bar
 
 import { useState, useEffect } from "react";
 import { X, Sparkles } from "lucide-react";
 
-const STORAGE_KEY = "banner-dismissed-v1";
+const STORAGE_KEY = "banner-dismissed-v2";
+
+// Export banner height so Navigation can offset itself
+export const BANNER_HEIGHT = 40; // px
 
 export default function AvailabilityBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Only show if not previously dismissed in this session
     const dismissed = sessionStorage.getItem(STORAGE_KEY);
     if (!dismissed) {
-      // Small delay so it slides in after page load
-      const t = setTimeout(() => setVisible(true), 600);
+      const t = setTimeout(() => setVisible(true), 400);
       return () => clearTimeout(t);
     }
   }, []);
@@ -28,49 +29,35 @@ export default function AvailabilityBanner() {
 
   return (
     <div
-      className="relative z-50 w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm"
+      className="fixed left-0 right-0 z-[60] flex items-center justify-center gap-3 px-4 text-sm"
       style={{
+        top: 0,
+        height: `${BANNER_HEIGHT}px`,
         background: "linear-gradient(90deg, oklch(0.12 0.02 200) 0%, oklch(0.10 0.015 220) 50%, oklch(0.12 0.02 200) 100%)",
-        borderBottom: "1px solid oklch(0.82 0.15 200 / 20%)",
-        animation: "slideDown 0.4s ease-out",
+        borderBottom: "1px solid oklch(0.82 0.15 200 / 25%)",
+        animation: "bannerSlideDown 0.4s ease-out",
       }}
     >
-      {/* Subtle animated glow line at the bottom */}
+      {/* Glow line at bottom */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-px"
+        className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
         style={{
-          background: "linear-gradient(90deg, transparent 0%, oklch(0.82 0.15 200 / 60%) 50%, transparent 100%)",
+          background: "linear-gradient(90deg, transparent 0%, oklch(0.82 0.15 200 / 50%) 50%, transparent 100%)",
         }}
       />
 
-      <Sparkles
-        size={14}
-        style={{ color: "oklch(0.82 0.15 200)", flexShrink: 0 }}
-      />
+      <Sparkles size={13} style={{ color: "oklch(0.82 0.15 200)", flexShrink: 0 }} />
 
-      <span
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          color: "oklch(0.75 0.01 240)",
-        }}
-      >
-        <span
-          className="font-semibold"
-          style={{ color: "oklch(0.82 0.15 200)" }}
-        >
+      <span style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.72 0.01 240)", fontSize: "0.8125rem" }}>
+        <span className="font-semibold" style={{ color: "oklch(0.82 0.15 200)" }}>
           Open to new opportunities
         </span>
         {" — "}
-        <span>
-          Available for full-time roles and consulting engagements.{" "}
-        </span>
+        Available for full-time roles &amp; consulting.{" "}
         <a
           href="/about"
-          className="underline underline-offset-2 transition-colors hover:text-white"
-          style={{
-            color: "oklch(0.75 0.01 240)",
-            fontFamily: "'Inter', sans-serif",
-          }}
+          className="underline underline-offset-2 transition-colors hover:opacity-80"
+          style={{ color: "oklch(0.72 0.01 240)" }}
         >
           Learn more
         </a>
@@ -80,13 +67,13 @@ export default function AvailabilityBanner() {
         onClick={dismiss}
         aria-label="Dismiss banner"
         className="ml-2 p-1 rounded transition-colors hover:bg-white/10 flex-shrink-0"
-        style={{ color: "oklch(0.52 0.015 250)" }}
+        style={{ color: "oklch(0.45 0.01 250)" }}
       >
-        <X size={14} />
+        <X size={13} />
       </button>
 
       <style>{`
-        @keyframes slideDown {
+        @keyframes bannerSlideDown {
           from { transform: translateY(-100%); opacity: 0; }
           to   { transform: translateY(0);    opacity: 1; }
         }
