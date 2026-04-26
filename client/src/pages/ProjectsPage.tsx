@@ -1,11 +1,12 @@
 // Terminal Noir — Projects Page
-// Full filterable project grid
+// Full filterable project grid — reads from database via tRPC
 
 import { useState } from "react";
 import { Link } from "wouter";
 import { Github, Lock, Star, ExternalLink } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
-import { projects, type Project } from "@/lib/data";
+import { trpc } from "@/lib/trpc";
+import type { Project } from "../../../drizzle/schema";
 
 const filters = [
   { label: "All", value: "all" },
@@ -15,6 +16,7 @@ const filters = [
 ];
 
 function ProjectCard({ project }: { project: Project }) {
+  const technologies = Array.isArray(project.technologies) ? (project.technologies as string[]) : [];
   return (
     <div className="gradient-border rounded-xl p-6 flex flex-col gap-4 h-full">
       {/* Header */}
@@ -71,21 +73,23 @@ function ProjectCard({ project }: { project: Project }) {
         {project.summary}
       </p>
 
-      {/* Results */}
-      <div className="text-xs leading-relaxed p-3 rounded-md"
-        style={{ background: "oklch(0.82 0.15 200 / 5%)", borderLeft: "2px solid oklch(0.82 0.15 200 / 40%)", fontFamily: "'Inter', sans-serif", color: "oklch(0.75 0.02 240)" }}>
-        {project.results}
-      </div>
+      {/* Description */}
+      {project.description && (
+        <div className="text-xs leading-relaxed p-3 rounded-md"
+          style={{ background: "oklch(0.82 0.15 200 / 5%)", borderLeft: "2px solid oklch(0.82 0.15 200 / 40%)", fontFamily: "'Inter', sans-serif", color: "oklch(0.75 0.02 240)" }}>
+          {project.description}
+        </div>
+      )}
 
       {/* Tech tags */}
       <div className="flex flex-wrap gap-1.5">
-        {project.technologies.slice(0, 5).map((tech) => (
+        {technologies.slice(0, 5).map((tech) => (
           <span key={tech} className="skill-tag text-xs">{tech}</span>
         ))}
-        {project.technologies.length > 5 && (
+        {technologies.length > 5 && (
           <span className="px-2 py-0.5 rounded-full text-xs"
             style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
-            +{project.technologies.length - 5}
+            +{technologies.length - 5}
           </span>
         )}
       </div>
@@ -102,10 +106,9 @@ function ProjectCard({ project }: { project: Project }) {
 
 export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
-
-  const filtered = activeFilter === "all"
-    ? projects
-    : projects.filter((p) => p.category === activeFilter);
+  const { data: filtered = [], isLoading } = trpc.projects.list.useQuery(
+    activeFilter === "all" ? {} : { category: activeFilter as "open-source" | "professional" | "personal" }
+  );
 
   return (
     <PageLayout>
@@ -148,12 +151,28 @@ export default function ProjectsPage() {
           ))}
         </div>
 
+        {/* Loading */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-20">
+            <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
         {/* Grid */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {filtered.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
-        </div>
+        {!isLoading && (
+          <>
+            {filtered.length === 0 && (
+              <div className="text-center py-20" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}>
+                No projects in this category yet.
+              </div>
+            )}
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {filtered.map((project) => (
+                <ProjectCard key={project.slug} project={project} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </PageLayout>
   );

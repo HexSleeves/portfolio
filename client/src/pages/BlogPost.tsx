@@ -10,53 +10,44 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import { getPublishedPost } from "@/lib/blog";
-
-// Dark syntax highlighting theme matching Terminal Noir
+import { trpc } from "@/lib/trpc";
 import "highlight.js/styles/github-dark.css";
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+function formatDate(d: Date | string) {
+  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
-  const post = getPublishedPost(slug ?? "");
+  const { data: post, isLoading, error } = trpc.blog.bySlug.useQuery({ slug: slug ?? "" }, { enabled: !!slug });
 
-  if (!post) {
+  if (isLoading) {
     return (
-      <div
-        className="min-h-screen flex flex-col items-center justify-center gap-4"
-        style={{ background: "oklch(0.085 0.012 265)" }}
-      >
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "oklch(0.085 0.012 265)" }}>
         <Navigation />
-        <p
-          className="text-5xl font-bold mt-20"
-          style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.82 0.15 200)" }}
-        >
-          404
-        </p>
-        <p
-          className="text-sm"
-          style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}
-        >
+        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mt-20" />
+      </div>
+    );
+  }
+
+  if (!post || error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: "oklch(0.085 0.012 265)" }}>
+        <Navigation />
+        <p className="text-5xl font-bold mt-20" style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.82 0.15 200)" }}>404</p>
+        <p className="text-sm" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}>
           Post not found or not yet published.
         </p>
         <Link href="/blog">
-          <span
-            className="text-sm transition-colors cursor-pointer"
-            style={{ color: "oklch(0.82 0.15 200)", fontFamily: "'Inter', sans-serif" }}
-          >
+          <span className="text-sm transition-colors cursor-pointer" style={{ color: "oklch(0.82 0.15 200)", fontFamily: "'Inter', sans-serif" }}>
             ← Back to blog
           </span>
         </Link>
       </div>
     );
   }
+
+  const tags = Array.isArray(post.tags) ? (post.tags as string[]) : [];
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.085 0.012 265)" }}>
@@ -123,7 +114,7 @@ export default function BlogPost() {
                     color: "oklch(0.52 0.015 250)",
                   }}
                 >
-                  {formatDate(post.date)}
+                  {formatDate(post.publishedAt ?? post.createdAt)}
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -138,9 +129,9 @@ export default function BlogPost() {
                   {post.readTime}
                 </span>
               </div>
-              {post.tags.length > 0 && (
+              {tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
-                  {post.tags.map((tag) => (
+                  {tags.map((tag) => (
                     <span
                       key={tag}
                       className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"

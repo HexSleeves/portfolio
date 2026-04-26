@@ -6,7 +6,8 @@ import { Link } from "wouter";
 import { ArrowRight, Github, Star, Lock, ExternalLink, Calendar, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import ContactSection from "@/components/ContactSection";
-import { projects, blogPosts, skillCategories, stats } from "@/lib/data";
+import { skillCategories, stats } from "@/lib/data";
+import { trpc } from "@/lib/trpc";
 
 // ─── Typewriter hook ─────────────────────────────────────────
 const taglines = ["Full-Stack Engineer", "AI Platform Builder", "DevOps Architect", "Open Source Author"];
@@ -136,7 +137,7 @@ function HeroSection() {
 
 // ─── Featured Projects ────────────────────────────────────────
 function FeaturedProjects() {
-  const featured = projects.filter((p) => p.isFeatured).slice(0, 3);
+  const { data: featured = [] } = trpc.projects.featured.useQuery();
 
   return (
     <section className="py-20 relative">
@@ -200,7 +201,7 @@ function FeaturedProjects() {
                 </p>
 
                 <div className="flex flex-wrap gap-1.5 mt-auto">
-                  {project.technologies.slice(0, 4).map((tech) => (
+                  {(Array.isArray(project.technologies) ? (project.technologies as string[]) : []).slice(0, 4).map((tech) => (
                     <span key={tech} className="skill-tag text-xs">{tech}</span>
                   ))}
                 </div>
@@ -262,7 +263,10 @@ function SkillsSnapshot() {
 
 // ─── Latest Blog Post ─────────────────────────────────────────
 function LatestPost() {
-  const post = blogPosts[0];
+  const { data: posts = [] } = trpc.blog.list.useQuery();
+  const post = posts[0];
+
+  if (!post) return null;
 
   return (
     <section className="py-20 relative">
@@ -306,7 +310,7 @@ function LatestPost() {
                 <div className="flex items-center gap-1.5">
                   <Calendar size={12} style={{ color: "oklch(0.52 0.015 250)" }} />
                   <span className="text-xs" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}>
-                    {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                    {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "Recent"}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
