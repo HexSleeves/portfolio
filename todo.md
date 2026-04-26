@@ -22,5 +22,5 @@
 - [x] Wire public ProjectsPage to read from DB instead of static data.ts
 - [x] Wire public ProjectDetail to read from DB
 - [x] Wire public Home featured projects and latest blog post to read from DB
-- [ ] Write vitest tests for blog and project routers
+- [x] Write vitest tests for blog and project routers
 - [x] Checkpoint and deliver

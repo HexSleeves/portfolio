@@ -28,8 +28,7 @@ const blogRouter = router({
       return post;
     }),
   adminList: adminProcedure
-    .input(z.object({ search: z.string().optional() }).optional())
-    .query(({ input }) => getAllBlogPosts({ search: input?.search })),
+    .query(() => getAllBlogPosts({ publishedOnly: false })),
   adminById: adminProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {

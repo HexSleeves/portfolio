@@ -9,8 +9,9 @@ export default function AdminBlogList() {
   const [search, setSearch] = useState("");
   const utils = trpc.useUtils();
 
-  const { data: posts = [], isLoading } = trpc.blog.adminList.useQuery(
-    search ? { search } : undefined
+  const { data: allPosts = [], isLoading } = trpc.blog.adminList.useQuery();
+  const posts = allPosts.filter((p) =>
+    !search || p.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const togglePublish = trpc.blog.update.useMutation({
