@@ -162,51 +162,59 @@ function FeaturedProjects() {
 
         <div className="grid md:grid-cols-3 gap-5">
           {featured.map((project) => (
-            <Link key={project.slug} href={`/projects/${project.slug}`}>
-              <div className="gradient-border rounded-xl p-5 h-full flex flex-col gap-3 cursor-pointer group">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.isFeatured && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-                        style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        <Star size={9} fill="currentColor" /> featured
-                      </span>
-                    )}
-                    {project.isPrivate && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-                        style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        <Lock size={9} /> private
-                      </span>
-                    )}
+            <div key={project.slug} className="relative group">
+              <Link href={`/projects/${project.slug}`}>
+                <div className="gradient-border rounded-xl p-5 h-full flex flex-col gap-3 cursor-pointer">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.isFeatured && (
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
+                          style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
+                          <Star size={9} fill="currentColor" /> featured
+                        </span>
+                      )}
+                      {project.isPrivate && (
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
+                          style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+                          <Lock size={9} /> private
+                        </span>
+                      )}
+                    </div>
+                    {/* Spacer to keep layout consistent when no GitHub link */}
+                    <div className="w-4" />
                   </div>
-                  {project.githubUrl && (
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ color: "oklch(0.52 0.015 250)" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = "oklch(0.94 0.005 240)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = "oklch(0.52 0.015 250)")}>
-                      <Github size={15} />
-                    </a>
-                  )}
+
+                  <h3 className="font-display font-bold text-base group-hover:text-cyan-400 transition-colors"
+                    style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.94 0.005 240)" }}>
+                    {project.title}
+                  </h3>
+
+                  <p className="text-sm leading-relaxed flex-1"
+                    style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}>
+                    {project.summary}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 mt-auto">
+                    {(Array.isArray(project.technologies) ? (project.technologies as string[]) : []).slice(0, 4).map((tech) => (
+                      <span key={tech} className="skill-tag text-xs">{tech}</span>
+                    ))}
+                  </div>
                 </div>
-
-                <h3 className="font-display font-bold text-base group-hover:text-cyan-400 transition-colors"
-                  style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.94 0.005 240)" }}>
-                  {project.title}
-                </h3>
-
-                <p className="text-sm leading-relaxed flex-1"
-                  style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}>
-                  {project.summary}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5 mt-auto">
-                  {(Array.isArray(project.technologies) ? (project.technologies as string[]) : []).slice(0, 4).map((tech) => (
-                    <span key={tech} className="skill-tag text-xs">{tech}</span>
-                  ))}
-                </div>
-              </div>
-            </Link>
+              </Link>
+              {/* GitHub link sits outside the Link to avoid nested <a> */}
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute top-5 right-5 z-10"
+                  style={{ color: "oklch(0.52 0.015 250)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "oklch(0.94 0.005 240)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "oklch(0.52 0.015 250)")}>
+                  <Github size={15} />
+                </a>
+              )}
+            </div>
           ))}
         </div>
       </div>
