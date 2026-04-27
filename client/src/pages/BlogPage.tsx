@@ -20,11 +20,11 @@ function PostCard({ post, featured = false }: { post: BlogPost; featured?: boole
       >
         {/* Meta row */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
+          <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
             {post.category}
           </span>
           {featured && (
-            <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+            <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
               latest
             </span>
           )}
@@ -46,7 +46,7 @@ function PostCard({ post, featured = false }: { post: BlogPost; featured?: boole
           <div className="flex flex-wrap gap-1.5">
             {tags.slice(0, 4).map((tag) => (
               <span key={tag} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-                style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+                style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
                 <Tag size={8} />{tag}
               </span>
             ))}

@@ -81,6 +81,8 @@ export default function BlogPost() {
                   background: "oklch(0.82 0.15 200 / 10%)",
                   color: "oklch(0.82 0.15 200)",
                   fontFamily: "'JetBrains Mono', monospace",
+                  userSelect: "none",
+                  cursor: "default",
                 }}
               >
                 {post.category}
@@ -139,6 +141,8 @@ export default function BlogPost() {
                         background: "oklch(0.16 0.012 265)",
                         color: "oklch(0.52 0.015 250)",
                         fontFamily: "'JetBrains Mono', monospace",
+                        userSelect: "none",
+                        cursor: "default",
                       }}
                     >
                       <Tag size={8} />

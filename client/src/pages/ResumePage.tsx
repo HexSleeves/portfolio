@@ -36,9 +36,9 @@ function ExperienceTimeline() {
                       {job.role}
                     </h3>
                     {job.current && (
-                      <span className="px-2 py-0.5 rounded-full text-xs"
-                        style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        current
+                      <span className="text-xs"
+                        style={{ color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none" }}>
+                        · present
                       </span>
                     )}
                   </div>

@@ -178,9 +178,11 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .gradient-border:hover {
-    border-color: oklch(0.82 0.15 200 / 40%);
-    box-shadow: 0 0 20px oklch(0.82 0.15 200 / 8%);
+  /* Only apply hover glow when the card itself is interactive (cursor-pointer) */
+  .gradient-border.cursor-pointer:hover,
+  a:hover > .gradient-border,
+  a .gradient-border:hover {
+    border-color: oklch(0.82 0.15 200 / 30%);
   }
 
   /* Skill tag */
@@ -194,13 +196,8 @@
     background: oklch(0.16 0.012 265);
     border: 1px solid oklch(1 0 0 / 10%);
     color: oklch(0.75 0.01 240);
-    transition: all 0.2s ease;
-  }
-
-  .skill-tag:hover {
-    background: oklch(0.82 0.15 200 / 10%);
-    border-color: oklch(0.82 0.15 200 / 40%);
-    color: oklch(0.82 0.15 200);
+    user-select: none;
+    cursor: default;
   }
 
   /* Nav link */

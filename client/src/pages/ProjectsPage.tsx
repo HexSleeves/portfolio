@@ -24,18 +24,18 @@ function ProjectCard({ project }: { project: Project }) {
         <div className="flex flex-wrap gap-1.5">
           {project.isFeatured && (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-              style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
+              style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
               <Star size={9} fill="currentColor" /> featured
             </span>
           )}
           {project.isPrivate && (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-              style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+              style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
               <Lock size={9} /> private
             </span>
           )}
           <span className="px-2 py-0.5 rounded-full text-xs capitalize"
-            style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+            style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
             {project.category}
           </span>
         </div>
@@ -88,7 +88,7 @@ function ProjectCard({ project }: { project: Project }) {
         ))}
         {technologies.length > 5 && (
           <span className="px-2 py-0.5 rounded-full text-xs"
-            style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+            style={{ background: "oklch(0.16 0.012 265)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
             +{technologies.length - 5}
           </span>
         )}

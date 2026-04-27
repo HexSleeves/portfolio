@@ -6,7 +6,7 @@ import { Link } from "wouter";
 import { ArrowRight, Github, Star, Lock, ExternalLink, Calendar, Clock } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import ContactSection from "@/components/ContactSection";
-import { skillCategories, stats } from "@/lib/data";
+import { skillCategories } from "@/lib/data";
 import { trpc } from "@/lib/trpc";
 
 // ─── Typewriter hook ─────────────────────────────────────────
@@ -115,20 +115,6 @@ function HeroSection() {
               HexSleeves
             </a>
           </div>
-
-          {/* Stats */}
-          <div className={`grid grid-cols-2 sm:grid-cols-4 gap-6 transition-all duration-700 delay-500 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex flex-col gap-1">
-                <span className="font-display font-bold text-2xl" style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.82 0.15 200)" }}>
-                  {stat.value}
-                </span>
-                <span className="text-xs" style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}>
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>
@@ -169,13 +155,13 @@ function FeaturedProjects() {
                     <div className="flex flex-wrap gap-1.5">
                       {project.isFeatured && (
                         <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-                          style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
+                          style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
                           <Star size={9} fill="currentColor" /> featured
                         </span>
                       )}
                       {project.isPrivate && (
                         <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
-                          style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+                          style={{ background: "oklch(1 0 0 / 5%)", color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
                           <Lock size={9} /> private
                         </span>
                       )}
@@ -301,7 +287,7 @@ function LatestPost() {
           <div className="gradient-border rounded-xl p-7 cursor-pointer group" style={{ borderColor: "oklch(0.82 0.15 200 / 15%)" }}>
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <span className="px-2 py-0.5 rounded-full text-xs"
-                style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}>
+                style={{ background: "oklch(0.82 0.15 200 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace", userSelect: "none", cursor: "default" }}>
                 {post.category}
               </span>
             </div>

@@ -4,7 +4,7 @@
 import { Link } from "wouter";
 import { Github, Linkedin, Mail, MapPin, ArrowRight } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
-import { skillCategories, stats } from "@/lib/data";
+import { skillCategories } from "@/lib/data";
 
 const values = [
   {
@@ -91,27 +91,6 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Stats */}
-            <div>
-              <h2 className="font-display font-bold text-2xl mb-6"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.94 0.005 240)" }}>
-                By the numbers
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="gradient-border rounded-xl p-5 text-center">
-                    <div className="font-display font-bold text-2xl mb-1"
-                      style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.82 0.15 200)" }}>
-                      {stat.value}
-                    </div>
-                    <div className="text-xs text-center"
-                      style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}>
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Right — Contact card + Skills summary */}
