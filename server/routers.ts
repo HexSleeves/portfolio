@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
+import { ENV } from "./_core/env";
+import { verifyPassword } from "./_core/password";
+import { clearSessionCookie, setSessionCookie } from "./_core/session";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import {
@@ -134,9 +135,23 @@ export const appRouter = router({
   system: systemRouter,
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),
+    login: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const validEmail = input.email.toLowerCase() === ENV.adminEmail.toLowerCase();
+        const validPassword = await verifyPassword(input.password, ENV.adminPasswordHash);
+        if (!validEmail || !validPassword) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid email or password" });
+        }
+
+        await setSessionCookie(ctx.req, ctx.res, ENV.adminEmail);
+        return { success: true } as const;
+      }),
     logout: publicProcedure.mutation(({ ctx }) => {
-      const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
+      clearSessionCookie(ctx.req, ctx.res);
       return { success: true } as const;
     }),
   }),

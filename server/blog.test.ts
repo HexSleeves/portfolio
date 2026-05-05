@@ -45,7 +45,7 @@ function makeAdminCtx(): TrpcContext {
       openId: "owner-open-id",
       email: "lecoqjacob@gmail.com",
       name: "Jacob LeCoq",
-      loginMethod: "manus",
+      loginMethod: "password",
       role: "admin",
       createdAt: new Date(),
       updatedAt: new Date(),

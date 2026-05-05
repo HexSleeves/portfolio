@@ -18,6 +18,7 @@ import AdminBlogEditor from "./pages/admin/AdminBlogEditor";
 import AdminProjectsList from "./pages/admin/AdminProjectsList";
 import AdminProjectEditor from "./pages/admin/AdminProjectEditor";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminLogin from "./pages/admin/AdminLogin";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/blog" component={BlogPage} />
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/about" component={AboutPage} />
+      <Route path="/admin/login" component={AdminLogin} />
       {/* Admin routes — protected by RequireAdmin (owner/admin only) */}
       <Route path="/admin">{() => <RequireAdmin><AdminDashboard /></RequireAdmin>}</Route>
       <Route path="/admin/blog">{() => <RequireAdmin><AdminBlogList /></RequireAdmin>}</Route>

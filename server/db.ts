@@ -1,5 +1,6 @@
 import { and, desc, eq, like, or } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import {
   blogPosts,
   InsertBlogPost,
@@ -12,11 +13,13 @@ import {
 import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
+let _pool: Pool | null = null;
 
 export async function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
+  if (!_db && ENV.databaseUrl) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      _pool = new Pool({ connectionString: ENV.databaseUrl });
+      _db = drizzle(_pool);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -25,13 +28,19 @@ export async function getDb() {
   return _db;
 }
 
+export async function closeDb() {
+  await _pool?.end();
+  _pool = null;
+  _db = null;
+}
+
 // ─── Users ────────────────────────────────────────────────────
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
   const db = await getDb();
   if (!db) { console.warn("[Database] Cannot upsert user: database not available"); return; }
   const values: InsertUser = { openId: user.openId };
-  const updateSet: Record<string, unknown> = {};
+  const updateSet: Partial<InsertUser> = {};
   const textFields = ["name", "email", "loginMethod"] as const;
   for (const field of textFields) {
     const value = user[field];
@@ -42,10 +51,11 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
   if (user.lastSignedIn !== undefined) { values.lastSignedIn = user.lastSignedIn; updateSet.lastSignedIn = user.lastSignedIn; }
   if (user.role !== undefined) { values.role = user.role; updateSet.role = user.role; }
-  else if (user.openId === ENV.ownerOpenId) { values.role = "admin"; updateSet.role = "admin"; }
+  else if (user.email && user.email.toLowerCase() === ENV.adminEmail.toLowerCase()) { values.role = "admin"; updateSet.role = "admin"; }
   if (!values.lastSignedIn) values.lastSignedIn = new Date();
   if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
-  await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
+  updateSet.updatedAt = new Date();
+  await db.insert(users).values(values).onConflictDoUpdate({ target: users.openId, set: updateSet });
 }
 
 export async function getUserByOpenId(openId: string) {
@@ -96,7 +106,7 @@ export async function updateBlogPost(id: number, data: Partial<InsertBlogPost>) 
     const existing = await getBlogPostById(id);
     if (existing && !existing.publishedAt) data.publishedAt = new Date();
   }
-  await db.update(blogPosts).set(data).where(eq(blogPosts.id, id));
+  await db.update(blogPosts).set({ ...data, updatedAt: new Date() }).where(eq(blogPosts.id, id));
   return getBlogPostById(id);
 }
 
@@ -143,7 +153,7 @@ export async function createProject(data: InsertProject) {
 export async function updateProject(id: number, data: Partial<InsertProject>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(projects).set(data).where(eq(projects.id, id));
+  await db.update(projects).set({ ...data, updatedAt: new Date() }).where(eq(projects.id, id));
   return getProjectById(id);
 }
 
@@ -164,7 +174,10 @@ export async function getSetting(key: string): Promise<string | null> {
 export async function setSetting(key: string, value: string): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(siteSettings).values({ key, value }).onDuplicateKeyUpdate({ set: { value } });
+  await db.insert(siteSettings).values({ key, value }).onConflictDoUpdate({
+    target: siteSettings.key,
+    set: { value, updatedAt: new Date() },
+  });
 }
 
 export async function getAllSettings(): Promise<Record<string, string>> {

@@ -129,7 +129,7 @@ export default function ResumePage() {
             </p>
           </div>
           <a
-            href="/manus-storage/Jacob-LeCoq-Resume_8c936ce0.pdf"
+            href="/assets/Jacob-LeCoq-Resume.pdf"
             download="Jacob-LeCoq-Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"

@@ -2,18 +2,16 @@
 // Run with: node seed.mjs
 
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
 import { readFileSync, readdirSync } from "fs";
-import { join, dirname } from "path";
+import { dirname, join } from "path";
+import pg from "pg";
 import { fileURLToPath } from "url";
 
+const { Pool } = pg;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const connection = await mysql.createConnection(process.env.DATABASE_URL);
-const db = drizzle(connection);
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-// ─── Parse frontmatter ────────────────────────────────────────
 function parseFrontmatter(raw) {
   const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
   if (!match) return { frontmatter: {}, content: raw };
@@ -25,7 +23,11 @@ function parseFrontmatter(raw) {
     const key = line.slice(0, colonIdx).trim();
     let val = line.slice(colonIdx + 1).trim();
     if (val.startsWith("[") && val.endsWith("]")) {
-      val = val.slice(1, -1).split(",").map((s) => s.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
+      val = val
+        .slice(1, -1)
+        .split(",")
+        .map((s) => s.trim().replace(/^["']|["']$/g, ""))
+        .filter(Boolean);
     } else if (val === "true") val = true;
     else if (val === "false") val = false;
     else val = val.replace(/^["']|["']$/g, "");
@@ -34,7 +36,6 @@ function parseFrontmatter(raw) {
   return { frontmatter: fm, content: match[2].trim() };
 }
 
-// ─── Blog posts ───────────────────────────────────────────────
 const blogDir = join(__dirname, "client/src/content/blog");
 const mdFiles = readdirSync(blogDir).filter((f) => f.endsWith(".md"));
 
@@ -46,13 +47,19 @@ for (const file of mdFiles) {
   const tags = Array.isArray(fm.tags) ? fm.tags : [];
   const published = fm.published === true || fm.published === "true";
 
-  await connection.execute(
-    `INSERT INTO blog_posts (slug, title, summary, content, category, tags, published, readTime, publishedAt)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-     ON DUPLICATE KEY UPDATE
-       title=VALUES(title), summary=VALUES(summary), content=VALUES(content),
-       category=VALUES(category), tags=VALUES(tags), published=VALUES(published),
-       readTime=VALUES(readTime), publishedAt=VALUES(publishedAt)`,
+  await pool.query(
+    `INSERT INTO blog_posts (slug, title, summary, content, category, tags, published, "readTime", "publishedAt")
+     VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9)
+     ON CONFLICT (slug) DO UPDATE SET
+       title = EXCLUDED.title,
+       summary = EXCLUDED.summary,
+       content = EXCLUDED.content,
+       category = EXCLUDED.category,
+       tags = EXCLUDED.tags,
+       published = EXCLUDED.published,
+       "readTime" = EXCLUDED."readTime",
+       "publishedAt" = EXCLUDED."publishedAt",
+       "updatedAt" = now()`,
     [
       slug,
       fm.title || slug,
@@ -60,7 +67,7 @@ for (const file of mdFiles) {
       content,
       fm.category || "Engineering",
       JSON.stringify(tags),
-      published ? 1 : 0,
+      published,
       fm.readTime || fm.read_time || "5 min read",
       published && fm.date ? new Date(fm.date) : null,
     ]
@@ -68,7 +75,6 @@ for (const file of mdFiles) {
   console.log(`  ✓ ${slug} (published: ${published})`);
 }
 
-// ─── Projects ─────────────────────────────────────────────────
 const projectsData = [
   {
     slug: "tailscale-mcp",
@@ -88,7 +94,7 @@ const projectsData = [
     slug: "waggle",
     title: "Waggle",
     summary: "A multi-agent orchestration framework written in Go for building and coordinating AI agent swarms.",
-    description: "Waggle provides a clean, composable API for defining agent roles, communication channels, and task delegation. Designed for production use with built-in observability, retry logic, and support for multiple LLM backends. Inspired by the waggle dance of honeybees — distributed coordination through simple local signals.",
+    description: "Waggle provides a clean, composable API for defining agent roles, communication channels, and task delegation. Designed for production use with built-in observability, retry logic, and support for multiple LLM backends.",
     category: "open-source",
     technologies: ["Go", "LLM", "Multi-agent", "gRPC", "OpenAI API"],
     githubUrl: "https://github.com/HexSleeves/waggle",
@@ -172,25 +178,40 @@ const projectsData = [
 
 console.log(`\nSeeding ${projectsData.length} projects...`);
 for (const p of projectsData) {
-  await connection.execute(
-    `INSERT INTO projects (slug, title, summary, description, category, technologies, githubUrl, liveUrl, isFeatured, isPrivate, stars, sortOrder)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-     ON DUPLICATE KEY UPDATE
-       title=VALUES(title), summary=VALUES(summary), description=VALUES(description),
-       category=VALUES(category), technologies=VALUES(technologies),
-       githubUrl=VALUES(githubUrl), liveUrl=VALUES(liveUrl),
-       isFeatured=VALUES(isFeatured), isPrivate=VALUES(isPrivate),
-       stars=VALUES(stars), sortOrder=VALUES(sortOrder)`,
+  await pool.query(
+    `INSERT INTO projects (slug, title, summary, description, category, technologies, "githubUrl", "liveUrl", "isFeatured", "isPrivate", stars, "sortOrder")
+     VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7, $8, $9, $10, $11, $12)
+     ON CONFLICT (slug) DO UPDATE SET
+       title = EXCLUDED.title,
+       summary = EXCLUDED.summary,
+       description = EXCLUDED.description,
+       category = EXCLUDED.category,
+       technologies = EXCLUDED.technologies,
+       "githubUrl" = EXCLUDED."githubUrl",
+       "liveUrl" = EXCLUDED."liveUrl",
+       "isFeatured" = EXCLUDED."isFeatured",
+       "isPrivate" = EXCLUDED."isPrivate",
+       stars = EXCLUDED.stars,
+       "sortOrder" = EXCLUDED."sortOrder",
+       "updatedAt" = now()`,
     [
-      p.slug, p.title, p.summary, p.description, p.category,
-      JSON.stringify(p.technologies), p.githubUrl, p.liveUrl,
-      p.isFeatured ? 1 : 0, p.isPrivate ? 1 : 0, p.stars, p.sortOrder,
+      p.slug,
+      p.title,
+      p.summary,
+      p.description,
+      p.category,
+      JSON.stringify(p.technologies),
+      p.githubUrl,
+      p.liveUrl,
+      p.isFeatured,
+      p.isPrivate,
+      p.stars,
+      p.sortOrder,
     ]
   );
   console.log(`  ✓ ${p.slug}`);
 }
 
-// ─── Site settings ────────────────────────────────────────────
 const settings = [
   { key: "availability_banner_visible", value: "true" },
   { key: "availability_banner_message", value: "Open to new opportunities" },
@@ -199,13 +220,14 @@ const settings = [
 
 console.log(`\nSeeding ${settings.length} site settings...`);
 for (const s of settings) {
-  await connection.execute(
-    `INSERT INTO site_settings (\`key\`, value) VALUES (?, ?)
-     ON DUPLICATE KEY UPDATE value=VALUES(value)`,
+  await pool.query(
+    `INSERT INTO site_settings (key, value)
+     VALUES ($1, $2)
+     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, "updatedAt" = now()`,
     [s.key, s.value]
   );
   console.log(`  ✓ ${s.key}`);
 }
 
-await connection.end();
-console.log("\n✅ Seed complete!\n");
+await pool.end();
+console.log("\nSeed complete!\n");

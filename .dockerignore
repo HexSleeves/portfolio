@@ -1,0 +1,11 @@
+.git
+.sc
+.conductor
+dist
+node_modules
+.manus-logs
+.env
+.env.*
+coverage
+*.log
+docs

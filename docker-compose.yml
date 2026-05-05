@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://portfolio:portfolio@postgres:5432/portfolio
+      JWT_SECRET: ${JWT_SECRET:-replace-this-with-a-32-character-secret}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      # Default local password: admin123
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:-pbkdf2:210000:ee0f9e8109a8e569401363c7d99b4f64:1510d74e0864c79d5fd8e010ad4a16fe8c923f6583493bc5872a96a0b5ecc4e8}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: portfolio
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio -d portfolio"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

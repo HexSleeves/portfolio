@@ -15,12 +15,10 @@ export default function RequireAdmin({ children }: RequireAdminProps) {
   useEffect(() => {
     if (loading) return;
     if (!isAuthenticated) {
-      // Not logged in — redirect to Manus OAuth login
       window.location.href = getLoginUrl();
       return;
     }
     if (user && user.role !== "admin") {
-      // Logged in but not admin — redirect to 404
       setLocation("/404");
     }
   }, [loading, isAuthenticated, user, setLocation]);
