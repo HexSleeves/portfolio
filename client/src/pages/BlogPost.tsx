@@ -14,16 +14,27 @@ import { trpc } from "@/lib/trpc";
 import "highlight.js/styles/github-dark.css";
 
 function formatDate(d: Date | string) {
-  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  return new Date(d).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
-  const { data: post, isLoading, error } = trpc.blog.bySlug.useQuery({ slug: slug ?? "" }, { enabled: !!slug });
+  const {
+    data: post,
+    isLoading,
+    error,
+  } = trpc.blog.bySlug.useQuery({ slug: slug ?? "" }, { enabled: !!slug });
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "oklch(0.085 0.012 265)" }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
         <Navigation />
         <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mt-20" />
       </div>
@@ -32,14 +43,37 @@ export default function BlogPost() {
 
   if (!post || error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: "oklch(0.085 0.012 265)" }}>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center gap-4"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
         <Navigation />
-        <p className="text-5xl font-bold mt-20" style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.82 0.15 200)" }}>404</p>
-        <p className="text-sm" style={{ fontFamily: "'JetBrains Mono', monospace", color: "oklch(0.52 0.015 250)" }}>
+        <p
+          className="text-5xl font-bold mt-20"
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            color: "oklch(0.82 0.15 200)",
+          }}
+        >
+          404
+        </p>
+        <p
+          className="text-sm"
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            color: "oklch(0.52 0.015 250)",
+          }}
+        >
           Post not found or not yet published.
         </p>
         <Link href="/blog">
-          <span className="text-sm transition-colors cursor-pointer" style={{ color: "oklch(0.82 0.15 200)", fontFamily: "'Inter', sans-serif" }}>
+          <span
+            className="text-sm transition-colors cursor-pointer"
+            style={{
+              color: "oklch(0.82 0.15 200)",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
             ← Back to blog
           </span>
         </Link>
@@ -50,7 +84,10 @@ export default function BlogPost() {
   const tags = Array.isArray(post.tags) ? (post.tags as string[]) : [];
 
   return (
-    <div className="min-h-screen" style={{ background: "oklch(0.085 0.012 265)" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "oklch(0.085 0.012 265)" }}
+    >
       <Navigation />
 
       <main className="pt-24 pb-20">
@@ -59,12 +96,17 @@ export default function BlogPost() {
           <Link href="/blog">
             <span
               className="inline-flex items-center gap-2 text-sm mb-10 transition-colors cursor-pointer"
-              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = "oklch(0.82 0.15 200)")
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                color: "oklch(0.52 0.015 250)",
+              }}
+              onMouseEnter={e =>
+                ((e.currentTarget as HTMLElement).style.color =
+                  "oklch(0.82 0.15 200)")
               }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.color = "oklch(0.52 0.015 250)")
+              onMouseLeave={e =>
+                ((e.currentTarget as HTMLElement).style.color =
+                  "oklch(0.52 0.015 250)")
               }
             >
               <ArrowLeft size={14} />
@@ -91,14 +133,20 @@ export default function BlogPost() {
 
             <h1
               className="font-display font-bold text-3xl lg:text-4xl leading-tight mb-4"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", color: "oklch(0.94 0.005 240)" }}
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                color: "oklch(0.94 0.005 240)",
+              }}
             >
               {post.title}
             </h1>
 
             <p
               className="text-base leading-relaxed mb-6"
-              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.65 0.01 240)" }}
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                color: "oklch(0.65 0.01 240)",
+              }}
             >
               {post.summary}
             </p>
@@ -108,7 +156,10 @@ export default function BlogPost() {
               style={{ borderColor: "oklch(1 0 0 / 8%)" }}
             >
               <div className="flex items-center gap-1.5">
-                <Calendar size={13} style={{ color: "oklch(0.52 0.015 250)" }} />
+                <Calendar
+                  size={13}
+                  style={{ color: "oklch(0.52 0.015 250)" }}
+                />
                 <span
                   className="text-sm"
                   style={{
@@ -133,7 +184,7 @@ export default function BlogPost() {
               </div>
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
-                  {tags.map((tag) => (
+                  {tags.map(tag => (
                     <span
                       key={tag}
                       className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs"
@@ -169,10 +220,16 @@ export default function BlogPost() {
           </article>
 
           {/* Footer */}
-          <div className="mt-16 pt-8 border-t" style={{ borderColor: "oklch(1 0 0 / 8%)" }}>
+          <div
+            className="mt-16 pt-8 border-t"
+            style={{ borderColor: "oklch(1 0 0 / 8%)" }}
+          >
             <p
               className="text-sm mb-4"
-              style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.52 0.015 250)" }}
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                color: "oklch(0.52 0.015 250)",
+              }}
             >
               Enjoyed this article? Let's connect.
             </p>

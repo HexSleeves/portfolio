@@ -38,7 +38,10 @@ export async function closeDb() {
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
   const db = await getDb();
-  if (!db) { console.warn("[Database] Cannot upsert user: database not available"); return; }
+  if (!db) {
+    console.warn("[Database] Cannot upsert user: database not available");
+    return;
+  }
   const values: InsertUser = { openId: user.openId };
   const updateSet: Partial<InsertUser> = {};
   const textFields = ["name", "email", "loginMethod"] as const;
@@ -49,30 +52,56 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     values[field] = normalized;
     updateSet[field] = normalized;
   }
-  if (user.lastSignedIn !== undefined) { values.lastSignedIn = user.lastSignedIn; updateSet.lastSignedIn = user.lastSignedIn; }
-  if (user.role !== undefined) { values.role = user.role; updateSet.role = user.role; }
-  else if (user.email && user.email.toLowerCase() === ENV.adminEmail.toLowerCase()) { values.role = "admin"; updateSet.role = "admin"; }
+  if (user.lastSignedIn !== undefined) {
+    values.lastSignedIn = user.lastSignedIn;
+    updateSet.lastSignedIn = user.lastSignedIn;
+  }
+  if (user.role !== undefined) {
+    values.role = user.role;
+    updateSet.role = user.role;
+  } else if (
+    user.email &&
+    user.email.toLowerCase() === ENV.adminEmail.toLowerCase()
+  ) {
+    values.role = "admin";
+    updateSet.role = "admin";
+  }
   if (!values.lastSignedIn) values.lastSignedIn = new Date();
   if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
   updateSet.updatedAt = new Date();
-  await db.insert(users).values(values).onConflictDoUpdate({ target: users.openId, set: updateSet });
+  await db
+    .insert(users)
+    .values(values)
+    .onConflictDoUpdate({ target: users.openId, set: updateSet });
 }
 
 export async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, openId))
+    .limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
 // ─── Blog Posts ───────────────────────────────────────────────
-export async function getAllBlogPosts(opts?: { publishedOnly?: boolean; search?: string }) {
+export async function getAllBlogPosts(opts?: {
+  publishedOnly?: boolean;
+  search?: string;
+}) {
   const db = await getDb();
   if (!db) return [];
   const conditions = [];
   if (opts?.publishedOnly) conditions.push(eq(blogPosts.published, true));
   if (opts?.search) {
-    conditions.push(or(like(blogPosts.title, `%${opts.search}%`), like(blogPosts.summary, `%${opts.search}%`)));
+    conditions.push(
+      or(
+        like(blogPosts.title, `%${opts.search}%`),
+        like(blogPosts.summary, `%${opts.search}%`)
+      )
+    );
   }
   const query = db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
   return conditions.length > 0 ? query.where(and(...conditions)) : query;
@@ -81,14 +110,22 @@ export async function getAllBlogPosts(opts?: { publishedOnly?: boolean; search?:
 export async function getBlogPostBySlug(slug: string) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug)).limit(1);
+  const result = await db
+    .select()
+    .from(blogPosts)
+    .where(eq(blogPosts.slug, slug))
+    .limit(1);
   return result[0] ?? undefined;
 }
 
 export async function getBlogPostById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(blogPosts)
+    .where(eq(blogPosts.id, id))
+    .limit(1);
   return result[0] ?? undefined;
 }
 
@@ -99,14 +136,20 @@ export async function createBlogPost(data: InsertBlogPost) {
   return getBlogPostBySlug(data.slug);
 }
 
-export async function updateBlogPost(id: number, data: Partial<InsertBlogPost>) {
+export async function updateBlogPost(
+  id: number,
+  data: Partial<InsertBlogPost>
+) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   if (data.published === true) {
     const existing = await getBlogPostById(id);
     if (existing && !existing.publishedAt) data.publishedAt = new Date();
   }
-  await db.update(blogPosts).set({ ...data, updatedAt: new Date() }).where(eq(blogPosts.id, id));
+  await db
+    .update(blogPosts)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(blogPosts.id, id));
   return getBlogPostById(id);
 }
 
@@ -117,29 +160,48 @@ export async function deleteBlogPost(id: number) {
 }
 
 // ─── Projects ─────────────────────────────────────────────────
-export async function getAllProjects(opts?: { category?: string; featuredOnly?: boolean }) {
+export async function getAllProjects(opts?: {
+  category?: string;
+  featuredOnly?: boolean;
+}) {
   const db = await getDb();
   if (!db) return [];
   const conditions = [];
   if (opts?.category && opts.category !== "all") {
-    conditions.push(eq(projects.category, opts.category as "open-source" | "professional" | "personal"));
+    conditions.push(
+      eq(
+        projects.category,
+        opts.category as "open-source" | "professional" | "personal"
+      )
+    );
   }
   if (opts?.featuredOnly) conditions.push(eq(projects.isFeatured, true));
-  const query = db.select().from(projects).orderBy(projects.sortOrder, desc(projects.createdAt));
+  const query = db
+    .select()
+    .from(projects)
+    .orderBy(projects.sortOrder, desc(projects.createdAt));
   return conditions.length > 0 ? query.where(and(...conditions)) : query;
 }
 
 export async function getProjectBySlug(slug: string) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(projects).where(eq(projects.slug, slug)).limit(1);
+  const result = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.slug, slug))
+    .limit(1);
   return result[0] ?? undefined;
 }
 
 export async function getProjectById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
-  const result = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  const result = await db
+    .select()
+    .from(projects)
+    .where(eq(projects.id, id))
+    .limit(1);
   return result[0] ?? undefined;
 }
 
@@ -153,7 +215,10 @@ export async function createProject(data: InsertProject) {
 export async function updateProject(id: number, data: Partial<InsertProject>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.update(projects).set({ ...data, updatedAt: new Date() }).where(eq(projects.id, id));
+  await db
+    .update(projects)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(projects.id, id));
   return getProjectById(id);
 }
 
@@ -167,22 +232,29 @@ export async function deleteProject(id: number) {
 export async function getSetting(key: string): Promise<string | null> {
   const db = await getDb();
   if (!db) return null;
-  const result = await db.select().from(siteSettings).where(eq(siteSettings.key, key)).limit(1);
+  const result = await db
+    .select()
+    .from(siteSettings)
+    .where(eq(siteSettings.key, key))
+    .limit(1);
   return result[0]?.value ?? null;
 }
 
 export async function setSetting(key: string, value: string): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(siteSettings).values({ key, value }).onConflictDoUpdate({
-    target: siteSettings.key,
-    set: { value, updatedAt: new Date() },
-  });
+  await db
+    .insert(siteSettings)
+    .values({ key, value })
+    .onConflictDoUpdate({
+      target: siteSettings.key,
+      set: { value, updatedAt: new Date() },
+    });
 }
 
 export async function getAllSettings(): Promise<Record<string, string>> {
   const db = await getDb();
   if (!db) return {};
   const rows = await db.select().from(siteSettings);
-  return Object.fromEntries(rows.map((r) => [r.key, r.value ?? ""]));
+  return Object.fromEntries(rows.map(r => [r.key, r.value ?? ""]));
 }

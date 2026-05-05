@@ -14,7 +14,10 @@ interface PageLayoutProps {
   className?: string;
 }
 
-export default function PageLayout({ children, className = "" }: PageLayoutProps) {
+export default function PageLayout({
+  children,
+  className = "",
+}: PageLayoutProps) {
   const [bannerVisible, setBannerVisible] = useState(false);
 
   useEffect(() => {
@@ -37,7 +40,10 @@ export default function PageLayout({ children, className = "" }: PageLayoutProps
   const topOffset = NAV_HEIGHT + (bannerVisible ? BANNER_HEIGHT : 0);
 
   return (
-    <div className="min-h-screen" style={{ background: "oklch(0.085 0.012 265)" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "oklch(0.085 0.012 265)" }}
+    >
       <AvailabilityBanner />
       <Navigation />
       <main

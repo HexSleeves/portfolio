@@ -3,7 +3,7 @@ import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
 // ─── Mock the DB helpers ────────────────────────────────────────────────────
-vi.mock("./db", async (importOriginal) => {
+vi.mock("./db", async importOriginal => {
   const actual = await importOriginal<typeof import("./db")>();
   return {
     ...actual,
@@ -23,11 +23,7 @@ vi.mock("./db", async (importOriginal) => {
   };
 });
 
-import {
-  getAllBlogPosts,
-  getBlogPostBySlug,
-  getAllProjects,
-} from "./db";
+import { getAllBlogPosts, getBlogPostBySlug, getAllProjects } from "./db";
 
 // ─── Context helpers ────────────────────────────────────────────────────────
 function makePublicCtx(): TrpcContext {
@@ -62,14 +58,24 @@ describe("blog.list (public)", () => {
 
   it("returns published posts only", async () => {
     const mockPosts = [
-      { id: 1, slug: "post-one", title: "Post One", published: true, tags: "[]", technologies: "[]" },
+      {
+        id: 1,
+        slug: "post-one",
+        title: "Post One",
+        published: true,
+        tags: "[]",
+        technologies: "[]",
+      },
     ];
     vi.mocked(getAllBlogPosts).mockResolvedValue(mockPosts as any);
 
     const caller = appRouter.createCaller(makePublicCtx());
     const result = await caller.blog.list();
 
-    expect(getAllBlogPosts).toHaveBeenCalledWith({ publishedOnly: true, search: undefined });
+    expect(getAllBlogPosts).toHaveBeenCalledWith({
+      publishedOnly: true,
+      search: undefined,
+    });
     expect(result).toEqual(mockPosts);
   });
 
@@ -79,7 +85,10 @@ describe("blog.list (public)", () => {
     const caller = appRouter.createCaller(makePublicCtx());
     await caller.blog.list({ search: "typescript" });
 
-    expect(getAllBlogPosts).toHaveBeenCalledWith({ publishedOnly: true, search: "typescript" });
+    expect(getAllBlogPosts).toHaveBeenCalledWith({
+      publishedOnly: true,
+      search: "typescript",
+    });
   });
 });
 
@@ -87,7 +96,12 @@ describe("blog.bySlug (public)", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns a published post by slug", async () => {
-    const mockPost = { id: 1, slug: "my-post", title: "My Post", published: true };
+    const mockPost = {
+      id: 1,
+      slug: "my-post",
+      title: "My Post",
+      published: true,
+    };
     vi.mocked(getBlogPostBySlug).mockResolvedValue(mockPost as any);
 
     const caller = appRouter.createCaller(makePublicCtx());
@@ -97,7 +111,11 @@ describe("blog.bySlug (public)", () => {
   });
 
   it("throws NOT_FOUND for unpublished post", async () => {
-    vi.mocked(getBlogPostBySlug).mockResolvedValue({ id: 2, slug: "draft", published: false } as any);
+    vi.mocked(getBlogPostBySlug).mockResolvedValue({
+      id: 2,
+      slug: "draft",
+      published: false,
+    } as any);
 
     const caller = appRouter.createCaller(makePublicCtx());
     await expect(caller.blog.bySlug({ slug: "draft" })).rejects.toThrow();
@@ -150,7 +168,13 @@ describe("projects.list (public)", () => {
 
   it("returns all visible projects", async () => {
     const mockProjects = [
-      { id: 1, slug: "tailscale-mcp", title: "tailscale-mcp", isPrivate: false, isFeatured: true },
+      {
+        id: 1,
+        slug: "tailscale-mcp",
+        title: "tailscale-mcp",
+        isPrivate: false,
+        isFeatured: true,
+      },
     ];
     vi.mocked(getAllProjects).mockResolvedValue(mockProjects as any);
 
@@ -175,9 +199,7 @@ describe("projects.featured (public)", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns only featured projects", async () => {
-    const mockFeatured = [
-      { id: 1, slug: "tailscale-mcp", isFeatured: true },
-    ];
+    const mockFeatured = [{ id: 1, slug: "tailscale-mcp", isFeatured: true }];
     vi.mocked(getAllProjects).mockResolvedValue(mockFeatured as any);
 
     const caller = appRouter.createCaller(makePublicCtx());

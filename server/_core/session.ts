@@ -38,7 +38,9 @@ export function createAdminUser(email = ENV.adminEmail): User {
   };
 }
 
-export async function createSessionToken(payload: SessionPayload): Promise<string> {
+export async function createSessionToken(
+  payload: SessionPayload
+): Promise<string> {
   const issuedAt = Date.now();
   const expirationSeconds = Math.floor((issuedAt + ONE_YEAR_MS) / 1000);
 
@@ -49,7 +51,9 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
     .sign(getSecretKey());
 }
 
-export async function verifySessionToken(cookieValue: string | undefined | null): Promise<SessionPayload | null> {
+export async function verifySessionToken(
+  cookieValue: string | undefined | null
+): Promise<SessionPayload | null> {
   if (!cookieValue) return null;
 
   try {
@@ -57,7 +61,11 @@ export async function verifySessionToken(cookieValue: string | undefined | null)
       algorithms: ["HS256"],
     });
 
-    if (payload.sub !== "admin" || payload.role !== "admin" || typeof payload.email !== "string") {
+    if (
+      payload.sub !== "admin" ||
+      payload.role !== "admin" ||
+      typeof payload.email !== "string"
+    ) {
       return null;
     }
 
@@ -77,8 +85,16 @@ export async function authenticateRequest(req: Request): Promise<User | null> {
   return session ? createAdminUser(session.email) : null;
 }
 
-export async function setSessionCookie(req: Request, res: Response, email: string) {
-  const token = await createSessionToken({ sub: "admin", email, role: "admin" });
+export async function setSessionCookie(
+  req: Request,
+  res: Response,
+  email: string
+) {
+  const token = await createSessionToken({
+    sub: "admin",
+    email,
+    role: "admin",
+  });
   res.cookie(COOKIE_NAME, token, {
     ...getSessionCookieOptions(req),
     maxAge: ONE_YEAR_MS,

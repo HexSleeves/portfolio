@@ -42,7 +42,10 @@ const hello = "world";
 };
 
 function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 export default function AdminBlogEditor() {
@@ -70,7 +73,9 @@ export default function AdminBlogEditor() {
         slug: existingPost.slug,
         summary: existingPost.summary ?? "",
         category: existingPost.category ?? "Engineering",
-        tags: Array.isArray(existingPost.tags) ? (existingPost.tags as string[]).join(", ") : "",
+        tags: Array.isArray(existingPost.tags)
+          ? (existingPost.tags as string[]).join(", ")
+          : "",
         readTime: existingPost.readTime ?? "5 min read",
         published: existingPost.published ?? false,
         content: existingPost.content,
@@ -80,12 +85,12 @@ export default function AdminBlogEditor() {
   }, [existingPost]);
 
   const createPost = trpc.blog.create.useMutation({
-    onSuccess: (post) => {
+    onSuccess: post => {
       toast.success("Post created!");
       utils.blog.adminList.invalidate();
       if (post) navigate(`/admin/blog/${post.id}`);
     },
-    onError: (err) => toast.error(err.message || "Failed to create post"),
+    onError: err => toast.error(err.message || "Failed to create post"),
   });
 
   const updatePost = trpc.blog.update.useMutation({
@@ -94,16 +99,23 @@ export default function AdminBlogEditor() {
       utils.blog.adminList.invalidate();
       utils.blog.adminById.invalidate({ id: postId! });
     },
-    onError: (err) => toast.error(err.message || "Failed to save post"),
+    onError: err => toast.error(err.message || "Failed to save post"),
   });
 
   const handleTitleChange = (title: string) => {
-    setForm((f) => ({ ...f, title, slug: slugManual ? f.slug : slugify(title) }));
+    setForm(f => ({ ...f, title, slug: slugManual ? f.slug : slugify(title) }));
   };
 
   const handleSave = (publish?: boolean) => {
-    const tags = form.tags.split(",").map((t) => t.trim()).filter(Boolean);
-    const data = { ...form, tags, published: publish !== undefined ? publish : form.published };
+    const tags = form.tags
+      .split(",")
+      .map(t => t.trim())
+      .filter(Boolean);
+    const data = {
+      ...form,
+      tags,
+      published: publish !== undefined ? publish : form.published,
+    };
     if (isNew) {
       createPost.mutate(data);
     } else {
@@ -134,8 +146,12 @@ export default function AdminBlogEditor() {
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border transition-all"
               style={{
                 borderColor: "oklch(1 0 0 / 10%)",
-                color: preview ? "oklch(0.82 0.15 200)" : "oklch(0.52 0.015 250)",
-                background: preview ? "oklch(0.82 0.15 200 / 8%)" : "transparent",
+                color: preview
+                  ? "oklch(0.82 0.15 200)"
+                  : "oklch(0.52 0.015 250)",
+                background: preview
+                  ? "oklch(0.82 0.15 200 / 8%)"
+                  : "transparent",
                 fontFamily: "'Inter', sans-serif",
               }}
             >
@@ -161,8 +177,12 @@ export default function AdminBlogEditor() {
               disabled={isPending}
               className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
               style={{
-                background: form.published ? "oklch(0.75 0.15 60 / 15%)" : "oklch(0.82 0.15 200)",
-                color: form.published ? "oklch(0.75 0.15 60)" : "oklch(0.085 0.012 265)",
+                background: form.published
+                  ? "oklch(0.75 0.15 60 / 15%)"
+                  : "oklch(0.82 0.15 200)",
+                color: form.published
+                  ? "oklch(0.75 0.15 60)"
+                  : "oklch(0.085 0.012 265)",
                 fontFamily: "'Inter', sans-serif",
               }}
             >
@@ -186,7 +206,7 @@ export default function AdminBlogEditor() {
               type="text"
               placeholder="Post title..."
               value={form.title}
-              onChange={(e) => handleTitleChange(e.target.value)}
+              onChange={e => handleTitleChange(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border text-xl font-bold outline-none"
               style={{
                 background: "oklch(0.10 0.012 265)",
@@ -200,13 +220,22 @@ export default function AdminBlogEditor() {
             {preview ? (
               <div
                 className="blog-prose rounded-xl border p-6 min-h-[500px]"
-                style={{ background: "oklch(0.10 0.012 265)", borderColor: "oklch(1 0 0 / 10%)" }}
-                dangerouslySetInnerHTML={{ __html: "<em style='color:oklch(0.52 0.015 250)'>Preview renders on the public blog page.</em><br/><br/>" + form.content.replace(/\n/g, "<br/>") }}
+                style={{
+                  background: "oklch(0.10 0.012 265)",
+                  borderColor: "oklch(1 0 0 / 10%)",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html:
+                    "<em style='color:oklch(0.52 0.015 250)'>Preview renders on the public blog page.</em><br/><br/>" +
+                    form.content.replace(/\n/g, "<br/>"),
+                }}
               />
             ) : (
               <textarea
                 value={form.content}
-                onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
+                onChange={e =>
+                  setForm(f => ({ ...f, content: e.target.value }))
+                }
                 placeholder="Write your post in Markdown..."
                 className="w-full px-4 py-3 rounded-xl border text-sm outline-none resize-none font-mono"
                 rows={28}
@@ -223,82 +252,183 @@ export default function AdminBlogEditor() {
 
           {/* Sidebar: metadata */}
           <div className="space-y-4">
-            <div className="rounded-xl border p-4 space-y-4" style={{ background: "oklch(0.10 0.012 265)", borderColor: "oklch(1 0 0 / 8%)" }}>
-              <h3 className="text-xs font-semibold uppercase tracking-widest" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+            <div
+              className="rounded-xl border p-4 space-y-4"
+              style={{
+                background: "oklch(0.10 0.012 265)",
+                borderColor: "oklch(1 0 0 / 8%)",
+              }}
+            >
+              <h3
+                className="text-xs font-semibold uppercase tracking-widest"
+                style={{
+                  color: "oklch(0.52 0.015 250)",
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
                 Metadata
               </h3>
 
               {/* Slug */}
               <div>
-                <label className="block text-xs mb-1" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>Slug</label>
+                <label
+                  className="block text-xs mb-1"
+                  style={{
+                    color: "oklch(0.52 0.015 250)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Slug
+                </label>
                 <input
                   type="text"
                   value={form.slug}
-                  onChange={(e) => { setSlugManual(true); setForm((f) => ({ ...f, slug: e.target.value })); }}
+                  onChange={e => {
+                    setSlugManual(true);
+                    setForm(f => ({ ...f, slug: e.target.value }));
+                  }}
                   className="w-full px-3 py-1.5 rounded-lg border text-xs outline-none font-mono"
-                  style={{ background: "oklch(0.085 0.012 265)", borderColor: "oklch(1 0 0 / 10%)", color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace" }}
+                  style={{
+                    background: "oklch(0.085 0.012 265)",
+                    borderColor: "oklch(1 0 0 / 10%)",
+                    color: "oklch(0.82 0.15 200)",
+                    fontFamily: "'JetBrains Mono', monospace",
+                  }}
                 />
               </div>
 
               {/* Summary */}
               <div>
-                <label className="block text-xs mb-1" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>Summary</label>
+                <label
+                  className="block text-xs mb-1"
+                  style={{
+                    color: "oklch(0.52 0.015 250)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Summary
+                </label>
                 <textarea
                   value={form.summary}
-                  onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
+                  onChange={e =>
+                    setForm(f => ({ ...f, summary: e.target.value }))
+                  }
                   rows={3}
                   className="w-full px-3 py-1.5 rounded-lg border text-xs outline-none resize-none"
-                  style={{ background: "oklch(0.085 0.012 265)", borderColor: "oklch(1 0 0 / 10%)", color: "oklch(0.82 0.005 240)", fontFamily: "'Inter', sans-serif" }}
+                  style={{
+                    background: "oklch(0.085 0.012 265)",
+                    borderColor: "oklch(1 0 0 / 10%)",
+                    color: "oklch(0.82 0.005 240)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label className="block text-xs mb-1" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>Category</label>
+                <label
+                  className="block text-xs mb-1"
+                  style={{
+                    color: "oklch(0.52 0.015 250)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Category
+                </label>
                 <input
                   type="text"
                   value={form.category}
-                  onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+                  onChange={e =>
+                    setForm(f => ({ ...f, category: e.target.value }))
+                  }
                   className="w-full px-3 py-1.5 rounded-lg border text-xs outline-none"
-                  style={{ background: "oklch(0.085 0.012 265)", borderColor: "oklch(1 0 0 / 10%)", color: "oklch(0.82 0.005 240)", fontFamily: "'Inter', sans-serif" }}
+                  style={{
+                    background: "oklch(0.085 0.012 265)",
+                    borderColor: "oklch(1 0 0 / 10%)",
+                    color: "oklch(0.82 0.005 240)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
                 />
               </div>
 
               {/* Tags */}
               <div>
-                <label className="block text-xs mb-1" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>Tags (comma-separated)</label>
+                <label
+                  className="block text-xs mb-1"
+                  style={{
+                    color: "oklch(0.52 0.015 250)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Tags (comma-separated)
+                </label>
                 <input
                   type="text"
                   value={form.tags}
-                  onChange={(e) => setForm((f) => ({ ...f, tags: e.target.value }))}
+                  onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
                   placeholder="TypeScript, React, DevOps"
                   className="w-full px-3 py-1.5 rounded-lg border text-xs outline-none"
-                  style={{ background: "oklch(0.085 0.012 265)", borderColor: "oklch(1 0 0 / 10%)", color: "oklch(0.82 0.005 240)", fontFamily: "'Inter', sans-serif" }}
+                  style={{
+                    background: "oklch(0.085 0.012 265)",
+                    borderColor: "oklch(1 0 0 / 10%)",
+                    color: "oklch(0.82 0.005 240)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
                 />
               </div>
 
               {/* Read time */}
               <div>
-                <label className="block text-xs mb-1" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>Read Time</label>
+                <label
+                  className="block text-xs mb-1"
+                  style={{
+                    color: "oklch(0.52 0.015 250)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Read Time
+                </label>
                 <input
                   type="text"
                   value={form.readTime}
-                  onChange={(e) => setForm((f) => ({ ...f, readTime: e.target.value }))}
+                  onChange={e =>
+                    setForm(f => ({ ...f, readTime: e.target.value }))
+                  }
                   placeholder="5 min read"
                   className="w-full px-3 py-1.5 rounded-lg border text-xs outline-none"
-                  style={{ background: "oklch(0.085 0.012 265)", borderColor: "oklch(1 0 0 / 10%)", color: "oklch(0.82 0.005 240)", fontFamily: "'Inter', sans-serif" }}
+                  style={{
+                    background: "oklch(0.085 0.012 265)",
+                    borderColor: "oklch(1 0 0 / 10%)",
+                    color: "oklch(0.82 0.005 240)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
                 />
               </div>
 
               {/* Status */}
-              <div className="pt-2 border-t" style={{ borderColor: "oklch(1 0 0 / 8%)" }}>
+              <div
+                className="pt-2 border-t"
+                style={{ borderColor: "oklch(1 0 0 / 8%)" }}
+              >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>Status</span>
+                  <span
+                    className="text-xs"
+                    style={{
+                      color: "oklch(0.52 0.015 250)",
+                      fontFamily: "'Inter', sans-serif",
+                    }}
+                  >
+                    Status
+                  </span>
                   <span
                     className="px-2 py-0.5 rounded text-xs"
                     style={{
-                      background: form.published ? "oklch(0.75 0.18 145 / 12%)" : "oklch(0.75 0.15 60 / 12%)",
-                      color: form.published ? "oklch(0.75 0.18 145)" : "oklch(0.75 0.15 60)",
+                      background: form.published
+                        ? "oklch(0.75 0.18 145 / 12%)"
+                        : "oklch(0.75 0.15 60 / 12%)",
+                      color: form.published
+                        ? "oklch(0.75 0.18 145)"
+                        : "oklch(0.75 0.15 60)",
                       fontFamily: "'JetBrains Mono', monospace",
                     }}
                   >

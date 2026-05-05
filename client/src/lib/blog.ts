@@ -49,7 +49,10 @@ function parseValue(raw: string): unknown {
   const v = raw.trim();
 
   // Quoted string
-  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
+  if (
+    (v.startsWith('"') && v.endsWith('"')) ||
+    (v.startsWith("'") && v.endsWith("'"))
+  ) {
     return v.slice(1, -1);
   }
 
@@ -62,9 +65,12 @@ function parseValue(raw: string): unknown {
     return v
       .slice(1, -1)
       .split(",")
-      .map((item) => {
+      .map(item => {
         const t = item.trim();
-        if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+        if (
+          (t.startsWith('"') && t.endsWith('"')) ||
+          (t.startsWith("'") && t.endsWith("'"))
+        ) {
           return t.slice(1, -1);
         }
         return t;
@@ -83,7 +89,10 @@ function parseValue(raw: string): unknown {
  * Splits a raw .md file into { attributes, body }.
  * Expects frontmatter between the first pair of `---` lines.
  */
-function parseFrontmatter(raw: string): { attributes: Record<string, unknown>; body: string } {
+function parseFrontmatter(raw: string): {
+  attributes: Record<string, unknown>;
+  body: string;
+} {
   const lines = raw.split("\n");
   const attributes: Record<string, unknown> = {};
 
@@ -116,7 +125,10 @@ function parseFrontmatter(raw: string): { attributes: Record<string, unknown>; b
     }
   }
 
-  const body = lines.slice(closingIndex + 1).join("\n").trimStart();
+  const body = lines
+    .slice(closingIndex + 1)
+    .join("\n")
+    .trimStart();
   return { attributes, body };
 }
 
@@ -156,7 +168,7 @@ const allPosts: BlogPost[] = Object.values(rawFiles).map(parsePost);
  * Drafts (published: false or missing) are excluded.
  */
 export const publishedPosts: BlogPost[] = allPosts
-  .filter((p) => p.published)
+  .filter(p => p.published)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 /**
@@ -164,7 +176,7 @@ export const publishedPosts: BlogPost[] = allPosts
  * Returns undefined if the post doesn't exist or is a draft.
  */
 export function getPublishedPost(slug: string): BlogPost | undefined {
-  return publishedPosts.find((p) => p.slug === slug);
+  return publishedPosts.find(p => p.slug === slug);
 }
 
 /**
@@ -173,5 +185,5 @@ export function getPublishedPost(slug: string): BlogPost | undefined {
  */
 export const publishedCategories: string[] = [
   "All",
-  ...Array.from(new Set(publishedPosts.map((p) => p.category))),
+  ...Array.from(new Set(publishedPosts.map(p => p.category))),
 ];

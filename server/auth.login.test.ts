@@ -20,7 +20,11 @@ function createPublicContext(): { ctx: TrpcContext; cookies: CookieCall[] } {
       headers: {},
     } as TrpcContext["req"],
     res: {
-      cookie: (name: string, value: string, options: Record<string, unknown>) => {
+      cookie: (
+        name: string,
+        value: string,
+        options: Record<string, unknown>
+      ) => {
         cookies.push({ name, value, options });
       },
       clearCookie: () => undefined,

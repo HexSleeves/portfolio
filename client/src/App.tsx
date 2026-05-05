@@ -32,12 +32,48 @@ function Router() {
       <Route path="/about" component={AboutPage} />
       <Route path="/admin/login" component={AdminLogin} />
       {/* Admin routes — protected by RequireAdmin (owner/admin only) */}
-      <Route path="/admin">{() => <RequireAdmin><AdminDashboard /></RequireAdmin>}</Route>
-      <Route path="/admin/blog">{() => <RequireAdmin><AdminBlogList /></RequireAdmin>}</Route>
-      <Route path="/admin/blog/:id">{() => <RequireAdmin><AdminBlogEditor /></RequireAdmin>}</Route>
-      <Route path="/admin/projects">{() => <RequireAdmin><AdminProjectsList /></RequireAdmin>}</Route>
-      <Route path="/admin/projects/:id">{() => <RequireAdmin><AdminProjectEditor /></RequireAdmin>}</Route>
-      <Route path="/admin/settings">{() => <RequireAdmin><AdminSettings /></RequireAdmin>}</Route>
+      <Route path="/admin">
+        {() => (
+          <RequireAdmin>
+            <AdminDashboard />
+          </RequireAdmin>
+        )}
+      </Route>
+      <Route path="/admin/blog">
+        {() => (
+          <RequireAdmin>
+            <AdminBlogList />
+          </RequireAdmin>
+        )}
+      </Route>
+      <Route path="/admin/blog/:id">
+        {() => (
+          <RequireAdmin>
+            <AdminBlogEditor />
+          </RequireAdmin>
+        )}
+      </Route>
+      <Route path="/admin/projects">
+        {() => (
+          <RequireAdmin>
+            <AdminProjectsList />
+          </RequireAdmin>
+        )}
+      </Route>
+      <Route path="/admin/projects/:id">
+        {() => (
+          <RequireAdmin>
+            <AdminProjectEditor />
+          </RequireAdmin>
+        )}
+      </Route>
+      <Route path="/admin/settings">
+        {() => (
+          <RequireAdmin>
+            <AdminSettings />
+          </RequireAdmin>
+        )}
+      </Route>
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

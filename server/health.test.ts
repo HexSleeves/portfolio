@@ -7,7 +7,7 @@ let server: ReturnType<typeof createServer> | null = null;
 afterEach(async () => {
   if (!server) return;
   await new Promise<void>((resolve, reject) => {
-    server?.close((error) => {
+    server?.close(error => {
       if (error) reject(error);
       else resolve();
     });
@@ -18,9 +18,10 @@ afterEach(async () => {
 describe("health endpoint", () => {
   it("returns ok", async () => {
     server = createServer(createApp());
-    await new Promise<void>((resolve) => server?.listen(0, "127.0.0.1", resolve));
+    await new Promise<void>(resolve => server?.listen(0, "127.0.0.1", resolve));
     const address = server.address();
-    if (!address || typeof address === "string") throw new Error("Missing test server address");
+    if (!address || typeof address === "string")
+      throw new Error("Missing test server address");
 
     const response = await fetch(`http://127.0.0.1:${address.port}/healthz`);
     expect(response.status).toBe(200);

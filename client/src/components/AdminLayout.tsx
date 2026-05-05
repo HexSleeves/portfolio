@@ -33,10 +33,19 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "oklch(0.085 0.012 265)" }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>
+          <span
+            className="text-sm"
+            style={{
+              color: "oklch(0.52 0.015 250)",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
             Loading...
           </span>
         </div>
@@ -51,16 +60,33 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
   if (user?.role !== "admin") {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "oklch(0.085 0.012 265)" }}>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2" style={{ color: "oklch(0.94 0.005 240)", fontFamily: "'Space Grotesk', sans-serif" }}>
+          <h1
+            className="text-2xl font-bold mb-2"
+            style={{
+              color: "oklch(0.94 0.005 240)",
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}
+          >
             Access Denied
           </h1>
-          <p className="text-sm mb-4" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}>
+          <p
+            className="text-sm mb-4"
+            style={{
+              color: "oklch(0.52 0.015 250)",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
             You don't have admin access to this area.
           </p>
           <Link href="/">
-            <span className="text-sm" style={{ color: "oklch(0.82 0.15 200)" }}>← Back to portfolio</span>
+            <span className="text-sm" style={{ color: "oklch(0.82 0.15 200)" }}>
+              ← Back to portfolio
+            </span>
           </Link>
         </div>
       </div>
@@ -75,17 +101,44 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="px-5 py-5 border-b" style={{ borderColor: "oklch(1 0 0 / 6%)" }}>
+      <div
+        className="px-5 py-5 border-b"
+        style={{ borderColor: "oklch(1 0 0 / 6%)" }}
+      >
         <Link href="/admin" onClick={() => setMobileOpen(false)}>
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md flex items-center justify-center" style={{ background: "oklch(0.82 0.15 200 / 15%)" }}>
-              <span style={{ color: "oklch(0.82 0.15 200)", fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", fontWeight: 700 }}>JL</span>
+            <div
+              className="w-7 h-7 rounded-md flex items-center justify-center"
+              style={{ background: "oklch(0.82 0.15 200 / 15%)" }}
+            >
+              <span
+                style={{
+                  color: "oklch(0.82 0.15 200)",
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                }}
+              >
+                JL
+              </span>
             </div>
             <div>
-              <div className="text-sm font-semibold" style={{ color: "oklch(0.94 0.005 240)", fontFamily: "'Space Grotesk', sans-serif" }}>
+              <div
+                className="text-sm font-semibold"
+                style={{
+                  color: "oklch(0.94 0.005 240)",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                }}
+              >
                 Admin
               </div>
-              <div className="text-xs" style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'JetBrains Mono', monospace" }}>
+              <div
+                className="text-xs"
+                style={{
+                  color: "oklch(0.52 0.015 250)",
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}
+              >
                 jacob-portfolio
               </div>
             </div>
@@ -95,24 +148,35 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {NAV_ITEMS.map((item) => {
+        {NAV_ITEMS.map(item => {
           const active = isActive(item.href, item.exact);
           return (
-            <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+            >
               <div
                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 cursor-pointer group"
                 style={{
-                  background: active ? "oklch(0.82 0.15 200 / 10%)" : "transparent",
-                  color: active ? "oklch(0.82 0.15 200)" : "oklch(0.52 0.015 250)",
+                  background: active
+                    ? "oklch(0.82 0.15 200 / 10%)"
+                    : "transparent",
+                  color: active
+                    ? "oklch(0.82 0.15 200)"
+                    : "oklch(0.52 0.015 250)",
                   fontFamily: "'Inter', sans-serif",
                 }}
-                onMouseEnter={(e) => {
-                  if (!active) e.currentTarget.style.background = "oklch(1 0 0 / 4%)";
-                  if (!active) e.currentTarget.style.color = "oklch(0.75 0.01 240)";
+                onMouseEnter={e => {
+                  if (!active)
+                    e.currentTarget.style.background = "oklch(1 0 0 / 4%)";
+                  if (!active)
+                    e.currentTarget.style.color = "oklch(0.75 0.01 240)";
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={e => {
                   if (!active) e.currentTarget.style.background = "transparent";
-                  if (!active) e.currentTarget.style.color = "oklch(0.52 0.015 250)";
+                  if (!active)
+                    e.currentTarget.style.color = "oklch(0.52 0.015 250)";
                 }}
               >
                 <item.icon size={15} />
@@ -125,13 +189,25 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t space-y-1" style={{ borderColor: "oklch(1 0 0 / 6%)" }}>
+      <div
+        className="px-3 py-4 border-t space-y-1"
+        style={{ borderColor: "oklch(1 0 0 / 6%)" }}
+      >
         <Link href="/" onClick={() => setMobileOpen(false)}>
           <div
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
-            style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif" }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "oklch(0.75 0.01 240)"; e.currentTarget.style.background = "oklch(1 0 0 / 4%)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "oklch(0.52 0.015 250)"; e.currentTarget.style.background = "transparent"; }}
+            style={{
+              color: "oklch(0.52 0.015 250)",
+              fontFamily: "'Inter', sans-serif",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.color = "oklch(0.75 0.01 240)";
+              e.currentTarget.style.background = "oklch(1 0 0 / 4%)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.color = "oklch(0.52 0.015 250)";
+              e.currentTarget.style.background = "transparent";
+            }}
           >
             <Home size={15} />
             <span>View Portfolio</span>
@@ -140,9 +216,20 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         <button
           onClick={() => logout()}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
-          style={{ color: "oklch(0.52 0.015 250)", fontFamily: "'Inter', sans-serif", background: "transparent", border: "none" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "oklch(0.65 0.15 25)"; e.currentTarget.style.background = "oklch(0.65 0.15 25 / 8%)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "oklch(0.52 0.015 250)"; e.currentTarget.style.background = "transparent"; }}
+          style={{
+            color: "oklch(0.52 0.015 250)",
+            fontFamily: "'Inter', sans-serif",
+            background: "transparent",
+            border: "none",
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = "oklch(0.65 0.15 25)";
+            e.currentTarget.style.background = "oklch(0.65 0.15 25 / 8%)";
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = "oklch(0.52 0.015 250)";
+            e.currentTarget.style.background = "transparent";
+          }}
         >
           <LogOut size={15} />
           <span>Sign Out</span>
@@ -152,11 +239,17 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
   );
 
   return (
-    <div className="min-h-screen flex" style={{ background: "oklch(0.085 0.012 265)" }}>
+    <div
+      className="min-h-screen flex"
+      style={{ background: "oklch(0.085 0.012 265)" }}
+    >
       {/* Desktop Sidebar */}
       <aside
         className="hidden lg:flex flex-col w-56 flex-shrink-0 sticky top-0 h-screen"
-        style={{ background: "oklch(0.10 0.012 265)", borderRight: "1px solid oklch(1 0 0 / 6%)" }}
+        style={{
+          background: "oklch(0.10 0.012 265)",
+          borderRight: "1px solid oklch(1 0 0 / 6%)",
+        }}
       >
         <SidebarContent />
       </aside>
@@ -164,10 +257,16 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
       {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setMobileOpen(false)}
+          />
           <aside
             className="relative flex flex-col w-56 h-full z-10"
-            style={{ background: "oklch(0.10 0.012 265)", borderRight: "1px solid oklch(1 0 0 / 6%)" }}
+            style={{
+              background: "oklch(0.10 0.012 265)",
+              borderRight: "1px solid oklch(1 0 0 / 6%)",
+            }}
           >
             <button
               className="absolute top-3 right-3 p-1.5 rounded-md"
@@ -186,7 +285,10 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         {/* Top bar */}
         <header
           className="sticky top-0 z-30 flex items-center gap-4 px-5 py-3 border-b"
-          style={{ background: "oklch(0.085 0.012 265)", borderColor: "oklch(1 0 0 / 6%)" }}
+          style={{
+            background: "oklch(0.085 0.012 265)",
+            borderColor: "oklch(1 0 0 / 6%)",
+          }}
         >
           <button
             className="lg:hidden p-1.5 rounded-md"
@@ -197,7 +299,13 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           </button>
           <div className="flex-1">
             {title && (
-              <h1 className="text-base font-semibold" style={{ color: "oklch(0.94 0.005 240)", fontFamily: "'Space Grotesk', sans-serif" }}>
+              <h1
+                className="text-base font-semibold"
+                style={{
+                  color: "oklch(0.94 0.005 240)",
+                  fontFamily: "'Space Grotesk', sans-serif",
+                }}
+              >
                 {title}
               </h1>
             )}
@@ -205,7 +313,11 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           <div className="flex items-center gap-2">
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              style={{ background: "oklch(0.82 0.15 200 / 15%)", color: "oklch(0.82 0.15 200)", fontFamily: "'Space Grotesk', sans-serif" }}
+              style={{
+                background: "oklch(0.82 0.15 200 / 15%)",
+                color: "oklch(0.82 0.15 200)",
+                fontFamily: "'Space Grotesk', sans-serif",
+              }}
             >
               {user?.name?.charAt(0)?.toUpperCase() ?? "J"}
             </div>
@@ -213,9 +325,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-5 lg:p-7">
-          {children}
-        </main>
+        <main className="flex-1 p-5 lg:p-7">{children}</main>
       </div>
     </div>
   );

@@ -11,7 +11,11 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const userRole = pgEnum("user_role", ["user", "admin"]);
-export const projectCategory = pgEnum("project_category", ["open-source", "professional", "personal"]);
+export const projectCategory = pgEnum("project_category", [
+  "open-source",
+  "professional",
+  "personal",
+]);
 
 /**
  * Core user table backing auth flow.
@@ -45,7 +49,9 @@ export const blogPosts = pgTable("blog_posts", {
   title: varchar("title", { length: 500 }).notNull(),
   summary: text("summary").notNull(),
   content: text("content").notNull(),
-  category: varchar("category", { length: 100 }).notNull().default("Engineering"),
+  category: varchar("category", { length: 100 })
+    .notNull()
+    .default("Engineering"),
   tags: jsonb("tags").$type<string[]>(),
   published: boolean("published").notNull().default(false),
   readTime: varchar("readTime", { length: 50 }).default("5 min read"),

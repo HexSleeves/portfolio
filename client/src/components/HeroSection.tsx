@@ -2,7 +2,7 @@
 // Left-weighted layout with typewriter tagline and dot-grid background
 
 import { useState, useEffect } from "react";
-import { ArrowRight, Download, Github } from "lucide-react";
+import { ArrowRight, Code2 as Github, Download } from "lucide-react";
 import { stats } from "@/lib/data";
 
 const taglines = [
@@ -23,14 +23,14 @@ function useTypewriter(words: string[], speed = 80, pause = 2000) {
     let timeout: ReturnType<typeof setTimeout>;
 
     if (!deleting && charIndex < current.length) {
-      timeout = setTimeout(() => setCharIndex((c) => c + 1), speed);
+      timeout = setTimeout(() => setCharIndex(c => c + 1), speed);
     } else if (!deleting && charIndex === current.length) {
       timeout = setTimeout(() => setDeleting(true), pause);
     } else if (deleting && charIndex > 0) {
-      timeout = setTimeout(() => setCharIndex((c) => c - 1), speed / 2);
+      timeout = setTimeout(() => setCharIndex(c => c - 1), speed / 2);
     } else if (deleting && charIndex === 0) {
       setDeleting(false);
-      setWordIndex((w) => (w + 1) % words.length);
+      setWordIndex(w => (w + 1) % words.length);
     }
 
     setDisplayed(current.slice(0, charIndex));
@@ -59,8 +59,8 @@ export default function HeroSection() {
         className="absolute inset-0 opacity-25"
         style={{
           backgroundImage: `url('https://d2xsxph8kpxj0f.cloudfront.net/310519663074844816/D7Scsbof2ga2vbCvASFLcE/hero-bg-Rhiwk8BwfqiAMSinatKnvV.webp')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center right',
+          backgroundSize: "cover",
+          backgroundPosition: "center right",
         }}
       />
       {/* Dot-grid background */}
@@ -97,8 +97,7 @@ export default function HeroSection() {
               color: "oklch(0.94 0.005 240)",
             }}
           >
-            Jacob{" "}
-            <span style={{ color: "oklch(0.82 0.15 200)" }}>LeCoq</span>
+            Jacob <span style={{ color: "oklch(0.82 0.15 200)" }}>LeCoq</span>
           </h1>
 
           {/* Typewriter tagline */}
@@ -140,7 +139,10 @@ export default function HeroSection() {
               color: "oklch(0.52 0.015 250)",
             }}
           >
-            Senior Software Engineer with 8+ years shipping production software across enterprise commerce, genomics infrastructure, and AI tooling. Currently at Dexian (Bayer) driving CI/CD standards, AI agent workflows, and platform modernization.
+            Senior Software Engineer with 8+ years shipping production software
+            across enterprise commerce, genomics infrastructure, and AI tooling.
+            Currently at Dexian (Bayer) driving CI/CD standards, AI agent
+            workflows, and platform modernization.
           </p>
 
           {/* CTAs */}
@@ -200,7 +202,7 @@ export default function HeroSection() {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}
           >
-            {stats.map((stat) => (
+            {stats.map(stat => (
               <div key={stat.label} className="flex flex-col gap-1">
                 <span
                   className="font-display font-bold text-2xl"

@@ -50,10 +50,20 @@ export const projects: Project[] = [
   {
     slug: "tailscale-mcp",
     title: "Tailscale MCP Server",
-    summary: "A Model Context Protocol server enabling AI agents to manage Tailscale networks programmatically.",
-    problem: "AI coding assistants lacked the ability to interact with private network infrastructure, requiring manual context-switching and slowing down AI-assisted DevOps workflows.",
+    summary:
+      "A Model Context Protocol server enabling AI agents to manage Tailscale networks programmatically.",
+    problem:
+      "AI coding assistants lacked the ability to interact with private network infrastructure, requiring manual context-switching and slowing down AI-assisted DevOps workflows.",
     role: "Sole author — designed the architecture, implemented all tool modules, set up CI/CD, and published to NPM and Docker Hub.",
-    technologies: ["TypeScript", "Node.js", "Bun", "Docker", "GitHub Actions", "Zod", "MCP SDK"],
+    technologies: [
+      "TypeScript",
+      "Node.js",
+      "Bun",
+      "Docker",
+      "GitHub Actions",
+      "Zod",
+      "MCP SDK",
+    ],
     features: [
       "Device management: list, authorize, deauthorize Tailscale nodes",
       "Network operations: connect/disconnect, route management, status monitoring",
@@ -62,7 +72,8 @@ export const projects: Project[] = [
       "OAuth authentication support",
       "Full CI/CD pipeline with multi-registry publishing script",
     ],
-    results: "87 GitHub stars, 19 forks. Adopted by developers integrating AI agents into private network workflows. Published across three package registries.",
+    results:
+      "87 GitHub stars, 19 forks. Adopted by developers integrating AI agents into private network workflows. Published across three package registries.",
     githubUrl: "https://github.com/HexSleeves/tailscale-mcp",
     isPrivate: false,
     isFeatured: true,
@@ -71,10 +82,20 @@ export const projects: Project[] = [
   {
     slug: "waggle",
     title: "Waggle — Multi-Agent Orchestration",
-    summary: "A Go-based multi-agent orchestration framework where a Queen LLM agent decomposes objectives and delegates to Worker Bee sub-agents.",
-    problem: "Complex software tasks require coordinating multiple AI coding agents (Claude Code, Codex, Gemini) in parallel, but no lightweight Go-native framework existed for this workflow.",
+    summary:
+      "A Go-based multi-agent orchestration framework where a Queen LLM agent decomposes objectives and delegates to Worker Bee sub-agents.",
+    problem:
+      "Complex software tasks require coordinating multiple AI coding agents (Claude Code, Codex, Gemini) in parallel, but no lightweight Go-native framework existed for this workflow.",
     role: "Sole author — designed the agent architecture, Queen/Worker model, TUI dashboard, and GoReleaser-based distribution pipeline.",
-    technologies: ["Go", "LLM APIs", "Anthropic Claude", "SQLite", "Bubble Tea (TUI)", "GoReleaser", "GitHub Actions"],
+    technologies: [
+      "Go",
+      "LLM APIs",
+      "Anthropic Claude",
+      "SQLite",
+      "Bubble Tea (TUI)",
+      "GoReleaser",
+      "GitHub Actions",
+    ],
     features: [
       "Queen agent (tool-using LLM) decomposes objectives into task dependency graphs",
       "Worker Bee adapters for Claude Code, Codex, Kimi, Gemini, and plain shell",
@@ -83,7 +104,8 @@ export const projects: Project[] = [
       "SQLite-backed hive state for session persistence and resumption",
       "GoReleaser-based cross-platform binary distribution",
     ],
-    results: "Fully functional v1.0.0 release. Enables complex multi-step engineering tasks to be orchestrated autonomously across multiple AI backends.",
+    results:
+      "Fully functional v1.0.0 release. Enables complex multi-step engineering tasks to be orchestrated autonomously across multiple AI backends.",
     githubUrl: "https://github.com/HexSleeves/waggle",
     isPrivate: false,
     isFeatured: true,
@@ -92,17 +114,26 @@ export const projects: Project[] = [
   {
     slug: "resume-forge",
     title: "ResumeForge",
-    summary: "An AI-powered resume builder that generates tailored, ATS-optimized resumes from a structured profile.",
-    problem: "Job seekers waste hours reformatting resumes for each application. ResumeForge automates tailoring by matching a candidate's experience to job descriptions using LLM-driven content generation.",
+    summary:
+      "An AI-powered resume builder that generates tailored, ATS-optimized resumes from a structured profile.",
+    problem:
+      "Job seekers waste hours reformatting resumes for each application. ResumeForge automates tailoring by matching a candidate's experience to job descriptions using LLM-driven content generation.",
     role: "Sole author — full-stack design, LLM integration, PDF generation pipeline, and deployment.",
-    technologies: ["TypeScript", "React", "Node.js", "LLM APIs", "PDF generation"],
+    technologies: [
+      "TypeScript",
+      "React",
+      "Node.js",
+      "LLM APIs",
+      "PDF generation",
+    ],
     features: [
       "Structured profile input with experience, skills, and accomplishments",
       "AI-driven tailoring to match job descriptions",
       "Multiple resume templates with clean PDF export",
       "ATS-friendly formatting",
     ],
-    results: "Private project used personally and shared with colleagues. Reduced resume tailoring time from hours to minutes.",
+    results:
+      "Private project used personally and shared with colleagues. Reduced resume tailoring time from hours to minutes.",
     isPrivate: true,
     isFeatured: true,
     category: "personal",
@@ -110,17 +141,26 @@ export const projects: Project[] = [
   {
     slug: "family-events",
     title: "Family Events Platform",
-    summary: "A full-stack family event coordination platform with shared calendars, RSVP management, and real-time notifications.",
-    problem: "Coordinating family events across multiple households required juggling group chats, emails, and spreadsheets. A dedicated platform was needed to centralize planning and RSVPs.",
+    summary:
+      "A full-stack family event coordination platform with shared calendars, RSVP management, and real-time notifications.",
+    problem:
+      "Coordinating family events across multiple households required juggling group chats, emails, and spreadsheets. A dedicated platform was needed to centralize planning and RSVPs.",
     role: "Sole author — designed the data model, built the full-stack application, and deployed to production.",
-    technologies: ["TypeScript", "React", "Node.js", "PostgreSQL", "Real-time notifications"],
+    technologies: [
+      "TypeScript",
+      "React",
+      "Node.js",
+      "PostgreSQL",
+      "Real-time notifications",
+    ],
     features: [
       "Shared family calendar with event creation and management",
       "RSVP tracking with attendance counts",
       "Real-time notifications for event updates",
       "Mobile-responsive design for on-the-go access",
     ],
-    results: "Private project actively used by family. Eliminated coordination friction and centralized all event planning.",
+    results:
+      "Private project actively used by family. Eliminated coordination friction and centralized all event planning.",
     isPrivate: true,
     isFeatured: false,
     category: "personal",
@@ -128,8 +168,10 @@ export const projects: Project[] = [
   {
     slug: "runeforge",
     title: "RuneForge — Rust Roguelike Library",
-    summary: "A modern, modular roguelike game library for Rust with a clean API for grid-based game development.",
-    problem: "Existing Rust game libraries for roguelikes were either too opinionated or too low-level, making it hard to build maintainable grid-based games.",
+    summary:
+      "A modern, modular roguelike game library for Rust with a clean API for grid-based game development.",
+    problem:
+      "Existing Rust game libraries for roguelikes were either too opinionated or too low-level, making it hard to build maintainable grid-based games.",
     role: "Sole author — designed the library API, implemented core systems, and published as an open-source crate.",
     technologies: ["Rust", "Game Development", "Grid Systems", "ECS patterns"],
     features: [
@@ -138,7 +180,8 @@ export const projects: Project[] = [
       "FOV (field of view) and pathfinding utilities",
       "BSD 3-Clause licensed for maximum flexibility",
     ],
-    results: "Open-source library available on GitHub. Demonstrates deep Rust expertise and systems programming capability.",
+    results:
+      "Open-source library available on GitHub. Demonstrates deep Rust expertise and systems programming capability.",
     githubUrl: "https://github.com/HexSleeves/runeforge",
     isPrivate: false,
     isFeatured: false,
@@ -147,10 +190,20 @@ export const projects: Project[] = [
   {
     slug: "bayer-ai-platform",
     title: "Bayer AI Agent Platform",
-    summary: "Internal AI tooling and agent workflows built on Bayer's enterprise AI platform, automating ticket triage, code generation, and knowledge retrieval.",
-    problem: "Engineering teams at Bayer spent significant time on repetitive tasks — ticket triage, boilerplate code generation, and searching internal documentation — that could be automated with AI agents.",
+    summary:
+      "Internal AI tooling and agent workflows built on Bayer's enterprise AI platform, automating ticket triage, code generation, and knowledge retrieval.",
+    problem:
+      "Engineering teams at Bayer spent significant time on repetitive tasks — ticket triage, boilerplate code generation, and searching internal documentation — that could be automated with AI agents.",
     role: "Lead engineer — designed the agent architecture, built prompt patterns and agent templates in Rust and JavaScript, and integrated agents into JIRA, repositories, and documentation systems.",
-    technologies: ["TypeScript", "Rust", "JavaScript", "LLM APIs", "JIRA API", "NestJS", "Nx"],
+    technologies: [
+      "TypeScript",
+      "Rust",
+      "JavaScript",
+      "LLM APIs",
+      "JIRA API",
+      "NestJS",
+      "Nx",
+    ],
     features: [
       "Natural-language ticket triage and routing via AI agents",
       "Code generation agents integrated into PR workflows",
@@ -158,7 +211,8 @@ export const projects: Project[] = [
       "Reusable prompt patterns and agent templates",
       "Safe AI usage standards adopted across teams",
     ],
-    results: "Reduced manual engineering time by roughly 50%. Accelerated AI feature adoption across multiple teams. Standardized AI usage patterns company-wide.",
+    results:
+      "Reduced manual engineering time by roughly 50%. Accelerated AI feature adoption across multiple teams. Standardized AI usage patterns company-wide.",
     isPrivate: true,
     isFeatured: true,
     category: "professional",
@@ -166,17 +220,28 @@ export const projects: Project[] = [
   {
     slug: "dnanexus-aws",
     title: "DNAnexus AWS Cost Optimization",
-    summary: "Designed and implemented AWS infrastructure optimizations for a genomics cloud platform, reducing annual compute spend by $30K.",
-    problem: "DNAnexus's production Node.js services were running on suboptimal AWS compute configurations, leading to unnecessary spend and throughput bottlenecks for customer workloads.",
+    summary:
+      "Designed and implemented AWS infrastructure optimizations for a genomics cloud platform, reducing annual compute spend by $30K.",
+    problem:
+      "DNAnexus's production Node.js services were running on suboptimal AWS compute configurations, leading to unnecessary spend and throughput bottlenecks for customer workloads.",
     role: "Senior Software Engineer — led backend delivery, designed cross-account AWS patterns, and implemented Spot Instance orchestration.",
-    technologies: ["AWS", "Node.js", "TypeScript", "IAM", "KMS", "Secrets Manager", "Spot Instances"],
+    technologies: [
+      "AWS",
+      "Node.js",
+      "TypeScript",
+      "IAM",
+      "KMS",
+      "Secrets Manager",
+      "Spot Instances",
+    ],
     features: [
       "Cluster optimization and pricing-model changes",
       "Spot Instance orchestration for customer workloads",
       "Secure cross-account AWS patterns using IAM, KMS, and Secrets Manager",
       "BYOA (Bring Your Own Account) workload support",
     ],
-    results: "$30K annual AWS cost reduction. Improved compute throughput for customer genomics workloads. Enabled compliant cross-account data processing.",
+    results:
+      "$30K annual AWS cost reduction. Improved compute throughput for customer genomics workloads. Enabled compliant cross-account data processing.",
     isPrivate: true,
     isFeatured: false,
     category: "professional",
@@ -189,7 +254,8 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "building-mcp-servers-typescript",
     title: "Building Production MCP Servers with TypeScript",
-    summary: "A deep dive into the Model Context Protocol — how to design, build, and publish a production-grade MCP server that AI agents can actually rely on.",
+    summary:
+      "A deep dive into the Model Context Protocol — how to design, build, and publish a production-grade MCP server that AI agents can actually rely on.",
     date: "2026-03-15",
     readTime: "12 min read",
     tags: ["MCP", "TypeScript", "AI", "Open Source"],
@@ -230,7 +296,8 @@ The biggest lesson: **error messages are your API**. When an agent calls your to
   {
     slug: "multi-agent-orchestration-go",
     title: "Multi-Agent Orchestration in Go: Lessons from Building Waggle",
-    summary: "What I learned designing a Queen/Worker multi-agent framework in Go — from task dependency graphs to TUI dashboards and the surprisingly hard problem of agent state management.",
+    summary:
+      "What I learned designing a Queen/Worker multi-agent framework in Go — from task dependency graphs to TUI dashboards and the surprisingly hard problem of agent state management.",
     date: "2026-02-20",
     readTime: "15 min read",
     tags: ["Go", "AI Agents", "Architecture", "Open Source"],
@@ -258,7 +325,8 @@ The next frontier is persistent memory — giving the Queen access to a vector s
   {
     slug: "ci-cd-standards-nx-monorepo",
     title: "CI/CD Standards for Nx Monorepos at Scale",
-    summary: "How we defined CI/CD standards across a large Nx-based frontend monorepo at Bayer — from GitHub Actions workflows to release guardrails and SonarQube integration.",
+    summary:
+      "How we defined CI/CD standards across a large Nx-based frontend monorepo at Bayer — from GitHub Actions workflows to release guardrails and SonarQube integration.",
     date: "2026-01-10",
     readTime: "10 min read",
     tags: ["CI/CD", "Nx", "GitHub Actions", "DevOps"],
@@ -293,7 +361,8 @@ Build times dropped. Integration errors decreased. And most importantly, enginee
   {
     slug: "rust-for-typescript-developers",
     title: "Rust for TypeScript Developers: A Practical Guide",
-    summary: "Coming from TypeScript, Rust's ownership model feels alien at first. Here's the mental model shift that made it click — and why I now reach for Rust for performance-critical tooling.",
+    summary:
+      "Coming from TypeScript, Rust's ownership model feels alien at first. Here's the mental model shift that made it click — and why I now reach for Rust for performance-critical tooling.",
     date: "2025-12-05",
     readTime: "18 min read",
     tags: ["Rust", "TypeScript", "Systems Programming"],
@@ -413,7 +482,15 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     name: "Frontend",
-    skills: ["React", "Next.js", "AngularJS", "Tailwind CSS", "Electron", "Bootstrap", "Material UI"],
+    skills: [
+      "React",
+      "Next.js",
+      "AngularJS",
+      "Tailwind CSS",
+      "Electron",
+      "Bootstrap",
+      "Material UI",
+    ],
   },
   {
     name: "Backend",
@@ -421,19 +498,50 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     name: "Cloud & Data",
-    skills: ["AWS", "DynamoDB", "PostgreSQL", "Redis", "MS SQL", "Oracle", "CloudFormation", "Lambda"],
+    skills: [
+      "AWS",
+      "DynamoDB",
+      "PostgreSQL",
+      "Redis",
+      "MS SQL",
+      "Oracle",
+      "CloudFormation",
+      "Lambda",
+    ],
   },
   {
     name: "AI & Platform",
-    skills: ["AI Agents", "Prompt Engineering", "LLM Integration", "MCP", "Workflow Automation"],
+    skills: [
+      "AI Agents",
+      "Prompt Engineering",
+      "LLM Integration",
+      "MCP",
+      "Workflow Automation",
+    ],
   },
   {
     name: "DevOps & Tooling",
-    skills: ["CI/CD Architecture", "GitHub Actions", "Docker", "Deployment Automation", "Go CLI Tooling", "Nx", "SonarQube", "Datadog"],
+    skills: [
+      "CI/CD Architecture",
+      "GitHub Actions",
+      "Docker",
+      "Deployment Automation",
+      "Go CLI Tooling",
+      "Nx",
+      "SonarQube",
+      "Datadog",
+    ],
   },
   {
     name: "Leadership",
-    skills: ["Architecture", "Cross-functional Collaboration", "Mentoring", "Code Review", "Technical Guidance", "Operational Reliability"],
+    skills: [
+      "Architecture",
+      "Cross-functional Collaboration",
+      "Mentoring",
+      "Code Review",
+      "Technical Guidance",
+      "Operational Reliability",
+    ],
   },
 ];
 

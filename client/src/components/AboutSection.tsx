@@ -167,7 +167,10 @@ export default function AboutSection() {
             }`}
           >
             {/* Visual accent */}
-            <div className="mb-6 rounded-xl overflow-hidden border" style={{ borderColor: "oklch(1 0 0 / 8%)" }}>
+            <div
+              className="mb-6 rounded-xl overflow-hidden border"
+              style={{ borderColor: "oklch(1 0 0 / 8%)" }}
+            >
               <img
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310519663074844816/D7Scsbof2ga2vbCvASFLcE/about-visual-7umMgkAnJhwmEB7mS6sqSR.webp"
                 alt="Abstract tech visual"

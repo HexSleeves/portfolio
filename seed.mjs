@@ -26,7 +26,7 @@ function parseFrontmatter(raw) {
       val = val
         .slice(1, -1)
         .split(",")
-        .map((s) => s.trim().replace(/^["']|["']$/g, ""))
+        .map(s => s.trim().replace(/^["']|["']$/g, ""))
         .filter(Boolean);
     } else if (val === "true") val = true;
     else if (val === "false") val = false;
@@ -37,7 +37,7 @@ function parseFrontmatter(raw) {
 }
 
 const blogDir = join(__dirname, "client/src/content/blog");
-const mdFiles = readdirSync(blogDir).filter((f) => f.endsWith(".md"));
+const mdFiles = readdirSync(blogDir).filter(f => f.endsWith(".md"));
 
 console.log(`\nSeeding ${mdFiles.length} blog posts...`);
 for (const file of mdFiles) {
@@ -79,8 +79,10 @@ const projectsData = [
   {
     slug: "tailscale-mcp",
     title: "tailscale-mcp",
-    summary: "A Model Context Protocol (MCP) server that exposes Tailscale network management operations as AI-callable tools.",
-    description: "Enables AI assistants like Claude to manage Tailscale networks — listing devices, checking status, managing ACLs, and performing network operations — all through natural language. Built as a first-class MCP server with full TypeScript types and comprehensive tooling.",
+    summary:
+      "A Model Context Protocol (MCP) server that exposes Tailscale network management operations as AI-callable tools.",
+    description:
+      "Enables AI assistants like Claude to manage Tailscale networks — listing devices, checking status, managing ACLs, and performing network operations — all through natural language. Built as a first-class MCP server with full TypeScript types and comprehensive tooling.",
     category: "open-source",
     technologies: ["TypeScript", "MCP", "Tailscale API", "Node.js", "Claude"],
     githubUrl: "https://github.com/HexSleeves/tailscale-mcp",
@@ -93,8 +95,10 @@ const projectsData = [
   {
     slug: "waggle",
     title: "Waggle",
-    summary: "A multi-agent orchestration framework written in Go for building and coordinating AI agent swarms.",
-    description: "Waggle provides a clean, composable API for defining agent roles, communication channels, and task delegation. Designed for production use with built-in observability, retry logic, and support for multiple LLM backends.",
+    summary:
+      "A multi-agent orchestration framework written in Go for building and coordinating AI agent swarms.",
+    description:
+      "Waggle provides a clean, composable API for defining agent roles, communication channels, and task delegation. Designed for production use with built-in observability, retry logic, and support for multiple LLM backends.",
     category: "open-source",
     technologies: ["Go", "LLM", "Multi-agent", "gRPC", "OpenAI API"],
     githubUrl: "https://github.com/HexSleeves/waggle",
@@ -107,10 +111,19 @@ const projectsData = [
   {
     slug: "resume-forge",
     title: "ResumeForge",
-    summary: "AI-powered resume builder that tailors your resume to specific job descriptions using LLM analysis.",
-    description: "ResumeForge analyzes job postings and your existing resume to generate tailored, ATS-optimized versions. Features a markdown-based resume format, real-time preview, PDF export, and a diff view showing what changed between versions. Built with Next.js, tRPC, and OpenAI.",
+    summary:
+      "AI-powered resume builder that tailors your resume to specific job descriptions using LLM analysis.",
+    description:
+      "ResumeForge analyzes job postings and your existing resume to generate tailored, ATS-optimized versions. Features a markdown-based resume format, real-time preview, PDF export, and a diff view showing what changed between versions. Built with Next.js, tRPC, and OpenAI.",
     category: "personal",
-    technologies: ["Next.js", "TypeScript", "tRPC", "OpenAI", "Tailwind CSS", "PDF generation"],
+    technologies: [
+      "Next.js",
+      "TypeScript",
+      "tRPC",
+      "OpenAI",
+      "Tailwind CSS",
+      "PDF generation",
+    ],
     githubUrl: "https://github.com/HexSleeves/resume-forge",
     liveUrl: null,
     isFeatured: true,
@@ -121,10 +134,19 @@ const projectsData = [
   {
     slug: "family-events-v2",
     title: "Family Events v2",
-    summary: "A private family event coordination platform with shared calendars, RSVP management, and photo sharing.",
-    description: "A full-stack web application built for coordinating family events — birthdays, reunions, holidays. Features shared event calendars, RSVP tracking, photo albums, and push notifications. Built with React, Express, and PostgreSQL with OAuth authentication.",
+    summary:
+      "A private family event coordination platform with shared calendars, RSVP management, and photo sharing.",
+    description:
+      "A full-stack web application built for coordinating family events — birthdays, reunions, holidays. Features shared event calendars, RSVP tracking, photo albums, and push notifications. Built with React, Express, and PostgreSQL with OAuth authentication.",
     category: "personal",
-    technologies: ["React", "TypeScript", "Express", "PostgreSQL", "OAuth", "Tailwind CSS"],
+    technologies: [
+      "React",
+      "TypeScript",
+      "Express",
+      "PostgreSQL",
+      "OAuth",
+      "Tailwind CSS",
+    ],
     githubUrl: "https://github.com/HexSleeves/family-events-v2",
     liveUrl: null,
     isFeatured: false,
@@ -135,10 +157,18 @@ const projectsData = [
   {
     slug: "runeforge",
     title: "RuneForge",
-    summary: "A Rust library for building roguelike games — procedural generation, ECS integration, and terminal rendering.",
-    description: "RuneForge provides reusable building blocks for roguelike games in Rust: procedural dungeon generation, field-of-view algorithms, pathfinding, and a terminal renderer built on crossterm. Designed to work seamlessly with the Bevy ECS framework.",
+    summary:
+      "A Rust library for building roguelike games — procedural generation, ECS integration, and terminal rendering.",
+    description:
+      "RuneForge provides reusable building blocks for roguelike games in Rust: procedural dungeon generation, field-of-view algorithms, pathfinding, and a terminal renderer built on crossterm. Designed to work seamlessly with the Bevy ECS framework.",
     category: "open-source",
-    technologies: ["Rust", "Bevy ECS", "crossterm", "Procedural Generation", "Game Dev"],
+    technologies: [
+      "Rust",
+      "Bevy ECS",
+      "crossterm",
+      "Procedural Generation",
+      "Game Dev",
+    ],
     githubUrl: "https://github.com/HexSleeves/runeforge",
     liveUrl: null,
     isFeatured: false,
@@ -149,10 +179,20 @@ const projectsData = [
   {
     slug: "bayer-genomics-platform",
     title: "Bayer Genomics Platform",
-    summary: "Cloud-scale genomics data processing platform handling petabyte-scale datasets for agricultural research.",
-    description: "Led architecture and development of a cloud-native genomics platform at Bayer, processing petabyte-scale agricultural genomics data. Reduced pipeline execution time by 40% through parallelization and caching strategies. Built on AWS with Kubernetes orchestration and custom workflow engines.",
+    summary:
+      "Cloud-scale genomics data processing platform handling petabyte-scale datasets for agricultural research.",
+    description:
+      "Led architecture and development of a cloud-native genomics platform at Bayer, processing petabyte-scale agricultural genomics data. Reduced pipeline execution time by 40% through parallelization and caching strategies. Built on AWS with Kubernetes orchestration and custom workflow engines.",
     category: "professional",
-    technologies: ["AWS", "Kubernetes", "Python", "TypeScript", "Genomics", "Terraform", "Docker"],
+    technologies: [
+      "AWS",
+      "Kubernetes",
+      "Python",
+      "TypeScript",
+      "Genomics",
+      "Terraform",
+      "Docker",
+    ],
     githubUrl: null,
     liveUrl: null,
     isFeatured: true,
@@ -163,10 +203,20 @@ const projectsData = [
   {
     slug: "dnanexus-ai-platform",
     title: "DNAnexus AI Platform",
-    summary: "AI-assisted bioinformatics tooling and workflow automation for a leading genomics cloud platform.",
-    description: "Built AI-assisted tooling for DNAnexus's genomics cloud platform — including LLM-powered workflow generation, automated QC pipelines, and a developer SDK that reduced integration time by 50%. Shipped features used by hundreds of research institutions worldwide.",
+    summary:
+      "AI-assisted bioinformatics tooling and workflow automation for a leading genomics cloud platform.",
+    description:
+      "Built AI-assisted tooling for DNAnexus's genomics cloud platform — including LLM-powered workflow generation, automated QC pipelines, and a developer SDK that reduced integration time by 50%. Shipped features used by hundreds of research institutions worldwide.",
     category: "professional",
-    technologies: ["Python", "TypeScript", "LLM", "Bioinformatics", "REST APIs", "AWS", "CI/CD"],
+    technologies: [
+      "Python",
+      "TypeScript",
+      "LLM",
+      "Bioinformatics",
+      "REST APIs",
+      "AWS",
+      "CI/CD",
+    ],
     githubUrl: null,
     liveUrl: null,
     isFeatured: false,

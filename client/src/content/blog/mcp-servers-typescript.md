@@ -56,7 +56,9 @@ AI agents will call your tools in unexpected ways. Robust error handling isn't o
 ```typescript
 try {
   const devices = await tailscaleClient.getDevices(input.filter);
-  return { content: [{ type: "text", text: JSON.stringify(devices, null, 2) }] };
+  return {
+    content: [{ type: "text", text: JSON.stringify(devices, null, 2) }],
+  };
 } catch (err) {
   return {
     content: [{ type: "text", text: `Error: ${err.message}` }],

@@ -33,7 +33,8 @@ export default function AvailabilityBanner() {
       style={{
         top: 0,
         height: `${BANNER_HEIGHT}px`,
-        background: "linear-gradient(90deg, oklch(0.12 0.02 200) 0%, oklch(0.10 0.015 220) 50%, oklch(0.12 0.02 200) 100%)",
+        background:
+          "linear-gradient(90deg, oklch(0.12 0.02 200) 0%, oklch(0.10 0.015 220) 50%, oklch(0.12 0.02 200) 100%)",
         borderBottom: "1px solid oklch(0.82 0.15 200 / 25%)",
         animation: "bannerSlideDown 0.4s ease-out",
       }}
@@ -42,14 +43,27 @@ export default function AvailabilityBanner() {
       <div
         className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
         style={{
-          background: "linear-gradient(90deg, transparent 0%, oklch(0.82 0.15 200 / 50%) 50%, transparent 100%)",
+          background:
+            "linear-gradient(90deg, transparent 0%, oklch(0.82 0.15 200 / 50%) 50%, transparent 100%)",
         }}
       />
 
-      <Sparkles size={13} style={{ color: "oklch(0.82 0.15 200)", flexShrink: 0 }} />
+      <Sparkles
+        size={13}
+        style={{ color: "oklch(0.82 0.15 200)", flexShrink: 0 }}
+      />
 
-      <span style={{ fontFamily: "'Inter', sans-serif", color: "oklch(0.72 0.01 240)", fontSize: "0.8125rem" }}>
-        <span className="font-semibold" style={{ color: "oklch(0.82 0.15 200)" }}>
+      <span
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          color: "oklch(0.72 0.01 240)",
+          fontSize: "0.8125rem",
+        }}
+      >
+        <span
+          className="font-semibold"
+          style={{ color: "oklch(0.82 0.15 200)" }}
+        >
           Open to new opportunities
         </span>
         {" — "}

@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "test", "production"])
+    .default("development"),
   PORT: z.coerce.number().int().positive().default(3000),
   DATABASE_URL: z.string().optional(),
   JWT_SECRET: z.string().optional(),
@@ -34,7 +36,9 @@ export function assertProductionEnv() {
     .map(([key]) => key);
 
   if (missing.length > 0) {
-    throw new Error(`Missing required production environment variables: ${missing.join(", ")}`);
+    throw new Error(
+      `Missing required production environment variables: ${missing.join(", ")}`
+    );
   }
 
   if (ENV.cookieSecret.length < 32) {
