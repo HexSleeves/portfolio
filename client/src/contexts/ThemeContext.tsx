@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-type Theme = "light" | "dark";
+import { useEffect, type ReactNode } from "react";
+import { type Theme, useUiStore } from "@/stores/uiStore";
 
 interface ThemeContextType {
   theme: Theme;
@@ -8,10 +7,8 @@ interface ThemeContextType {
   switchable: boolean;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
 interface ThemeProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
   defaultTheme?: Theme;
   switchable?: boolean;
 }
@@ -21,44 +18,23 @@ export function ThemeProvider({
   defaultTheme = "light",
   switchable = false,
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (switchable) {
-      const stored = localStorage.getItem("theme");
-      return (stored as Theme) || defaultTheme;
-    }
-    return defaultTheme;
-  });
+  const configureTheme = useUiStore(state => state.configureTheme);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    configureTheme(defaultTheme, switchable);
+  }, [configureTheme, defaultTheme, switchable]);
 
-    if (switchable) {
-      localStorage.setItem("theme", theme);
-    }
-  }, [theme, switchable]);
-
-  const toggleTheme = switchable
-    ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
-      }
-    : undefined;
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, switchable }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return children;
 }
 
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useTheme must be used within ThemeProvider");
-  }
-  return context;
+export function useTheme(): ThemeContextType {
+  const theme = useUiStore(state => state.theme);
+  const toggleTheme = useUiStore(state => state.toggleTheme);
+  const switchable = useUiStore(state => state.switchableTheme);
+
+  return {
+    theme,
+    toggleTheme: switchable ? toggleTheme : undefined,
+    switchable,
+  };
 }

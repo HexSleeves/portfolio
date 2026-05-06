@@ -1,11 +1,11 @@
 // Terminal Noir — Projects Page
 // Full filterable project grid — reads from database via tRPC
 
-import { useState } from "react";
 import { Link } from "wouter";
 import { Code2 as Github, ExternalLink, Lock, Star } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
+import { useUiStore } from "@/stores/uiStore";
 import type { Project } from "../../../drizzle/schema";
 
 const filters = [
@@ -179,7 +179,8 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default function ProjectsPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
+  const activeFilter = useUiStore(state => state.projectFilter);
+  const setActiveFilter = useUiStore(state => state.setProjectFilter);
   const { data: filtered = [], isLoading } = trpc.projects.list.useQuery(
     activeFilter === "all"
       ? {}

@@ -9,12 +9,13 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useUiStore } from "@/stores/uiStore";
 import { Link } from "wouter";
 import { toast } from "sonner";
 
 export default function AdminBlogList() {
-  const [search, setSearch] = useState("");
+  const search = useUiStore(state => state.adminBlogSearch);
+  const setSearch = useUiStore(state => state.setAdminBlogSearch);
   const utils = trpc.useUtils();
 
   const { data: allPosts = [], isLoading } = trpc.blog.adminList.useQuery();

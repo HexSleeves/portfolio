@@ -1,7 +1,7 @@
 // Terminal Noir — Navigation
 // Route-based tab navigation with active highlighting
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import {
   BriefcaseBusiness as Linkedin,
@@ -10,8 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { BANNER_HEIGHT } from "./AvailabilityBanner";
-
-const STORAGE_KEY = "banner-dismissed-v2";
+import { useUiStore } from "@/stores/uiStore";
 
 const navLinks = [
   { href: "/", label: "Home", exact: true },
@@ -22,9 +21,11 @@ const navLinks = [
 ];
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [bannerVisible, setBannerVisible] = useState(false);
+  const isOpen = useUiStore(state => state.mobileNavOpen);
+  const setIsOpen = useUiStore(state => state.setMobileNavOpen);
+  const scrolled = useUiStore(state => state.scrolled);
+  const setScrolled = useUiStore(state => state.setScrolled);
+  const bannerVisible = useUiStore(state => state.bannerVisible);
   const [location] = useLocation();
 
   useEffect(() => {
@@ -33,28 +34,10 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Mirror banner visibility for nav offset
-  useEffect(() => {
-    const dismissed = sessionStorage.getItem(STORAGE_KEY);
-    if (!dismissed) {
-      const t = setTimeout(() => setBannerVisible(true), 400);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
-  // Poll for banner dismissal to remove the offset
-  useEffect(() => {
-    if (!bannerVisible) return;
-    const interval = setInterval(() => {
-      if (sessionStorage.getItem(STORAGE_KEY)) setBannerVisible(false);
-    }, 200);
-    return () => clearInterval(interval);
-  }, [bannerVisible]);
-
   // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
-  }, [location]);
+  }, [location, setIsOpen]);
 
   const isActive = (href: string, exact: boolean) => {
     if (exact) return location === href;

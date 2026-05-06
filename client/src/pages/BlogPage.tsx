@@ -1,11 +1,11 @@
 // Terminal Noir — Blog Page
 // Reads published posts from the database via tRPC.
 
-import { useState } from "react";
 import { Link } from "wouter";
 import { Calendar, Clock, ArrowRight, Tag } from "lucide-react";
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
+import { useUiStore } from "@/stores/uiStore";
 import type { BlogPost } from "../../../drizzle/schema";
 
 function PostCard({
@@ -154,7 +154,8 @@ function PostCard({
 }
 
 export default function BlogPage() {
-  const [activeCategory, setActiveCategory] = useState("All");
+  const activeCategory = useUiStore(state => state.blogCategory);
+  const setActiveCategory = useUiStore(state => state.setBlogCategory);
   const { data: allPosts = [], isLoading } = trpc.blog.list.useQuery();
 
   const publishedCategories = [

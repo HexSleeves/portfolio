@@ -1,28 +1,27 @@
 // Terminal Noir — Availability Banner
 // Fixed-position top banner that sits above the nav bar
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { X, Sparkles } from "lucide-react";
-
-const STORAGE_KEY = "banner-dismissed-v2";
+import { useUiStore } from "@/stores/uiStore";
 
 // Export banner height so Navigation can offset itself
 export const BANNER_HEIGHT = 40; // px
 
 export default function AvailabilityBanner() {
-  const [visible, setVisible] = useState(false);
+  const visible = useUiStore(state => state.bannerVisible);
+  const bannerDismissed = useUiStore(state => state.bannerDismissed);
+  const showBanner = useUiStore(state => state.showBanner);
+  const dismissBanner = useUiStore(state => state.dismissBanner);
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem(STORAGE_KEY);
-    if (!dismissed) {
-      const t = setTimeout(() => setVisible(true), 400);
-      return () => clearTimeout(t);
-    }
-  }, []);
+    if (bannerDismissed) return;
+    const t = setTimeout(showBanner, 400);
+    return () => clearTimeout(t);
+  }, [bannerDismissed, showBanner]);
 
   function dismiss() {
-    setVisible(false);
-    sessionStorage.setItem(STORAGE_KEY, "true");
+    dismissBanner();
   }
 
   if (!visible) return null;

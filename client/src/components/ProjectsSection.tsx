@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { projects, type Project } from "@/lib/data";
+import { useUiStore } from "@/stores/uiStore";
 import { Code2 as Github, ExternalLink, Lock, Star } from "lucide-react";
 import { Link } from "wouter";
 
@@ -203,7 +204,8 @@ function ProjectCard({
 
 export default function ProjectsSection() {
   const { ref, inView } = useInView();
-  const [activeFilter, setActiveFilter] = useState("all");
+  const activeFilter = useUiStore(state => state.projectFilter);
+  const setActiveFilter = useUiStore(state => state.setProjectFilter);
 
   const filtered =
     activeFilter === "all"
