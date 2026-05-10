@@ -237,9 +237,6 @@ importers:
       '@types/express':
         specifier: 5.0.6
         version: 5.0.6
-      '@types/google.maps':
-        specifier: ^3.64.0
-        version: 3.64.0
       '@types/node':
         specifier: ^25.6.0
         version: 25.6.0
@@ -2021,9 +2018,6 @@ packages:
 
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
-
-  '@types/google.maps@3.64.0':
-    resolution: {integrity: sha512-dN0H6tB4lgLQLovcbPXFYYOEV41TpyyJghzb5jrzjB96FZmjeOghevVdC+BMGd6YqyCqXaggyEtqRXLRjzCBZA==}
 
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
@@ -5363,8 +5357,6 @@ snapshots:
       '@types/serve-static': 2.2.0
 
   '@types/geojson@7946.0.16': {}
-
-  '@types/google.maps@3.64.0': {}
 
   '@types/hast@3.0.4':
     dependencies:

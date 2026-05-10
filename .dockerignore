@@ -3,7 +3,6 @@
 .conductor
 dist
 node_modules
-.manus-logs
 .env
 .env.*
 coverage
