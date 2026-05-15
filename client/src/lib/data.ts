@@ -305,13 +305,7 @@ export const projects: Project[] = [
     problem:
       "Engineering teams spent significant time on repetitive tasks — ticket triage, boilerplate code generation, and searching internal documentation — that were ripe for AI automation but lacked safe, standardized patterns.",
     role: "Lead engineer — designed the agent architecture, built prompt patterns and agent templates, integrated agents into JIRA and repository workflows, and drove team adoption.",
-    technologies: [
-      "TypeScript",
-      "LLM APIs",
-      "JIRA API",
-      "NestJS",
-      "Nx",
-    ],
+    technologies: ["TypeScript", "LLM APIs", "JIRA API", "NestJS", "Nx"],
     features: [
       "Natural-language ticket triage and routing via AI agents",
       "Code generation agents integrated into PR review workflows",
@@ -469,7 +463,8 @@ Build times dropped. Integration errors decreased. And most importantly, enginee
   },
   {
     slug: "building-component-library-vite-storybook",
-    title: "Building a Production Component Library with Vite, Storybook 10, and Biome",
+    title:
+      "Building a Production Component Library with Vite, Storybook 10, and Biome",
     summary:
       "How we designed and shipped @gc-agency/gc-ui — a standalone TypeScript component library used across 22 Bayer applications — and the tooling decisions that made it maintainable at scale.",
     date: "2026-04-28",
@@ -670,7 +665,16 @@ export const experience: Experience[] = [
 export const skillCategories: SkillCategory[] = [
   {
     name: "Languages",
-    skills: ["TypeScript", "JavaScript", "Go", "Rust", "Python", "Java", "C++", "SQL"],
+    skills: [
+      "TypeScript",
+      "JavaScript",
+      "Go",
+      "Rust",
+      "Python",
+      "Java",
+      "C++",
+      "SQL",
+    ],
   },
   {
     name: "Frontend",

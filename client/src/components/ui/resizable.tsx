@@ -9,9 +9,16 @@ function ResizablePanelGroup({
   direction,
   orientation,
   ...props
-}: Omit<React.ComponentProps<typeof ResizablePrimitive.Group>, "orientation"> & {
-  direction?: React.ComponentProps<typeof ResizablePrimitive.Group>["orientation"];
-  orientation?: React.ComponentProps<typeof ResizablePrimitive.Group>["orientation"];
+}: Omit<
+  React.ComponentProps<typeof ResizablePrimitive.Group>,
+  "orientation"
+> & {
+  direction?: React.ComponentProps<
+    typeof ResizablePrimitive.Group
+  >["orientation"];
+  orientation?: React.ComponentProps<
+    typeof ResizablePrimitive.Group
+  >["orientation"];
 }) {
   return (
     <ResizablePrimitive.Group
