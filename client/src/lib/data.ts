@@ -115,22 +115,24 @@ export const projects: Project[] = [
     slug: "resume-forge",
     title: "ResumeForge",
     summary:
-      "An AI-powered resume builder that generates tailored, ATS-optimized resumes from a structured profile.",
+      "AI-powered resume builder that tailors your resume to specific job descriptions using LLM analysis.",
     problem:
-      "Job seekers waste hours reformatting resumes for each application. ResumeForge automates tailoring by matching a candidate's experience to job descriptions using LLM-driven content generation.",
+      "Job seekers waste hours manually reformatting resumes for each application. ResumeForge automates tailoring by analyzing the job posting and generating an ATS-optimized version with a diff view showing exactly what changed.",
     role: "Sole author — full-stack design, LLM integration, PDF generation pipeline, and deployment.",
     technologies: [
+      "Next.js",
       "TypeScript",
-      "React",
-      "Node.js",
-      "LLM APIs",
-      "PDF generation",
+      "tRPC",
+      "OpenAI",
+      "Tailwind CSS",
+      "PostgreSQL",
     ],
     features: [
-      "Structured profile input with experience, skills, and accomplishments",
-      "AI-driven tailoring to match job descriptions",
-      "Multiple resume templates with clean PDF export",
-      "ATS-friendly formatting",
+      "Analyzes job postings against your existing resume to generate tailored, ATS-optimized versions",
+      "Markdown-based resume format with real-time preview",
+      "Diff view showing exactly what changed between the original and tailored version",
+      "PDF export with clean, recruiter-friendly formatting",
+      "tRPC for end-to-end type-safe API between Next.js frontend and backend",
     ],
     results:
       "Private project used personally and shared with colleagues. Reduced resume tailoring time from hours to minutes.",
@@ -140,11 +142,11 @@ export const projects: Project[] = [
   },
   {
     slug: "family-events",
-    title: "Family Events Platform",
+    title: "Family Events v2",
     summary:
-      "A full-stack family event coordination platform with shared calendars, RSVP management, and real-time notifications.",
+      "A private family event coordination platform with shared calendars, RSVP management, and photo sharing.",
     problem:
-      "Coordinating family events across multiple households required juggling group chats, emails, and spreadsheets. A dedicated platform was needed to centralize planning and RSVPs.",
+      "Coordinating family events across multiple households required juggling group chats, emails, and spreadsheets. A dedicated platform was needed to centralize planning, RSVPs, and memories in one place.",
     role: "Sole author — designed the data model, built the full-stack application, and deployed to production.",
     technologies: [
       "TypeScript",
@@ -154,15 +156,16 @@ export const projects: Project[] = [
       "Real-time notifications",
     ],
     features: [
-      "Shared family calendar with event creation and management",
+      "Shared family calendar for birthdays, reunions, and holidays",
       "RSVP tracking with attendance counts",
+      "Photo sharing tied to specific events",
       "Real-time notifications for event updates",
       "Mobile-responsive design for on-the-go access",
     ],
     results:
-      "Private project actively used by family. Eliminated coordination friction and centralized all event planning.",
+      "Private project actively used by family. Eliminated coordination friction and centralized all event planning and photo memories.",
     isPrivate: true,
-    isFeatured: false,
+    isFeatured: true,
     category: "personal",
   },
   {
@@ -188,17 +191,122 @@ export const projects: Project[] = [
     category: "open-source",
   },
   {
-    slug: "bayer-ai-platform",
-    title: "Bayer AI Agent Platform",
+    slug: "gc-ui",
+    title: "@gc-agency/gc-ui — Component Library",
     summary:
-      "Internal AI tooling and agent workflows built on Bayer's enterprise AI platform, automating ticket triage, code generation, and knowledge retrieval.",
+      "A standalone TypeScript component library standardizing shared UI patterns across Bayer's 22-app Global Commerce frontend monorepo.",
     problem:
-      "Engineering teams at Bayer spent significant time on repetitive tasks — ticket triage, boilerplate code generation, and searching internal documentation — that could be automated with AI agents.",
-    role: "Lead engineer — designed the agent architecture, built prompt patterns and agent templates in Rust and JavaScript, and integrated agents into JIRA, repositories, and documentation systems.",
+      "Each app in Bayer's large Nx monorepo was re-implementing common UI patterns independently — forms, feature-flagged components, design tokens — leading to inconsistency and duplicated maintenance burden across teams.",
+    role: "Lead engineer — designed the library architecture, built the component catalog and Storybook, configured the build pipeline, and drove adoption across application teams.",
     technologies: [
       "TypeScript",
-      "Rust",
-      "JavaScript",
+      "React",
+      "Vite",
+      "Storybook 10",
+      "Vitest",
+      "Playwright",
+      "Biome",
+      "Element Design",
+      "LaunchDarkly",
+      "React Hook Form",
+      "Nx",
+    ],
+    features: [
+      "Shared design-token-driven components aligned to Element Design system",
+      "LaunchDarkly feature-flag integration baked into component variants",
+      "React Hook Form wrappers enforcing consistent form validation patterns",
+      "Storybook 10 catalog with interactive docs and accessibility checks",
+      "Vitest unit tests and Playwright component tests in CI",
+      "Biome for zero-config linting and formatting across the library",
+      "Published as a versioned npm package consumed by all Bayer Commerce apps",
+    ],
+    results:
+      "Eliminated duplicated UI code across 22 applications. Reduced onboarding time for new component patterns from days to hours. Standardized feature-flag usage and form handling company-wide.",
+    isPrivate: true,
+    isFeatured: true,
+    category: "professional",
+  },
+  {
+    slug: "bayer-terraform",
+    title: "Bayer Commerce — Terraform AWS Infrastructure",
+    summary:
+      "Modular Terraform stacks automating the full AWS infrastructure for Bayer's Global Commerce middleware platform across non-production and production environments.",
+    problem:
+      "Bayer's middleware infrastructure was provisioned manually and inconsistently across environments, creating configuration drift, slow provisioning, and risky production changes.",
+    role: "Lead infrastructure engineer — designed modular stack architecture, implemented all service modules, configured remote state, and integrated infrastructure pipelines into GitHub Actions CI/CD.",
+    technologies: [
+      "Terraform",
+      "AWS",
+      "Aurora PostgreSQL",
+      "ElastiCache Redis",
+      "DynamoDB",
+      "Lambda",
+      "API Gateway",
+      "S3",
+      "Datadog",
+      "GitHub Actions",
+    ],
+    features: [
+      "Modular stacks for Aurora PostgreSQL, ElastiCache Redis, DynamoDB, S3, Lambda, and API Gateway",
+      "Remote S3-backed state with DynamoDB locking for safe concurrent applies",
+      "Datadog integration for infrastructure-level monitoring and alerting",
+      "Reusable GitHub Actions composite action for Terraform plan/apply across all repositories",
+      "Vault-backed secret retrieval for zero-plaintext credential handling",
+      "Consistent environment parity between non-production and production",
+    ],
+    results:
+      "Reduced environment provisioning time from days to under an hour. Eliminated configuration drift between environments. Enabled safe, automated infrastructure promotion through CI/CD.",
+    isPrivate: true,
+    isFeatured: true,
+    category: "professional",
+  },
+  {
+    slug: "bayer-etl",
+    title: "Bayer Commerce — ETL Pipelines & Workflow Engine",
+    summary:
+      "AWS Lambda and Nx ETL pipelines integrating SAP ERP data into Bayer's commerce platform, plus a deterministic workflow engine powering the reporting platform.",
+    problem:
+      "Bayer's commerce platform needed reliable, observable data flows from SAP ERP and SAP Commerce Cloud into DynamoDB and downstream systems, and a reporting layer that could execute multi-step workflows accurately and traceably.",
+    role: "Lead engineer — designed the Lambda pipeline architecture, built the SAP integration adapters, and integrated the workflow engine into the NestJS reporting API.",
+    technologies: [
+      "TypeScript",
+      "AWS Lambda",
+      "NestJS",
+      "DynamoDB",
+      "Kafka",
+      "SQS",
+      "EventBridge",
+      "SAP ERP",
+      "SAP Commerce Cloud",
+      "CloudWatch",
+      "Datadog",
+      "Nx",
+    ],
+    features: [
+      "Lambda pipelines consuming SAP ERP warehouse, location, stock, and packaging-material data",
+      "Kafka and SQS event-driven ingestion with EventBridge routing",
+      "Azure hot-folder upload integration for SAP Commerce Cloud",
+      "NestJS workflow engine endpoints with provider-based task execution and runtime validation",
+      "OpenAPI coverage and execution tracing for all workflow steps",
+      "CloudWatch and Datadog observability with Teams notifications on pipeline failures",
+      "Deterministic workflow caching to prevent redundant report generation",
+    ],
+    results:
+      "Reliable, observable SAP data flows supporting warehouse operations and packaging-material reporting. Workflow engine enabled faster, more accurate report generation with full execution traceability.",
+    isPrivate: true,
+    isFeatured: false,
+    category: "professional",
+  },
+  {
+    slug: "bayer-ai-platform",
+    title: "Bayer AI Developer Workflows",
+    summary:
+      "Internal AI agent workflows and prompt engineering templates automating ticket triage, code generation, and documentation retrieval across Bayer engineering teams.",
+    problem:
+      "Engineering teams spent significant time on repetitive tasks — ticket triage, boilerplate code generation, and searching internal documentation — that were ripe for AI automation but lacked safe, standardized patterns.",
+    role: "Lead engineer — designed the agent architecture, built prompt patterns and agent templates, integrated agents into JIRA and repository workflows, and drove team adoption.",
+    technologies: [
+      "TypeScript",
       "LLM APIs",
       "JIRA API",
       "NestJS",
@@ -206,15 +314,15 @@ export const projects: Project[] = [
     ],
     features: [
       "Natural-language ticket triage and routing via AI agents",
-      "Code generation agents integrated into PR workflows",
-      "Knowledge retrieval from internal documentation",
-      "Reusable prompt patterns and agent templates",
-      "Safe AI usage standards adopted across teams",
+      "Code generation agents integrated into PR review workflows",
+      "Repository and documentation retrieval for context-aware suggestions",
+      "Reusable prompt patterns and agent templates shared across teams",
+      "Standardized safe AI usage guidelines adopted company-wide",
     ],
     results:
-      "Reduced manual engineering time by roughly 50%. Accelerated AI feature adoption across multiple teams. Standardized AI usage patterns company-wide.",
+      "Reduced manual engineering time by ~50%. Accelerated AI feature adoption across multiple teams. Prompt patterns and agent templates became the standard approach for new AI integrations at Bayer.",
     isPrivate: true,
-    isFeatured: true,
+    isFeatured: false,
     category: "professional",
   },
   {
@@ -235,10 +343,11 @@ export const projects: Project[] = [
       "Spot Instances",
     ],
     features: [
-      "Cluster optimization and pricing-model changes",
-      "Spot Instance orchestration for customer workloads",
+      "Cluster optimization and pricing-model adjustments",
+      "Spot Instance orchestration for customer genomics workloads",
       "Secure cross-account AWS patterns using IAM, KMS, and Secrets Manager",
-      "BYOA (Bring Your Own Account) workload support",
+      "BYOA (Bring Your Own Account) workload support for compliant customer data processing",
+      "Service boundary enforcement reducing production incidents",
     ],
     results:
       "$30K annual AWS cost reduction. Improved compute throughput for customer genomics workloads. Enabled compliant cross-account data processing.",
@@ -357,6 +466,80 @@ The most impactful change was adding PR and deployment guardrails — automated 
 ## Results
 
 Build times dropped. Integration errors decreased. And most importantly, engineers stopped asking "how do I set up CI for my new service?" — the answer was always "use the shared workflow."`,
+  },
+  {
+    slug: "building-component-library-vite-storybook",
+    title: "Building a Production Component Library with Vite, Storybook 10, and Biome",
+    summary:
+      "How we designed and shipped @gc-agency/gc-ui — a standalone TypeScript component library used across 22 Bayer applications — and the tooling decisions that made it maintainable at scale.",
+    date: "2026-04-28",
+    readTime: "14 min read",
+    tags: ["React", "TypeScript", "Storybook", "Vite", "Component Libraries"],
+    category: "Engineering",
+    content: `When you're building UI components that need to run consistently across 22 separate applications in an enterprise monorepo, the stakes for your library tooling are higher than a typical side project. Here's what we learned building @gc-agency/gc-ui — a standalone TypeScript component library for Bayer's Global Commerce platform.
+
+## The Problem with Distributed UI Code
+
+Before gc-ui, each app team was solving the same problems independently: form validation wrappers, feature-flagged component variants, shared design tokens, and LaunchDarkly integration. The result was a slow drift toward inconsistency — the same input component implemented five different ways, with five different validation patterns.
+
+A shared component library sounds like an obvious fix. The hard part is making it something teams actually want to use rather than just another mandate from the platform team.
+
+## Why Vite for Library Builds
+
+The standard advice for library builds used to be Rollup directly. Vite's library mode wraps Rollup with sane defaults and makes it easy to emit both ESM and CJS outputs, generate declaration files, and externalize peer dependencies — all in a clean \`vite.config.ts\`:
+
+\`\`\`typescript
+export default defineConfig({
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/index.ts'),
+      formats: ['es', 'cjs'],
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+    },
+  },
+  plugins: [react(), dts()],
+});
+\`\`\`
+
+Build times are fast enough that we run the full library build on every PR without it becoming a bottleneck.
+
+## Storybook 10 as the Living Contract
+
+Storybook 10 dropped the \`.stories.tsx\` format overhead and made autodocs genuinely useful. For a shared library, Storybook isn't just docs — it's the contract between the library team and the consumers. We treated every component's story as a spec: if you can't write a story for a variant, the variant isn't ready to ship.
+
+The accessibility addon caught real issues before they reached production. Running \`storybook build\` as part of CI meant the catalog was always fresh.
+
+## LaunchDarkly Integration at the Component Level
+
+This was the trickiest design decision. Feature flags in enterprise apps often end up scattered across business logic — a flag check here, a conditional render there. We pushed flag evaluation down into the component layer for a subset of UI changes, providing flag-aware variants:
+
+\`\`\`typescript
+export function FeatureButton({ featureKey, children, ...props }) {
+  const flags = useFlags();
+  if (!flags[featureKey]) return null;
+  return <Button {...props}>{children}</Button>;
+}
+\`\`\`
+
+This meant app teams got flag-gated components without having to wire up the LaunchDarkly SDK themselves — it was already initialized in the library's provider.
+
+## Biome over ESLint + Prettier
+
+We replaced the ESLint + Prettier combination with Biome and haven't looked back. A single \`biome.json\` covers linting and formatting, runs in milliseconds on CI, and eliminated the endless configuration drift that plagues large JavaScript projects. For a shared library where every contributor needs a consistent baseline, the zero-config nature of Biome is a genuine quality-of-life improvement.
+
+## Testing Strategy: Vitest + Playwright
+
+Unit tests with Vitest covered pure logic — form validation schemas, utility functions, flag evaluation helpers. Component tests with Playwright covered visual regressions and interaction patterns that Vitest can't catch: focus management, keyboard navigation, and scroll behavior.
+
+The key insight: don't test component implementation details. Test behavior and output. This made refactoring internals without breaking tests practical.
+
+## What Made Adoption Stick
+
+The library succeeded because we made consumption frictionless. One \`npm install\`, one provider wrap, and teams had access to the full component catalog with TypeScript autocomplete. The Storybook deployment gave teams a reference they could bookmark. And when teams found gaps, we had a clear contribution path — open a PR against the library, get a review from the platform team, and ship.
+
+The hard part of a shared component library isn't the components. It's making the feedback loop fast enough that teams reach for it instead of rolling their own.`,
   },
   {
     slug: "rust-for-typescript-developers",
