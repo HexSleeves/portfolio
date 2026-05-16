@@ -9,6 +9,7 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import { useMemo } from "react";
 import { useUiStore } from "@/stores/uiStore";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -19,8 +20,12 @@ export default function AdminBlogList() {
   const utils = trpc.useUtils();
 
   const { data: allPosts = [], isLoading } = trpc.blog.adminList.useQuery();
-  const posts = allPosts.filter(
-    p => !search || p.title.toLowerCase().includes(search.toLowerCase())
+  const posts = useMemo(
+    () =>
+      allPosts.filter(
+        p => !search || p.title.toLowerCase().includes(search.toLowerCase())
+      ),
+    [allPosts, search]
   );
 
   const togglePublish = trpc.blog.update.useMutation({

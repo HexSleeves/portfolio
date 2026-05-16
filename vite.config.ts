@@ -18,6 +18,31 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rolldownOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) {
+            return "react";
+          }
+          if (
+            /[\\/]node_modules[\\/](@tanstack|@trpc|superjson|devalue)[\\/]/.test(
+              id
+            )
+          ) {
+            return "api";
+          }
+          if (
+            /[\\/]node_modules[\\/](react-markdown|remark-|rehype-|highlight\.js|unified|vfile|micromark|mdast-|hast-)[\\/]/.test(
+              id
+            )
+          ) {
+            return "markdown";
+          }
+          return "vendor";
+        },
+      },
+    },
   },
   server: {
     host: true,

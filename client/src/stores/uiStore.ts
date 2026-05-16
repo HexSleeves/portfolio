@@ -4,10 +4,6 @@ export type Theme = "light" | "dark";
 
 export const THEME_KEY = "theme";
 export const BANNER_DISMISSED_KEY = "banner-dismissed-v2";
-export const SIDEBAR_WIDTH_KEY = "sidebar-width";
-export const DEFAULT_SIDEBAR_WIDTH = 280;
-export const MIN_SIDEBAR_WIDTH = 200;
-export const MAX_SIDEBAR_WIDTH = 480;
 
 type UiStateValues = {
   theme: Theme;
@@ -16,8 +12,6 @@ type UiStateValues = {
   bannerDismissed: boolean;
   mobileNavOpen: boolean;
   scrolled: boolean;
-  sidebarWidth: number;
-  dashboardResizing: boolean;
   blogCategory: string;
   projectFilter: string;
   adminBlogSearch: string;
@@ -31,12 +25,10 @@ type UiStore = UiStateValues & {
   dismissBanner: () => void;
   setMobileNavOpen: (open: boolean) => void;
   setScrolled: (scrolled: boolean) => void;
-  setSidebarWidth: (width: number) => void;
-  setDashboardResizing: (resizing: boolean) => void;
   setBlogCategory: (category: string) => void;
   setProjectFilter: (filter: string) => void;
   setAdminBlogSearch: (search: string) => void;
-  resetTransientState: () => void;
+  resetUiSession: () => void;
 };
 
 function getStorage(kind: "localStorage" | "sessionStorage") {
@@ -74,20 +66,6 @@ function parseTheme(value: string | null, fallback: Theme): Theme {
   return value === "light" || value === "dark" ? value : fallback;
 }
 
-function clampSidebarWidth(width: number) {
-  if (!Number.isFinite(width)) return DEFAULT_SIDEBAR_WIDTH;
-  return Math.min(MAX_SIDEBAR_WIDTH, Math.max(MIN_SIDEBAR_WIDTH, width));
-}
-
-function readSidebarWidth() {
-  const stored = readStorage("localStorage", SIDEBAR_WIDTH_KEY);
-  if (!stored) return DEFAULT_SIDEBAR_WIDTH;
-  const parsed = Number.parseInt(stored, 10);
-  return Number.isNaN(parsed)
-    ? DEFAULT_SIDEBAR_WIDTH
-    : clampSidebarWidth(parsed);
-}
-
 export function createInitialUiState(
   defaultTheme: Theme = "dark"
 ): UiStateValues {
@@ -101,8 +79,6 @@ export function createInitialUiState(
     bannerDismissed,
     mobileNavOpen: false,
     scrolled: false,
-    sidebarWidth: readSidebarWidth(),
-    dashboardResizing: false,
     blogCategory: "All",
     projectFilter: "all",
     adminBlogSearch: "",
@@ -140,19 +116,13 @@ export const useUiStore = create<UiStore>((set, get) => ({
   },
   setMobileNavOpen: mobileNavOpen => set({ mobileNavOpen }),
   setScrolled: scrolled => set({ scrolled }),
-  setSidebarWidth: width => {
-    const sidebarWidth = clampSidebarWidth(width);
-    writeStorage("localStorage", SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
-    set({ sidebarWidth });
-  },
-  setDashboardResizing: dashboardResizing => set({ dashboardResizing }),
   setBlogCategory: blogCategory => set({ blogCategory }),
   setProjectFilter: projectFilter => set({ projectFilter }),
   setAdminBlogSearch: adminBlogSearch => set({ adminBlogSearch }),
-  resetTransientState: () =>
+  resetUiSession: () =>
     set({
       mobileNavOpen: false,
-      dashboardResizing: false,
+      scrolled: false,
       blogCategory: "All",
       projectFilter: "all",
       adminBlogSearch: "",

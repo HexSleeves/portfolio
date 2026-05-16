@@ -3,6 +3,7 @@
 
 import { Link } from "wouter";
 import { Calendar, Clock, ArrowRight, Tag } from "lucide-react";
+import { useMemo } from "react";
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
 import { useUiStore } from "@/stores/uiStore";
@@ -158,14 +159,20 @@ export default function BlogPage() {
   const setActiveCategory = useUiStore(state => state.setBlogCategory);
   const { data: allPosts = [], isLoading } = trpc.blog.list.useQuery();
 
-  const publishedCategories = [
-    "All",
-    ...Array.from(new Set(allPosts.map(p => p.category).filter(Boolean))),
-  ] as string[];
-  const filtered =
-    activeCategory === "All"
-      ? allPosts
-      : allPosts.filter(p => p.category === activeCategory);
+  const publishedCategories = useMemo(
+    () => [
+      "All",
+      ...Array.from(new Set(allPosts.map(p => p.category).filter(Boolean))),
+    ],
+    [allPosts]
+  );
+  const filtered = useMemo(
+    () =>
+      activeCategory === "All"
+        ? allPosts
+        : allPosts.filter(p => p.category === activeCategory),
+    [activeCategory, allPosts]
+  );
   const [featured, ...rest] = filtered;
 
   return (

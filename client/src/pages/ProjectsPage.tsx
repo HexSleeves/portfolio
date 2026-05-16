@@ -3,6 +3,7 @@
 
 import { Link } from "wouter";
 import { Code2 as Github, ExternalLink, Lock, Star } from "lucide-react";
+import { useMemo } from "react";
 import PageLayout from "@/components/PageLayout";
 import { trpc } from "@/lib/trpc";
 import { useUiStore } from "@/stores/uiStore";
@@ -181,12 +182,20 @@ function ProjectCard({ project }: { project: Project }) {
 export default function ProjectsPage() {
   const activeFilter = useUiStore(state => state.projectFilter);
   const setActiveFilter = useUiStore(state => state.setProjectFilter);
+  const queryInput = useMemo(
+    () =>
+      activeFilter === "all"
+        ? {}
+        : {
+            category: activeFilter as
+              | "open-source"
+              | "professional"
+              | "personal",
+          },
+    [activeFilter]
+  );
   const { data: filtered = [], isLoading } = trpc.projects.list.useQuery(
-    activeFilter === "all"
-      ? {}
-      : {
-          category: activeFilter as "open-source" | "professional" | "personal",
-        }
+    queryInput
   );
 
   return (

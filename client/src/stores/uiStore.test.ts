@@ -1,8 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   BANNER_DISMISSED_KEY,
-  DEFAULT_SIDEBAR_WIDTH,
-  SIDEBAR_WIDTH_KEY,
   THEME_KEY,
   createInitialUiState,
   useUiStore,
@@ -56,16 +54,14 @@ describe("uiStore", () => {
     vi.useRealTimers();
   });
 
-  it("hydrates persisted theme, banner dismissal, and sidebar width", () => {
+  it("hydrates persisted theme and banner dismissal", () => {
     localStorage.setItem(THEME_KEY, "light");
-    localStorage.setItem(SIDEBAR_WIDTH_KEY, "360");
     sessionStorage.setItem(BANNER_DISMISSED_KEY, "true");
 
     expect(createInitialUiState()).toMatchObject({
       theme: "light",
       bannerVisible: false,
       bannerDismissed: true,
-      sidebarWidth: 360,
     });
   });
 
@@ -91,43 +87,43 @@ describe("uiStore", () => {
     expect(sessionStorage.getItem(BANNER_DISMISSED_KEY)).toBe("true");
   });
 
-  it("clamps and persists dashboard sidebar width", () => {
-    useUiStore.getState().setSidebarWidth(50);
-    expect(useUiStore.getState().sidebarWidth).toBe(200);
+  it("centralizes cross-route UI state in Zustand", () => {
+    useUiStore.getState().setMobileNavOpen(true);
+    useUiStore.getState().setScrolled(true);
+    useUiStore.getState().setProjectFilter("professional");
+    useUiStore.getState().setBlogCategory("Engineering");
+    useUiStore.getState().setAdminBlogSearch("zustand");
 
-    useUiStore.getState().setSidebarWidth(999);
-    expect(useUiStore.getState().sidebarWidth).toBe(480);
-
-    useUiStore.getState().setSidebarWidth(320);
-    expect(useUiStore.getState().sidebarWidth).toBe(320);
-    expect(localStorage.getItem(SIDEBAR_WIDTH_KEY)).toBe("320");
+    expect(useUiStore.getState()).toMatchObject({
+      mobileNavOpen: true,
+      scrolled: true,
+      projectFilter: "professional",
+      blogCategory: "Engineering",
+      adminBlogSearch: "zustand",
+    });
   });
 
-  it("resets transient page state without clearing persisted preferences", () => {
+  it("resets transient UI state without clearing persisted preferences", () => {
     useUiStore.setState({
       mobileNavOpen: true,
-      dashboardResizing: true,
-      blogCategory: "React",
-      projectFilter: "featured",
+      scrolled: true,
+      blogCategory: "Engineering",
+      projectFilter: "professional",
       adminBlogSearch: "zustand",
-      sidebarWidth: 360,
+      theme: "dark",
+      bannerDismissed: true,
     });
 
-    useUiStore.getState().resetTransientState();
+    useUiStore.getState().resetUiSession();
 
     expect(useUiStore.getState()).toMatchObject({
       mobileNavOpen: false,
-      dashboardResizing: false,
+      scrolled: false,
       blogCategory: "All",
       projectFilter: "all",
       adminBlogSearch: "",
-      sidebarWidth: 360,
+      theme: "dark",
+      bannerDismissed: true,
     });
-  });
-
-  it("uses the default sidebar width when storage is invalid", () => {
-    localStorage.setItem(SIDEBAR_WIDTH_KEY, "wide");
-
-    expect(createInitialUiState().sidebarWidth).toBe(DEFAULT_SIDEBAR_WIDTH);
   });
 });
