@@ -72,11 +72,11 @@ export default function AboutPage() {
                     color: "oklch(0.75 0.01 240)",
                   }}
                 >
-                  I'm a Senior Software Engineer based in Lafayette, Louisiana,
-                  with 8+ years of experience building production systems across
-                  genomics, agriculture, food delivery, and federal contracting.
-                  I specialize in full-stack TypeScript, cloud infrastructure,
-                  and AI-powered developer tooling.
+                  I'm a Senior Software Engineer based in Youngsville,
+                  Louisiana, with 8+ years of experience building production
+                  systems across genomics, agriculture, food delivery, and
+                  federal contracting. I specialize in full-stack TypeScript,
+                  cloud infrastructure, and AI developer workflows.
                 </p>
                 <p
                   className="text-base leading-relaxed"
@@ -85,10 +85,10 @@ export default function AboutPage() {
                     color: "oklch(0.75 0.01 240)",
                   }}
                 >
-                  My current work at Bayer involves leading full-stack delivery
-                  across a large Nx monorepo, designing AI agent workflows that
-                  reduce engineering time by ~50%, and acting as DevOps lead for
-                  CI/CD standards across multiple teams.
+                  My current work at Bayer involves leading platform and
+                  full-stack delivery across a production NestJS API, a 22-app
+                  Nx React monorepo, Terraform-managed AWS services, ETL
+                  pipelines, reporting workflows, and reusable CI/CD automation.
                 </p>
                 <p
                   className="text-base leading-relaxed"
@@ -232,7 +232,7 @@ export default function AboutPage() {
                   }}
                 >
                   <MapPin size={14} className="flex-shrink-0" />
-                  Lafayette, Louisiana
+                  Youngsville, Louisiana
                 </div>
               </div>
               <a
