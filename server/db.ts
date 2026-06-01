@@ -15,7 +15,7 @@ import { ENV } from "./_core/env";
 let _db: ReturnType<typeof drizzle> | null = null;
 let _pool: Pool | null = null;
 
-export async function getDb() {
+async function getDb() {
   if (!_db && ENV.databaseUrl) {
     try {
       _pool = new Pool({ connectionString: ENV.databaseUrl });
@@ -35,7 +35,7 @@ export async function closeDb() {
 }
 
 // ─── Users ────────────────────────────────────────────────────
-export async function upsertUser(user: InsertUser): Promise<void> {
+async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
   const db = await getDb();
   if (!db) {
@@ -75,7 +75,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     .onConflictDoUpdate({ target: users.openId, set: updateSet });
 }
 
-export async function getUserByOpenId(openId: string) {
+async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) return undefined;
   const result = await db
@@ -229,7 +229,7 @@ export async function deleteProject(id: number) {
 }
 
 // ─── Site Settings ────────────────────────────────────────────
-export async function getSetting(key: string): Promise<string | null> {
+async function getSetting(key: string): Promise<string | null> {
   const db = await getDb();
   if (!db) return null;
   const result = await db
