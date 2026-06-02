@@ -43,7 +43,7 @@ export function useAuth(options?: UseAuthOptions) {
 
   const state = useMemo(() => {
     localStorage.setItem(
-      "portfolio-admin-user-info",
+      "portfolio-admin-user-info:v1",
       JSON.stringify(meQuery.data)
     );
     return {

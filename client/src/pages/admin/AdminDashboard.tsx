@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         {/* Welcome */}
         <div>
           <h2
-            className="text-2xl font-bold mb-1"
+            className="text-2xl font-semibold mb-1"
             style={{
               color: "oklch(0.94 0.005 240)",
               fontFamily: "'Space Grotesk', sans-serif",
@@ -179,7 +179,7 @@ export default function AdminDashboard() {
                   }}
                 >
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                    className="size-8 rounded-lg flex items-center justify-center flex-shrink-0"
                     style={{ background: "oklch(0.82 0.15 200 / 10%)" }}
                   >
                     <action.icon

@@ -57,6 +57,7 @@ export default function AdminProjectsList() {
           </p>
           <Link href="/admin/projects/new">
             <button
+              type="button"
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
               style={{
                 background: "oklch(0.82 0.15 200)",
@@ -71,7 +72,7 @@ export default function AdminProjectsList() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : projects.length === 0 ? (
           <div
@@ -82,7 +83,7 @@ export default function AdminProjectsList() {
             }}
           >
             <div
-              className="w-10 h-10 rounded-xl mx-auto flex items-center justify-center mb-3"
+              className="size-10 rounded-xl mx-auto flex items-center justify-center mb-3"
               style={{ background: "oklch(0.82 0.15 200 / 10%)" }}
             >
               <Plus size={18} style={{ color: "oklch(0.82 0.15 200)" }} />
@@ -98,6 +99,7 @@ export default function AdminProjectsList() {
             </p>
             <Link href="/admin/projects/new">
               <button
+                type="button"
                 className="px-4 py-2 rounded-lg text-sm font-medium"
                 style={{
                   background: "oklch(0.82 0.15 200 / 15%)",
@@ -201,6 +203,7 @@ export default function AdminProjectsList() {
                   <div className="flex items-center gap-1 flex-shrink-0">
                     {/* Toggle featured */}
                     <button
+                      type="button"
                       onClick={() =>
                         toggleFeatured.mutate({
                           id: project.id,
@@ -236,6 +239,7 @@ export default function AdminProjectsList() {
                     {/* Edit */}
                     <Link href={`/admin/projects/${project.id}`}>
                       <button
+                        type="button"
                         className="p-2 rounded-lg transition-colors"
                         title="Edit"
                         style={{ color: "oklch(0.52 0.015 250)" }}
@@ -255,6 +259,7 @@ export default function AdminProjectsList() {
 
                     {/* Delete */}
                     <button
+                      type="button"
                       onClick={() => handleDelete(project.id, project.title)}
                       disabled={deleteProject.isPending}
                       className="p-2 rounded-lg transition-colors"

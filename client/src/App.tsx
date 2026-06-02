@@ -16,9 +16,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminBlogList = lazy(() => import("./pages/admin/AdminBlogList"));
 const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
-const AdminProjectsList = lazy(
-  () => import("./pages/admin/AdminProjectsList")
-);
+const AdminProjectsList = lazy(() => import("./pages/admin/AdminProjectsList"));
 const AdminProjectEditor = lazy(
   () => import("./pages/admin/AdminProjectEditor")
 );

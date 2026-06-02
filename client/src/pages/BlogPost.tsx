@@ -36,7 +36,7 @@ export default function BlogPost() {
         style={{ background: "oklch(0.085 0.012 265)" }}
       >
         <Navigation />
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mt-20" />
+        <div className="size-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mt-20" />
       </div>
     );
   }
@@ -132,7 +132,7 @@ export default function BlogPost() {
             </div>
 
             <h1
-              className="font-display font-bold text-3xl lg:text-4xl leading-tight mb-4"
+              className="font-display font-semibold text-3xl lg:text-4xl leading-tight mb-4"
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 color: "oklch(0.94 0.005 240)",

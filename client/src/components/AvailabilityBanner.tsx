@@ -72,11 +72,12 @@ export default function AvailabilityBanner() {
           className="underline underline-offset-2 transition-colors hover:opacity-80"
           style={{ color: "oklch(0.72 0.01 240)" }}
         >
-          Learn more
+          View availability details
         </a>
       </span>
 
       <button
+        type="button"
         onClick={dismiss}
         aria-label="Dismiss banner"
         className="ml-2 p-1 rounded transition-colors hover:bg-white/10 flex-shrink-0"

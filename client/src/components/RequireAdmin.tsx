@@ -29,7 +29,7 @@ export default function RequireAdmin({ children }: RequireAdminProps) {
         className="min-h-screen flex items-center justify-center"
         style={{ background: "oklch(0.085 0.012 265)" }}
       >
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        <div className="size-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }

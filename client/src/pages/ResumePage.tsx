@@ -14,11 +14,11 @@ function ExperienceTimeline() {
         style={{ background: "oklch(1 0 0 / 8%)" }}
       />
       <div className="space-y-8">
-        {experience.map((job, i) => (
-          <div key={i} className="relative pl-12">
+        {experience.map(job => (
+          <div key={job.company} className="relative pl-12">
             {/* Dot */}
             <div
-              className="absolute left-0 top-1 w-8 h-8 rounded-full flex items-center justify-center"
+              className="absolute left-0 top-1 size-8 rounded-full flex items-center justify-center"
               style={{
                 background: job.current
                   ? "oklch(0.82 0.15 200 / 15%)"
@@ -41,7 +41,7 @@ function ExperienceTimeline() {
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3
-                      className="font-display font-bold text-base"
+                      className="font-display font-semibold text-base"
                       style={{
                         fontFamily: "'Space Grotesk', sans-serif",
                         color: "oklch(0.94 0.005 240)",
@@ -96,7 +96,7 @@ function ExperienceTimeline() {
                     }}
                   >
                     <span
-                      className="flex-shrink-0 mt-1.5 w-1 h-1 rounded-full"
+                      className="flex-shrink-0 mt-1.5 size-1 rounded-full"
                       style={{ background: "oklch(0.82 0.15 200 / 60%)" }}
                     />
                     {h}
@@ -142,7 +142,7 @@ function Education() {
   return (
     <div className="gradient-border rounded-xl p-6">
       <h3
-        className="font-display font-bold text-base mb-1"
+        className="font-display font-semibold text-base mb-1"
         style={{
           fontFamily: "'Space Grotesk', sans-serif",
           color: "oklch(0.94 0.005 240)",
@@ -184,7 +184,7 @@ export default function ResumePage() {
           <div>
             <div className="section-tag mb-3">// resume</div>
             <h1
-              className="font-display font-bold text-4xl lg:text-5xl"
+              className="font-display font-semibold text-4xl lg:text-5xl"
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 color: "oklch(0.94 0.005 240)",

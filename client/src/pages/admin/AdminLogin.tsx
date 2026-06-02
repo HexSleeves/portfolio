@@ -48,7 +48,7 @@ export default function AdminLogin() {
       >
         <div className="space-y-2">
           <div
-            className="w-10 h-10 rounded-lg flex items-center justify-center"
+            className="size-10 rounded-lg flex items-center justify-center"
             style={{
               background: "oklch(0.82 0.15 200 / 12%)",
               color: "oklch(0.82 0.15 200)",
@@ -57,7 +57,7 @@ export default function AdminLogin() {
             <Lock size={18} />
           </div>
           <h1
-            className="text-xl font-bold"
+            className="text-xl font-semibold"
             style={{
               color: "oklch(0.94 0.005 240)",
               fontFamily: "'Space Grotesk', sans-serif",
@@ -67,7 +67,7 @@ export default function AdminLogin() {
           </h1>
         </div>
 
-        <label className="block space-y-1.5">
+        <label htmlFor="login-email" className="block space-y-1.5">
           <span
             className="text-sm"
             style={{
@@ -78,6 +78,7 @@ export default function AdminLogin() {
             Email
           </span>
           <input
+            id="login-email"
             type="email"
             autoComplete="email"
             value={email}
@@ -93,7 +94,7 @@ export default function AdminLogin() {
           />
         </label>
 
-        <label className="block space-y-1.5">
+        <label htmlFor="login-password" className="block space-y-1.5">
           <span
             className="text-sm"
             style={{
@@ -104,6 +105,7 @@ export default function AdminLogin() {
             Password
           </span>
           <input
+            id="login-password"
             type="password"
             autoComplete="current-password"
             value={password}

@@ -65,7 +65,7 @@ export default function ContactSection() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleChange = (
+  const updateFormField = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -154,8 +154,8 @@ export default function ContactSection() {
                 >
                   I'm open to senior engineering roles, technical consulting,
                   and interesting open-source collaborations. If you're working
-                  on something ambitious — cloud platforms, AI tooling,
-                  developer experience — I'd love to hear about it.
+                  on something ambitious, cloud platforms, AI tooling, developer
+                  experience, I'd love to hear about it.
                 </p>
               </div>
 
@@ -315,7 +315,7 @@ export default function ContactSection() {
                 {formState === "success" ? (
                   <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center"
+                      className="size-12 rounded-full flex items-center justify-center"
                       style={{ background: "oklch(0.82 0.15 200 / 15%)" }}
                     >
                       <Check
@@ -377,7 +377,7 @@ export default function ContactSection() {
                           required
                           placeholder="Jane Smith"
                           value={formData.from_name}
-                          onChange={handleChange}
+                          onChange={updateFormField}
                           style={inputStyle}
                           onFocus={e => {
                             e.currentTarget.style.borderColor =
@@ -407,7 +407,7 @@ export default function ContactSection() {
                           required
                           placeholder="jane@company.com"
                           value={formData.from_email}
-                          onChange={handleChange}
+                          onChange={updateFormField}
                           style={inputStyle}
                           onFocus={e => {
                             e.currentTarget.style.borderColor =
@@ -439,7 +439,7 @@ export default function ContactSection() {
                         required
                         placeholder="Opportunity / Collaboration / Question"
                         value={formData.subject}
-                        onChange={handleChange}
+                        onChange={updateFormField}
                         style={inputStyle}
                         onFocus={e => {
                           e.currentTarget.style.borderColor =
@@ -470,7 +470,7 @@ export default function ContactSection() {
                         rows={5}
                         placeholder="Tell me about your project, role, or what you'd like to discuss..."
                         value={formData.message}
-                        onChange={handleChange}
+                        onChange={updateFormField}
                         style={{ ...inputStyle, resize: "vertical" }}
                         onFocus={e => {
                           e.currentTarget.style.borderColor =
@@ -562,6 +562,7 @@ export default function ContactSection() {
           <div className="flex items-center gap-2">
             <MapPin size={12} style={{ color: "oklch(0.52 0.015 250)" }} />
             <span
+              suppressHydrationWarning
               className="text-xs"
               style={{
                 fontFamily: "'Inter', sans-serif",

@@ -162,7 +162,14 @@ export default function BlogPage() {
   const publishedCategories = useMemo(
     () => [
       "All",
-      ...Array.from(new Set(allPosts.map(p => p.category).filter(Boolean))),
+      ...Array.from(
+        new Set(
+          allPosts.flatMap(p => {
+            const c = p.category;
+            return c ? [c] : [];
+          })
+        )
+      ),
     ],
     [allPosts]
   );
@@ -182,7 +189,7 @@ export default function BlogPage() {
         <div className="mb-10">
           <div className="section-tag mb-3">// blog</div>
           <h1
-            className="font-display font-bold text-4xl lg:text-5xl"
+            className="font-display font-semibold text-4xl lg:text-5xl"
             style={{
               fontFamily: "'Space Grotesk', sans-serif",
               color: "oklch(0.94 0.005 240)",
@@ -205,7 +212,7 @@ export default function BlogPage() {
         {/* Loading */}
         {isLoading && (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 
@@ -215,6 +222,7 @@ export default function BlogPage() {
             <div className="flex flex-wrap gap-2 mb-8">
               {publishedCategories.map(cat => (
                 <button
+                  type="button"
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className="px-4 py-1.5 rounded-full text-sm transition-all duration-200"

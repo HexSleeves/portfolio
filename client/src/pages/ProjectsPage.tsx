@@ -107,7 +107,7 @@ function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <h3
-        className="font-display font-bold text-lg leading-tight"
+        className="font-display font-semibold text-lg leading-tight"
         style={{
           fontFamily: "'Space Grotesk', sans-serif",
           color: "oklch(0.94 0.005 240)",
@@ -194,9 +194,8 @@ export default function ProjectsPage() {
           },
     [activeFilter]
   );
-  const { data: filtered = [], isLoading } = trpc.projects.list.useQuery(
-    queryInput
-  );
+  const { data: filtered = [], isLoading } =
+    trpc.projects.list.useQuery(queryInput);
 
   return (
     <PageLayout>
@@ -206,7 +205,7 @@ export default function ProjectsPage() {
           <div className="section-tag mb-3">// projects</div>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h1
-              className="font-display font-bold text-4xl lg:text-5xl"
+              className="font-display font-semibold text-4xl lg:text-5xl"
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 color: "oklch(0.94 0.005 240)",
@@ -240,8 +239,8 @@ export default function ProjectsPage() {
               color: "oklch(0.52 0.015 250)",
             }}
           >
-            Open source tools, professional platform work, and personal projects
-            — spanning AI agents, cloud infrastructure, and full-stack
+            Open source tools, professional platform work, and personal
+            projects, spanning AI agents, cloud infrastructure, and full-stack
             applications.
           </p>
         </div>
@@ -250,6 +249,7 @@ export default function ProjectsPage() {
         <div className="flex flex-wrap gap-2 mb-8">
           {filters.map(f => (
             <button
+              type="button"
               key={f.value}
               onClick={() => setActiveFilter(f.value)}
               className="px-4 py-1.5 rounded-full text-sm transition-all duration-200"
@@ -274,7 +274,7 @@ export default function ProjectsPage() {
         {/* Loading */}
         {isLoading && (
           <div className="flex items-center justify-center py-20">
-            <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </div>
         )}
 

@@ -66,7 +66,7 @@ export default function AdminSettings() {
     return (
       <AdminLayout title="Settings">
         <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
         </div>
       </AdminLayout>
     );
@@ -78,6 +78,7 @@ export default function AdminSettings() {
         {/* Save */}
         <div className="flex justify-end">
           <button
+            type="button"
             onClick={() =>
               updateSettings.mutate([
                 {
@@ -105,7 +106,7 @@ export default function AdminSettings() {
             }}
           >
             {updateSettings.isPending ? (
-              <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span className="size-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
               <Save size={13} />
             )}
@@ -140,7 +141,7 @@ export default function AdminSettings() {
                   availabilityBannerEnabled: e.target.checked,
                 }))
               }
-              className="w-4 h-4 rounded"
+              className="size-4 rounded"
               style={{ accentColor: "oklch(0.82 0.15 200)" }}
             />
             <span
@@ -154,10 +155,15 @@ export default function AdminSettings() {
             </span>
           </label>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-banner-text"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               Banner Message
             </label>
             <input
+              id="settings-banner-text"
               type="text"
               value={form.availabilityBannerText}
               onChange={e =>
@@ -187,10 +193,15 @@ export default function AdminSettings() {
             Site Identity
           </h3>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-site-title"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               Site Title
             </label>
             <input
+              id="settings-site-title"
               type="text"
               value={form.siteTitle}
               onChange={e =>
@@ -201,10 +212,15 @@ export default function AdminSettings() {
             />
           </div>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-tagline"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               Tagline
             </label>
             <input
+              id="settings-tagline"
               type="text"
               value={form.siteTagline}
               onChange={e =>
@@ -234,10 +250,15 @@ export default function AdminSettings() {
             Contact & Social
           </h3>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-contact-email"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               Contact Email
             </label>
             <input
+              id="settings-contact-email"
               type="email"
               value={form.contactEmail}
               onChange={e =>
@@ -248,10 +269,15 @@ export default function AdminSettings() {
             />
           </div>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-github-url"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               GitHub URL
             </label>
             <input
+              id="settings-github-url"
               type="url"
               value={form.githubUrl}
               onChange={e =>
@@ -262,10 +288,15 @@ export default function AdminSettings() {
             />
           </div>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-linkedin-url"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               LinkedIn URL
             </label>
             <input
+              id="settings-linkedin-url"
               type="url"
               value={form.linkedinUrl}
               onChange={e =>
@@ -276,10 +307,15 @@ export default function AdminSettings() {
             />
           </div>
           <div>
-            <label className="block text-xs mb-1" style={labelStyle}>
+            <label
+              htmlFor="settings-twitter-url"
+              className="block text-xs mb-1"
+              style={labelStyle}
+            >
               Twitter / X URL
             </label>
             <input
+              id="settings-twitter-url"
               type="url"
               value={form.twitterUrl}
               onChange={e =>

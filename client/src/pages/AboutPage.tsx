@@ -39,7 +39,7 @@ export default function AboutPage() {
         <div className="mb-12">
           <div className="section-tag mb-3">// about</div>
           <h1
-            className="font-display font-bold text-4xl lg:text-5xl mb-4"
+            className="font-display font-semibold text-4xl lg:text-5xl mb-4"
             style={{
               fontFamily: "'Space Grotesk', sans-serif",
               color: "oklch(0.94 0.005 240)",
@@ -108,7 +108,7 @@ export default function AboutPage() {
                     tailscale-mcp
                   </a>{" "}
                   (87+ GitHub stars), the Waggle multi-agent orchestration
-                  framework for Go, and RuneForge — a Rust library for building
+                  framework for Go, and RuneForge, a Rust library for building
                   roguelike games.
                 </p>
               </div>
@@ -117,7 +117,7 @@ export default function AboutPage() {
             {/* Values */}
             <div>
               <h2
-                className="font-display font-bold text-2xl mb-6"
+                className="font-display font-semibold text-2xl mb-6"
                 style={{
                   fontFamily: "'Space Grotesk', sans-serif",
                   color: "oklch(0.94 0.005 240)",

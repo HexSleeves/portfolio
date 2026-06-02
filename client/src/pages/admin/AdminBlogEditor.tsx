@@ -1,7 +1,7 @@
 import AdminLayout from "@/components/AdminLayout";
 import { trpc } from "@/lib/trpc";
 import { Eye, EyeOff, Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "wouter";
 import { toast } from "sonner";
 
@@ -56,7 +56,7 @@ export default function AdminBlogEditor() {
 
   const [form, setForm] = useState<BlogFormState>(DEFAULT_FORM);
   const [preview, setPreview] = useState(false);
-  const [slugManual, setSlugManual] = useState(false);
+  const slugManual = useRef(false);
 
   const utils = trpc.useUtils();
 
@@ -80,7 +80,7 @@ export default function AdminBlogEditor() {
         published: existingPost.published ?? false,
         content: existingPost.content,
       });
-      setSlugManual(true);
+      slugManual.current = true;
     }
   }, [existingPost]);
 
@@ -103,14 +103,18 @@ export default function AdminBlogEditor() {
   });
 
   const handleTitleChange = (title: string) => {
-    setForm(f => ({ ...f, title, slug: slugManual ? f.slug : slugify(title) }));
+    setForm(f => ({
+      ...f,
+      title,
+      slug: slugManual.current ? f.slug : slugify(title),
+    }));
   };
 
   const handleSave = (publish?: boolean) => {
-    const tags = form.tags
-      .split(",")
-      .map(t => t.trim())
-      .filter(Boolean);
+    const tags = form.tags.split(",").flatMap(t => {
+      const s = t.trim();
+      return s ? [s] : [];
+    });
     const data = {
       ...form,
       tags,
@@ -129,7 +133,7 @@ export default function AdminBlogEditor() {
     return (
       <AdminLayout title="Edit Post">
         <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
         </div>
       </AdminLayout>
     );
@@ -142,6 +146,7 @@ export default function AdminBlogEditor() {
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => setPreview(!preview)}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm border transition-all"
               style={{
@@ -161,6 +166,7 @@ export default function AdminBlogEditor() {
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => handleSave(false)}
               disabled={isPending}
               className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm border transition-all"
@@ -173,6 +179,7 @@ export default function AdminBlogEditor() {
               <Save size={13} /> Save Draft
             </button>
             <button
+              type="button"
               onClick={() => handleSave(!form.published)}
               disabled={isPending}
               className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
@@ -187,7 +194,7 @@ export default function AdminBlogEditor() {
               }}
             >
               {isPending ? (
-                <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                <span className="size-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
               ) : form.published ? (
                 <EyeOff size={13} />
               ) : (
@@ -224,12 +231,22 @@ export default function AdminBlogEditor() {
                   background: "oklch(0.10 0.012 265)",
                   borderColor: "oklch(1 0 0 / 10%)",
                 }}
-                dangerouslySetInnerHTML={{
-                  __html:
-                    "<em style='color:oklch(0.52 0.015 250)'>Preview renders on the public blog page.</em><br/><br/>" +
-                    form.content.replace(/\n/g, "<br/>"),
-                }}
-              />
+              >
+                <em style={{ color: "oklch(0.52 0.015 250)" }}>
+                  Preview renders on the public blog page.
+                </em>
+                <pre
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    marginTop: "1rem",
+                    color: "oklch(0.82 0.005 240)",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: "12px",
+                  }}
+                >
+                  {form.content}
+                </pre>
+              </div>
             ) : (
               <textarea
                 value={form.content}
@@ -272,6 +289,7 @@ export default function AdminBlogEditor() {
               {/* Slug */}
               <div>
                 <label
+                  htmlFor="blog-slug"
                   className="block text-xs mb-1"
                   style={{
                     color: "oklch(0.52 0.015 250)",
@@ -281,10 +299,11 @@ export default function AdminBlogEditor() {
                   Slug
                 </label>
                 <input
+                  id="blog-slug"
                   type="text"
                   value={form.slug}
                   onChange={e => {
-                    setSlugManual(true);
+                    slugManual.current = true;
                     setForm(f => ({ ...f, slug: e.target.value }));
                   }}
                   className="w-full px-3 py-1.5 rounded-lg border text-xs outline-none font-mono"
@@ -300,6 +319,7 @@ export default function AdminBlogEditor() {
               {/* Summary */}
               <div>
                 <label
+                  htmlFor="blog-summary"
                   className="block text-xs mb-1"
                   style={{
                     color: "oklch(0.52 0.015 250)",
@@ -309,6 +329,7 @@ export default function AdminBlogEditor() {
                   Summary
                 </label>
                 <textarea
+                  id="blog-summary"
                   value={form.summary}
                   onChange={e =>
                     setForm(f => ({ ...f, summary: e.target.value }))
@@ -327,6 +348,7 @@ export default function AdminBlogEditor() {
               {/* Category */}
               <div>
                 <label
+                  htmlFor="blog-category"
                   className="block text-xs mb-1"
                   style={{
                     color: "oklch(0.52 0.015 250)",
@@ -336,6 +358,7 @@ export default function AdminBlogEditor() {
                   Category
                 </label>
                 <input
+                  id="blog-category"
                   type="text"
                   value={form.category}
                   onChange={e =>
@@ -354,6 +377,7 @@ export default function AdminBlogEditor() {
               {/* Tags */}
               <div>
                 <label
+                  htmlFor="blog-tags"
                   className="block text-xs mb-1"
                   style={{
                     color: "oklch(0.52 0.015 250)",
@@ -363,6 +387,7 @@ export default function AdminBlogEditor() {
                   Tags (comma-separated)
                 </label>
                 <input
+                  id="blog-tags"
                   type="text"
                   value={form.tags}
                   onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
@@ -380,6 +405,7 @@ export default function AdminBlogEditor() {
               {/* Read time */}
               <div>
                 <label
+                  htmlFor="blog-read-time"
                   className="block text-xs mb-1"
                   style={{
                     color: "oklch(0.52 0.015 250)",
@@ -389,6 +415,7 @@ export default function AdminBlogEditor() {
                   Read Time
                 </label>
                 <input
+                  id="blog-read-time"
                   type="text"
                   value={form.readTime}
                   onChange={e =>

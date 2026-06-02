@@ -32,7 +32,7 @@ export default function Navigation() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [setScrolled]);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -219,7 +219,7 @@ export default function Navigation() {
           className="md:hidden border-t"
           style={{
             background: "oklch(0.11 0.012 265 / 0.98)",
-            backdropFilter: "blur(12px)",
+            backdropFilter: "blur(8px)",
             borderColor: "oklch(1 0 0 / 5%)",
           }}
         >
@@ -243,7 +243,7 @@ export default function Navigation() {
                 >
                   {active && (
                     <span
-                      className="w-1 h-1 rounded-full flex-shrink-0"
+                      className="size-1 rounded-full flex-shrink-0"
                       style={{ background: "oklch(0.82 0.15 200)" }}
                     />
                   )}

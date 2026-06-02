@@ -63,6 +63,7 @@ export default function AdminBlogList() {
             <input
               type="text"
               placeholder="Search posts..."
+              aria-label="Search posts"
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-lg text-sm outline-none border"
@@ -76,6 +77,7 @@ export default function AdminBlogList() {
           </div>
           <Link href="/admin/blog/new">
             <button
+              type="button"
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
               style={{
                 background: "oklch(0.82 0.15 200)",
@@ -91,7 +93,7 @@ export default function AdminBlogList() {
         {/* List */}
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : posts.length === 0 ? (
           <div
@@ -114,6 +116,7 @@ export default function AdminBlogList() {
             {!search && (
               <Link href="/admin/blog/new">
                 <button
+                  type="button"
                   className="px-4 py-2 rounded-lg text-sm font-medium"
                   style={{
                     background: "oklch(0.82 0.15 200 / 15%)",
@@ -195,6 +198,7 @@ export default function AdminBlogList() {
                 <div className="flex items-center gap-1 flex-shrink-0">
                   {/* Toggle publish */}
                   <button
+                    type="button"
                     onClick={() =>
                       togglePublish.mutate({
                         id: post.id,
@@ -221,6 +225,7 @@ export default function AdminBlogList() {
                   {/* Edit */}
                   <Link href={`/admin/blog/${post.id}`}>
                     <button
+                      type="button"
                       className="p-2 rounded-lg transition-colors"
                       title="Edit"
                       style={{ color: "oklch(0.52 0.015 250)" }}
@@ -240,6 +245,7 @@ export default function AdminBlogList() {
 
                   {/* Delete */}
                   <button
+                    type="button"
                     onClick={() => handleDelete(post.id, post.title)}
                     disabled={deletePost.isPending}
                     className="p-2 rounded-lg transition-colors"
@@ -270,7 +276,7 @@ export default function AdminBlogList() {
 function BookOpenIcon() {
   return (
     <div
-      className="w-10 h-10 rounded-xl mx-auto flex items-center justify-center"
+      className="size-10 rounded-xl mx-auto flex items-center justify-center"
       style={{ background: "oklch(0.82 0.15 200 / 10%)" }}
     >
       <Eye size={18} style={{ color: "oklch(0.82 0.15 200)" }} />

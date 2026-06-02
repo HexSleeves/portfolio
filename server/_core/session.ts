@@ -38,9 +38,7 @@ function createAdminUser(email = ENV.adminEmail): User {
   };
 }
 
-async function createSessionToken(
-  payload: SessionPayload
-): Promise<string> {
+async function createSessionToken(payload: SessionPayload): Promise<string> {
   const issuedAt = Date.now();
   const expirationSeconds = Math.floor((issuedAt + ONE_YEAR_MS) / 1000);
 

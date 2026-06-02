@@ -26,96 +26,35 @@ interface AdminLayoutProps {
   title?: string;
 }
 
-export default function AdminLayout({ children, title }: AdminLayoutProps) {
-  const { user, loading, isAuthenticated, logout } = useAuth();
-  const [location] = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
+interface SidebarContentProps {
+  isActive: (href: string, exact?: boolean) => boolean;
+  setMobileOpen: (open: boolean) => void;
+  logout: () => void;
+}
 
-  if (loading) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ background: "oklch(0.085 0.012 265)" }}
-      >
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-          <span
-            className="text-sm"
-            style={{
-              color: "oklch(0.52 0.015 250)",
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
-            Loading...
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    window.location.href = getLoginUrl();
-    return null;
-  }
-
-  if (user?.role !== "admin") {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ background: "oklch(0.085 0.012 265)" }}
-      >
-        <div className="text-center">
-          <h1
-            className="text-2xl font-bold mb-2"
-            style={{
-              color: "oklch(0.94 0.005 240)",
-              fontFamily: "'Space Grotesk', sans-serif",
-            }}
-          >
-            Access Denied
-          </h1>
-          <p
-            className="text-sm mb-4"
-            style={{
-              color: "oklch(0.52 0.015 250)",
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
-            You don't have admin access to this area.
-          </p>
-          <Link href="/">
-            <span className="text-sm" style={{ color: "oklch(0.82 0.15 200)" }}>
-              ← Back to portfolio
-            </span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const isActive = (href: string, exact?: boolean) => {
-    if (exact) return location === href;
-    return location.startsWith(href);
-  };
-
-  const SidebarContent = () => (
+function SidebarContent({
+  isActive,
+  setMobileOpen,
+  logout,
+}: SidebarContentProps) {
+  return (
     <>
       {/* Logo */}
       <div
-        className="px-5 py-5 border-b"
+        className="p-5 border-b"
         style={{ borderColor: "oklch(1 0 0 / 6%)" }}
       >
         <Link href="/admin" onClick={() => setMobileOpen(false)}>
           <div className="flex items-center gap-2.5">
             <div
-              className="w-7 h-7 rounded-md flex items-center justify-center"
+              className="size-7 rounded-md flex items-center justify-center"
               style={{ background: "oklch(0.82 0.15 200 / 15%)" }}
             >
               <span
                 style={{
                   color: "oklch(0.82 0.15 200)",
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: "11px",
+                  fontSize: "12px",
                   fontWeight: 700,
                 }}
               >
@@ -214,6 +153,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           </div>
         </Link>
         <button
+          type="button"
           onClick={() => logout()}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors"
           style={{
@@ -237,6 +177,79 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
       </div>
     </>
   );
+}
+
+export default function AdminLayout({ children, title }: AdminLayoutProps) {
+  const { user, loading, isAuthenticated, logout } = useAuth();
+  const [location] = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
+        <div className="flex flex-col items-center gap-3">
+          <div className="size-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <span
+            className="text-sm"
+            style={{
+              color: "oklch(0.52 0.015 250)",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            Loading…
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    window.location.href = getLoginUrl();
+    return null;
+  }
+
+  if (user?.role !== "admin") {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "oklch(0.085 0.012 265)" }}
+      >
+        <div className="text-center">
+          <h1
+            className="text-2xl font-semibold mb-2"
+            style={{
+              color: "oklch(0.94 0.005 240)",
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}
+          >
+            Access Denied
+          </h1>
+          <p
+            className="text-sm mb-4"
+            style={{
+              color: "oklch(0.52 0.015 250)",
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            You don't have admin access to this area.
+          </p>
+          <Link href="/">
+            <span className="text-sm" style={{ color: "oklch(0.82 0.15 200)" }}>
+              ← Back to portfolio
+            </span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const isActive = (href: string, exact?: boolean) => {
+    if (exact) return location === href;
+    return location.startsWith(href);
+  };
 
   return (
     <div
@@ -251,15 +264,25 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           borderRight: "1px solid oklch(1 0 0 / 6%)",
         }}
       >
-        <SidebarContent />
+        <SidebarContent
+          isActive={isActive}
+          setMobileOpen={setMobileOpen}
+          logout={logout}
+        />
       </aside>
 
       {/* Mobile Sidebar Overlay */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div
+            role="button"
+            tabIndex={0}
+            aria-label="Close menu"
             className="absolute inset-0 bg-black/60"
             onClick={() => setMobileOpen(false)}
+            onKeyDown={e => {
+              if (e.key === "Enter" || e.key === " ") setMobileOpen(false);
+            }}
           />
           <aside
             className="relative flex flex-col w-56 h-full z-10"
@@ -269,13 +292,18 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             }}
           >
             <button
+              type="button"
               className="absolute top-3 right-3 p-1.5 rounded-md"
               style={{ color: "oklch(0.52 0.015 250)" }}
               onClick={() => setMobileOpen(false)}
             >
               <X size={16} />
             </button>
-            <SidebarContent />
+            <SidebarContent
+              isActive={isActive}
+              setMobileOpen={setMobileOpen}
+              logout={logout}
+            />
           </aside>
         </div>
       )}
@@ -291,6 +319,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           }}
         >
           <button
+            type="button"
             className="lg:hidden p-1.5 rounded-md"
             style={{ color: "oklch(0.52 0.015 250)" }}
             onClick={() => setMobileOpen(true)}
@@ -312,7 +341,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           </div>
           <div className="flex items-center gap-2">
             <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+              className="size-7 rounded-full flex items-center justify-center text-xs font-bold"
               style={{
                 background: "oklch(0.82 0.15 200 / 15%)",
                 color: "oklch(0.82 0.15 200)",

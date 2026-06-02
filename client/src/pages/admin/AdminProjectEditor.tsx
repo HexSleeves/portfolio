@@ -1,7 +1,7 @@
 import AdminLayout from "@/components/AdminLayout";
 import { trpc } from "@/lib/trpc";
 import { Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "wouter";
 import { toast } from "sonner";
 
@@ -49,7 +49,7 @@ export default function AdminProjectEditor() {
   const projectId = isNew ? null : parseInt(params.id!, 10);
 
   const [form, setForm] = useState<ProjectFormState>(DEFAULT_FORM);
-  const [slugManual, setSlugManual] = useState(false);
+  const slugManual = useRef(false);
 
   const utils = trpc.useUtils();
 
@@ -78,7 +78,7 @@ export default function AdminProjectEditor() {
         stars: existingProject.stars ?? 0,
         sortOrder: existingProject.sortOrder ?? 0,
       });
-      setSlugManual(true);
+      slugManual.current = true;
     }
   }, [existingProject]);
 
@@ -101,14 +101,18 @@ export default function AdminProjectEditor() {
   });
 
   const handleTitleChange = (title: string) => {
-    setForm(f => ({ ...f, title, slug: slugManual ? f.slug : slugify(title) }));
+    setForm(f => ({
+      ...f,
+      title,
+      slug: slugManual.current ? f.slug : slugify(title),
+    }));
   };
 
   const handleSave = () => {
-    const technologies = form.technologies
-      .split(",")
-      .map(t => t.trim())
-      .filter(Boolean);
+    const technologies = form.technologies.split(",").flatMap(t => {
+      const s = t.trim();
+      return s ? [s] : [];
+    });
     const data = {
       ...form,
       technologies,
@@ -128,7 +132,7 @@ export default function AdminProjectEditor() {
     return (
       <AdminLayout title="Edit Project">
         <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="size-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
         </div>
       </AdminLayout>
     );
@@ -152,6 +156,7 @@ export default function AdminProjectEditor() {
         {/* Save button */}
         <div className="flex justify-end">
           <button
+            type="button"
             onClick={handleSave}
             disabled={isPending}
             className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium"
@@ -162,7 +167,7 @@ export default function AdminProjectEditor() {
             }}
           >
             {isPending ? (
-              <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span className="size-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
               <Save size={13} />
             )}
@@ -191,10 +196,15 @@ export default function AdminProjectEditor() {
               </h3>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-title"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Title *
                 </label>
                 <input
+                  id="proj-title"
                   type="text"
                   value={form.title}
                   onChange={e => handleTitleChange(e.target.value)}
@@ -205,14 +215,19 @@ export default function AdminProjectEditor() {
               </div>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-slug"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Slug *
                 </label>
                 <input
+                  id="proj-slug"
                   type="text"
                   value={form.slug}
                   onChange={e => {
-                    setSlugManual(true);
+                    slugManual.current = true;
                     setForm(f => ({ ...f, slug: e.target.value }));
                   }}
                   className="w-full px-3 py-2 rounded-lg border text-xs outline-none font-mono"
@@ -225,10 +240,15 @@ export default function AdminProjectEditor() {
               </div>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-summary"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Summary *
                 </label>
                 <textarea
+                  id="proj-summary"
                   value={form.summary}
                   onChange={e =>
                     setForm(f => ({ ...f, summary: e.target.value }))
@@ -241,10 +261,15 @@ export default function AdminProjectEditor() {
               </div>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-description"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Full Description (Markdown)
                 </label>
                 <textarea
+                  id="proj-description"
                   value={form.description}
                   onChange={e =>
                     setForm(f => ({ ...f, description: e.target.value }))
@@ -261,10 +286,15 @@ export default function AdminProjectEditor() {
               </div>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-technologies"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Technologies (comma-separated)
                 </label>
                 <input
+                  id="proj-technologies"
                   type="text"
                   value={form.technologies}
                   onChange={e =>
@@ -294,10 +324,15 @@ export default function AdminProjectEditor() {
                 Links
               </h3>
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-github"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   GitHub URL
                 </label>
                 <input
+                  id="proj-github"
                   type="url"
                   value={form.githubUrl}
                   onChange={e =>
@@ -309,10 +344,15 @@ export default function AdminProjectEditor() {
                 />
               </div>
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-live"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Live URL
                 </label>
                 <input
+                  id="proj-live"
                   type="url"
                   value={form.liveUrl}
                   onChange={e =>
@@ -346,10 +386,15 @@ export default function AdminProjectEditor() {
               </h3>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-category"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Category
                 </label>
                 <select
+                  id="proj-category"
                   value={form.category}
                   onChange={e =>
                     setForm(f => ({
@@ -367,10 +412,15 @@ export default function AdminProjectEditor() {
               </div>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-stars"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   GitHub Stars
                 </label>
                 <input
+                  id="proj-stars"
                   type="number"
                   value={form.stars}
                   onChange={e =>
@@ -386,10 +436,15 @@ export default function AdminProjectEditor() {
               </div>
 
               <div>
-                <label className="block text-xs mb-1" style={labelStyle}>
+                <label
+                  htmlFor="proj-sort-order"
+                  className="block text-xs mb-1"
+                  style={labelStyle}
+                >
                   Sort Order
                 </label>
                 <input
+                  id="proj-sort-order"
                   type="number"
                   value={form.sortOrder}
                   onChange={e =>
@@ -414,7 +469,7 @@ export default function AdminProjectEditor() {
                     onChange={e =>
                       setForm(f => ({ ...f, isFeatured: e.target.checked }))
                     }
-                    className="w-4 h-4 rounded"
+                    className="size-4 rounded"
                     style={{ accentColor: "oklch(0.82 0.15 200)" }}
                   />
                   <span
@@ -434,7 +489,7 @@ export default function AdminProjectEditor() {
                     onChange={e =>
                       setForm(f => ({ ...f, isPrivate: e.target.checked }))
                     }
-                    className="w-4 h-4 rounded"
+                    className="size-4 rounded"
                     style={{ accentColor: "oklch(0.82 0.15 200)" }}
                   />
                   <span
