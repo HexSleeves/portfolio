@@ -199,10 +199,11 @@ export default function ResumePage() {
                 color: "oklch(0.52 0.015 250)",
               }}
             >
-              Senior Software Engineer with deep experience in full-stack,
-              DevOps, and platform engineering. Drove delivery of CI/CD
-              standards, integrated AI tooling, and optimized AWS infrastructure
-              across enterprise commerce and genomics platforms.
+              Senior Software Engineer specializing in platform engineering,
+              full-stack systems, AWS infrastructure, and AI developer
+              workflows. Leads modernization across large TypeScript ecosystems,
+              including NestJS APIs, Nx React applications, Terraform-managed
+              cloud services, ETL pipelines, and reusable CI/CD automation.
             </p>
           </div>
           <a

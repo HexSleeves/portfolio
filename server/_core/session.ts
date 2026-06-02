@@ -23,7 +23,7 @@ function parseCookies(cookieHeader: string | undefined) {
   return new Map(Object.entries(parseCookieHeader(cookieHeader)));
 }
 
-export function createAdminUser(email = ENV.adminEmail): User {
+function createAdminUser(email = ENV.adminEmail): User {
   const now = new Date();
   return {
     id: 1,
@@ -38,7 +38,7 @@ export function createAdminUser(email = ENV.adminEmail): User {
   };
 }
 
-export async function createSessionToken(
+async function createSessionToken(
   payload: SessionPayload
 ): Promise<string> {
   const issuedAt = Date.now();
@@ -51,7 +51,7 @@ export async function createSessionToken(
     .sign(getSecretKey());
 }
 
-export async function verifySessionToken(
+async function verifySessionToken(
   cookieValue: string | undefined | null
 ): Promise<SessionPayload | null> {
   if (!cookieValue) return null;

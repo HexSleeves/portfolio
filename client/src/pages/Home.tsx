@@ -130,9 +130,9 @@ function HeroSection() {
               color: "oklch(0.52 0.015 250)",
             }}
           >
-            I build cloud-scale platforms, AI agent systems, and developer
-            tooling that teams actually want to use. 8+ years shipping
-            production software at Bayer, DNAnexus, and beyond.
+            I build cloud-scale platforms, AI developer workflows, and
+            full-stack TypeScript systems that teams actually use. 8+ years
+            shipping production software at Bayer, DNAnexus, and beyond.
           </p>
 
           <div
@@ -615,7 +615,7 @@ function Footer() {
             color: "oklch(0.52 0.015 250)",
           }}
         >
-          Jacob LeCoq · Lafayette, LA · {new Date().getFullYear()}
+          Jacob LeCoq · Youngsville, LA · {new Date().getFullYear()}
         </span>
         <div className="flex items-center gap-4">
           {[
