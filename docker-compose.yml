@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: postgres:17
+    image: postgres:18
     environment:
       POSTGRES_DB: portfolio
       POSTGRES_USER: portfolio
